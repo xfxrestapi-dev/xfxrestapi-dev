@@ -2,551 +2,844 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#07080d">
-<title>XYRO API</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#050505">
+<title>XYRO AM Premium API</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
 
 :root{
---bg:#07080d;
---card:#101219;
---card2:#151821;
---border:#252934;
---text:#f5f6f8;
---muted:#858b98;
---primary:#8b5cf6;
---primary2:#6d3eea;
---green:#35d58b;
---red:#ff5964;
+--bg:#030303;
+--panel:rgba(13,13,16,.78);
+--border:rgba(255,255,255,.09);
+--purple:#8b5cf6;
+--violet:#a855f7;
+--pink:#d946ef;
+--text:#f7f7f7;
+--muted:#8e8e98;
+--green:#34d399;
+--red:#fb7185;
+}
+
+html{
+scroll-behavior:smooth;
 }
 
 body{
-font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-background:
-radial-gradient(circle at 50% -10%,rgba(139,92,246,.20),transparent 34%),
-var(--bg);
+font-family:Inter,Arial,sans-serif;
+background:#030303;
 color:var(--text);
 min-height:100vh;
+overflow-x:hidden;
 }
 
-button,input{
-font:inherit
+/* BACKGROUND */
+
+.bg{
+position:fixed;
+inset:0;
+z-index:-10;
+overflow:hidden;
+background:
+radial-gradient(
+circle at 50% 15%,
+rgba(139,92,246,.14),
+transparent 30%
+),
+#030303;
 }
 
-button{
-cursor:pointer
+.orb{
+position:absolute;
+border-radius:50%;
+filter:blur(90px);
+opacity:.18;
+animation:orb 10s ease-in-out infinite alternate;
 }
+
+.orb.one{
+width:420px;
+height:420px;
+background:#7c3aed;
+top:-180px;
+left:-120px;
+}
+
+.orb.two{
+width:360px;
+height:360px;
+background:#c026d3;
+right:-120px;
+bottom:-100px;
+animation-delay:2s;
+}
+
+.orb.three{
+width:260px;
+height:260px;
+background:#4f46e5;
+left:40%;
+top:40%;
+animation-delay:4s;
+}
+
+@keyframes orb{
+from{
+transform:translate(0,0) scale(1);
+}
+to{
+transform:translate(80px,60px) scale(1.25);
+}
+}
+
+/* LIGHTNING CHARACTER STYLE */
+
+.character{
+position:absolute;
+right:4%;
+top:17%;
+width:390px;
+height:520px;
+opacity:.18;
+filter:blur(.2px);
+animation:floatCharacter 5s ease-in-out infinite;
+}
+
+.head{
+position:absolute;
+width:190px;
+height:190px;
+border-radius:50%;
+background:
+radial-gradient(
+circle at 50% 50%,
+#fff 0 3%,
+#b48cff 5%,
+transparent 7%
+);
+border:2px solid rgba(168,85,247,.7);
+box-shadow:
+0 0 25px #8b5cf6,
+0 0 80px rgba(168,85,247,.8);
+left:100px;
+top:70px;
+}
+
+.hair{
+position:absolute;
+left:65px;
+top:25px;
+width:260px;
+height:180px;
+clip-path:polygon(
+50% 0,
+62% 35%,
+83% 12%,
+77% 52%,
+100% 38%,
+82% 70%,
+94% 88%,
+60% 75%,
+48% 100%,
+38% 73%,
+8% 90%,
+19% 65%,
+0 52%,
+28% 42%,
+17% 12%,
+40% 33%
+);
+background:
+linear-gradient(
+135deg,
+#fff,
+#ddd6fe 35%,
+#8b5cf6 70%,
+#4c1d95
+);
+filter:
+drop-shadow(0 0 20px #8b5cf6);
+}
+
+.eye{
+position:absolute;
+width:32px;
+height:8px;
+border-radius:100%;
+background:#fff;
+box-shadow:0 0 20px #c084fc;
+top:150px;
+}
+
+.eye.left{
+left:135px;
+transform:rotate(10deg);
+}
+
+.eye.right{
+left:215px;
+transform:rotate(-10deg);
+}
+
+.body{
+position:absolute;
+left:125px;
+top:245px;
+width:150px;
+height:240px;
+border-radius:70px 70px 20px 20px;
+background:
+linear-gradient(
+180deg,
+rgba(168,85,247,.8),
+rgba(20,10,40,.1)
+);
+border:1px solid rgba(168,85,247,.5);
+box-shadow:0 0 60px rgba(139,92,246,.4);
+}
+
+.lightning{
+position:absolute;
+width:3px;
+height:300px;
+background:#fff;
+box-shadow:
+0 0 10px #fff,
+0 0 25px #a855f7,
+0 0 60px #7c3aed;
+transform:rotate(25deg);
+animation:flash .8s infinite alternate;
+}
+
+.l1{
+right:80px;
+top:60px;
+}
+
+.l2{
+left:50px;
+top:150px;
+transform:rotate(-20deg);
+animation-delay:.2s;
+}
+
+@keyframes flash{
+from{
+opacity:.25;
+}
+to{
+opacity:1;
+}
+}
+
+@keyframes floatCharacter{
+0%,100%{
+transform:translateY(0);
+}
+50%{
+transform:translateY(-18px);
+}
+}
+
+/* PARTICLES */
+
+.particle{
+position:fixed;
+width:2px;
+height:2px;
+background:#fff;
+border-radius:50%;
+opacity:.4;
+animation:particle linear infinite;
+z-index:-3;
+}
+
+@keyframes particle{
+from{
+transform:translateY(110vh);
+opacity:0;
+}
+20%{
+opacity:.5;
+}
+80%{
+opacity:.5;
+}
+to{
+transform:translateY(-10vh);
+opacity:0;
+}
+}
+
+/* NAV */
 
 .container{
-width:min(1150px,94%);
-margin:auto
+width:min(1120px,92%);
+margin:auto;
 }
 
-header{
-padding:35px 0 20px
+nav{
+height:76px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+border-bottom:1px solid var(--border);
 }
 
 .logo{
-font-size:26px;
+font-size:20px;
 font-weight:900;
-letter-spacing:-1px
+letter-spacing:-1px;
 }
 
 .logo span{
-color:var(--primary)
-}
-
-.subtitle{
-color:var(--muted);
-font-size:13px;
-margin-top:6px
+color:#a855f7;
 }
 
 .nav{
 display:flex;
 gap:8px;
-margin:25px 0;
-overflow:auto
 }
 
-.nav button{
-border:1px solid var(--border);
-background:var(--card);
-color:#aaa;
-padding:10px 15px;
-border-radius:10px;
-white-space:nowrap
-}
-
-.nav button.active{
-background:var(--primary);
-border-color:var(--primary);
-color:#fff
-}
-
-.page{
-display:none
-}
-
-.page.active{
-display:block
-}
-
-.card{
-background:rgba(16,18,25,.92);
-border:1px solid var(--border);
-border-radius:18px;
-padding:20px;
-margin-bottom:16px;
-box-shadow:0 20px 60px rgba(0,0,0,.15)
-}
-
-.card-title{
-font-weight:850;
-font-size:15px;
-margin-bottom:15px
-}
-
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px
-}
-
-.full{
-grid-column:1/-1
-}
-
-label{
-display:block;
-font-size:12px;
-font-weight:800;
-color:#cdd0d8;
-margin-bottom:7px
-}
-
-input{
-width:100%;
-background:#080a0f;
-border:1px solid var(--border);
+button{
+font-family:inherit;
+cursor:pointer;
 color:#fff;
-border-radius:10px;
-padding:13px;
-outline:none
-}
-
-input:focus{
-border-color:var(--primary);
-box-shadow:0 0 0 3px rgba(139,92,246,.10)
-}
-
-.btns{
-display:flex;
-gap:9px;
-flex-wrap:wrap;
-margin-top:16px
+border:0;
 }
 
 .btn{
-border:0;
-padding:12px 16px;
+padding:11px 16px;
 border-radius:10px;
-font-weight:850
+background:#111;
+border:1px solid var(--border);
+transition:.25s;
+}
+
+.btn:hover{
+border-color:#8b5cf6;
+transform:translateY(-2px);
 }
 
 .primary{
-background:var(--primary);
-color:white
+padding:12px 18px;
+border-radius:10px;
+background:
+linear-gradient(
+135deg,
+#7c3aed,
+#c026d3
+);
+box-shadow:
+0 10px 35px rgba(124,58,237,.22);
+transition:.25s;
 }
 
-.secondary{
-background:#20232c;
-border:1px solid #30343e;
-color:white
+.primary:hover{
+transform:translateY(-2px);
+box-shadow:
+0 15px 45px rgba(168,85,247,.35);
 }
 
-.danger{
-background:#35171b;
-border:1px solid #63242b;
-color:#ff8790
+/* HERO */
+
+.hero{
+padding:115px 0 80px;
+position:relative;
 }
 
-.btn:disabled{
-opacity:.5;
-cursor:not-allowed
+.hero-content{
+max-width:760px;
+}
+
+.badge{
+display:inline-flex;
+align-items:center;
+gap:8px;
+padding:8px 13px;
+border:1px solid rgba(168,85,247,.35);
+border-radius:100px;
+background:rgba(139,92,246,.08);
+color:#c4b5fd;
+font-size:11px;
+margin-bottom:22px;
+}
+
+.status-dot{
+width:7px;
+height:7px;
+border-radius:50%;
+background:#34d399;
+box-shadow:0 0 15px #34d399;
+}
+
+h1{
+font-size:
+clamp(48px,8vw,88px);
+line-height:.95;
+letter-spacing:-5px;
+}
+
+.gradient{
+background:
+linear-gradient(
+90deg,
+#fff,
+#c084fc,
+#e879f9,
+#fff
+);
+background-size:250%;
+-webkit-background-clip:text;
+color:transparent;
+animation:gradient 5s linear infinite;
+}
+
+@keyframes gradient{
+to{
+background-position:250%;
+}
+}
+
+.hero p{
+max-width:650px;
+margin:25px 0;
+color:var(--muted);
+line-height:1.8;
+font-size:14px;
+}
+
+.hero-actions{
+display:flex;
+gap:9px;
+flex-wrap:wrap;
+}
+
+/* SECTIONS */
+
+section{
+padding:75px 0;
+}
+
+.section-title{
+margin-bottom:25px;
+}
+
+.section-title h2{
+font-size:34px;
+letter-spacing:-1.5px;
+}
+
+.section-title p{
+margin-top:7px;
+color:var(--muted);
+font-size:13px;
+}
+
+/* PANEL */
+
+.panel{
+background:var(--panel);
+border:1px solid var(--border);
+backdrop-filter:blur(20px);
+border-radius:20px;
+padding:24px;
+box-shadow:
+0 25px 100px rgba(0,0,0,.3);
 }
 
 .endpoint{
 display:flex;
-align-items:center;
 gap:10px;
-flex-wrap:wrap;
-margin-bottom:18px
+align-items:center;
+padding-bottom:20px;
+margin-bottom:20px;
+border-bottom:1px solid var(--border);
 }
 
 .method{
-background:#103827;
-border:1px solid #1b6847;
-color:#54df9a;
-padding:7px 11px;
-border-radius:8px;
-font-size:11px;
-font-weight:900
+padding:6px 9px;
+border-radius:6px;
+background:#052e1f;
+color:#34d399;
+font-size:10px;
+font-weight:800;
 }
 
 .endpoint-url{
-font-family:monospace;
-font-size:13px;
+font:12px Consolas,monospace;
+color:#c9c2d2;
 word-break:break-all;
-color:#ddd
 }
 
-.status{
-margin-left:auto;
-display:flex;
-gap:7px;
-align-items:center;
+/* FORM */
+
+.form-grid{
+display:grid;
+grid-template-columns:
+repeat(3,1fr);
+gap:14px;
+}
+
+.field label{
+display:block;
+margin-bottom:7px;
 font-size:11px;
-color:#8d929d
+color:#98909f;
 }
 
-.dot{
-width:7px;
-height:7px;
-border-radius:50%;
-background:#777
+input,
+select{
+width:100%;
+padding:13px;
+border-radius:10px;
+border:1px solid #29222f;
+background:#070609;
+color:#fff;
+outline:none;
 }
 
-.status.ok .dot{
-background:var(--green)
+input:focus,
+select:focus{
+border-color:#8b5cf6;
+box-shadow:
+0 0 0 3px rgba(139,92,246,.08);
 }
 
-.status.err .dot{
-background:var(--red)
+.action-row{
+display:flex;
+gap:8px;
+margin-top:18px;
+flex-wrap:wrap;
+}
+
+/* RESPONSE */
+
+.response-title{
+margin-top:25px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.response-title span{
+font-size:12px;
+color:var(--muted);
 }
 
 pre{
-background:#07090d;
-border:1px solid #20232c;
+margin-top:10px;
+padding:17px;
 border-radius:12px;
-padding:15px;
-overflow:auto;
+background:#050505;
+border:1px solid #201a26;
+font:12px/1.7 Consolas,monospace;
+color:#ddd6e5;
 white-space:pre-wrap;
 word-break:break-word;
-font:12px/1.65 Consolas,monospace;
-color:#d2d5dc
+overflow:auto;
+min-height:130px;
 }
 
-.keybox{
-background:#090b10;
-border:1px solid #292d38;
-border-radius:12px;
-padding:14px;
-font-family:monospace;
-word-break:break-all;
-color:#bfa5ff
+.success{
+color:var(--green);
 }
 
-.profile{
+.error{
+color:var(--red);
+}
+
+/* PROFILE */
+
+.profile-grid{
 display:grid;
-grid-template-columns:100px 1fr;
-gap:18px;
-align-items:center
+grid-template-columns:
+1fr 1fr;
+gap:15px;
 }
 
-.avatar{
-width:85px;
-height:85px;
-border-radius:22px;
-display:grid;
-place-items:center;
-background:linear-gradient(135deg,var(--primary),#4c1d95);
-font-size:30px;
-font-weight:900
-}
-
-.profile-name{
-font-size:21px;
-font-weight:900
-}
-
-.muted{
-color:var(--muted);
-font-size:13px;
-margin-top:5px
-}
-
-.stat-grid{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:12px;
-margin-top:18px
-}
-
-.stat{
-background:var(--card2);
+.profile-box{
+padding:22px;
+border-radius:16px;
+background:#0b090e;
 border:1px solid var(--border);
-padding:16px;
-border-radius:12px
 }
 
-.stat-value{
-font-size:21px;
-font-weight:900
+.profile-box h3{
+font-size:14px;
+margin-bottom:14px;
 }
 
-.stat-label{
+.key{
+display:flex;
+gap:8px;
+}
+
+.key input{
+font-family:monospace;
+}
+
+.key button{
+white-space:nowrap;
+}
+
+/* FEATURES */
+
+.cards{
+display:grid;
+grid-template-columns:
+repeat(3,1fr);
+gap:15px;
+}
+
+.card{
+padding:23px;
+background:rgba(12,10,15,.8);
+border:1px solid var(--border);
+border-radius:16px;
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+border-color:#6d28d9;
+box-shadow:
+0 20px 60px rgba(109,40,217,.13);
+}
+
+.card-icon{
+font-size:25px;
+margin-bottom:14px;
+}
+
+.card h3{
+font-size:15px;
+margin-bottom:8px;
+}
+
+.card p{
+font-size:12px;
+line-height:1.7;
 color:var(--muted);
-font-size:11px;
-margin-top:4px
 }
 
-.auth{
-max-width:430px;
-margin:70px auto
-}
-
-.auth h1{
-font-size:30px;
-margin-bottom:7px
-}
-
-.auth p{
-color:var(--muted);
-font-size:13px;
-margin-bottom:20px
-}
-
-.auth .field{
-margin-bottom:13px
-}
-
-.hidden{
-display:none!important
-}
+/* FOOTER */
 
 footer{
+padding:35px 0;
+border-top:1px solid var(--border);
+color:#625c68;
 text-align:center;
-color:#5e6470;
 font-size:11px;
-padding:25px 0 40px
 }
 
-@media(max-width:700px){
-.grid{
-grid-template-columns:1fr
+/* TOAST */
+
+.toast{
+position:fixed;
+right:20px;
+bottom:20px;
+padding:13px 17px;
+background:#121014;
+border:1px solid #33253f;
+border-radius:10px;
+font-size:12px;
+transform:
+translateY(100px);
+opacity:0;
+transition:.3s;
+z-index:999;
 }
 
-.full{
-grid-column:auto
+.toast.show{
+transform:translateY(0);
+opacity:1;
 }
 
-.stat-grid{
-grid-template-columns:1fr
+/* LOADING */
+
+.loading{
+display:inline-block;
+width:13px;
+height:13px;
+border:2px solid rgba(255,255,255,.25);
+border-top-color:#fff;
+border-radius:50%;
+animation:spin .7s linear infinite;
+vertical-align:middle;
+margin-right:7px;
 }
 
-.profile{
-grid-template-columns:1fr
+@keyframes spin{
+to{
+transform:rotate(360deg);
+}
 }
 
-.status{
-margin-left:0
+/* MOBILE */
+
+@media(max-width:800px){
+
+.character{
+right:-100px;
+top:20%;
+opacity:.1;
 }
+
+.form-grid,
+.profile-grid,
+.cards{
+grid-template-columns:1fr;
 }
+
+.hero{
+padding-top:85px;
+}
+
+h1{
+letter-spacing:-3px;
+}
+
+.nav button:first-child{
+display:none;
+}
+
+}
+
 </style>
 </head>
 
 <body>
 
+<div class="bg">
+
+<div class="orb one"></div>
+<div class="orb two"></div>
+<div class="orb three"></div>
+
+<div class="character">
+
+<div class="hair"></div>
+<div class="head"></div>
+
+<div class="eye left"></div>
+<div class="eye right"></div>
+
+<div class="body"></div>
+
+<div class="lightning l1"></div>
+<div class="lightning l2"></div>
+
+</div>
+
+</div>
+
+
+<div id="particles"></div>
+
+
 <div class="container">
 
-<header>
+<nav>
+
 <div class="logo">
-<span>XYRO</span> API
-</div>
-<div class="subtitle">
-REST API Dashboard · Alight Motion Premium
-</div>
-</header>
-
-<div id="authPage">
-
-<div class="card auth">
-
-<h1 id="authTitle">
-Login
-</h1>
-
-<p>
-Masuk ke dashboard API XYRO.
-</p>
-
-<div class="field">
-<label>Username / Email</label>
-<input id="authUser" autocomplete="username">
+<span>XYRO</span> AM API
 </div>
 
-<div class="field">
-<label>Password</label>
-<input id="authPass" type="password" autocomplete="current-password">
-</div>
-
-<div class="btns">
+<div class="nav">
 
 <button
-class="btn primary"
-onclick="authSubmit()">
-<span id="authButtonText">Login</span>
-</button>
-
-<button
-class="btn secondary"
-onclick="toggleAuth()">
-<span id="toggleText">Register</span>
-</button>
-
-</div>
-
-<pre id="authResponse" style="margin-top:15px;display:none"></pre>
-
-</div>
-
-</div>
-
-
-<div id="dashboard" class="hidden">
-
-<nav class="nav">
-
-<button
-class="active"
-data-page="home"
-onclick="showPage('home',this)">
-Dashboard
-</button>
-
-<button
-data-page="api"
-onclick="showPage('api',this)">
-API Tester
-</button>
-
-<button
-data-page="profile"
-onclick="showPage('profile',this)">
+class="btn"
+onclick="scrollToId('profile')">
 Profile
 </button>
 
 <button
-onclick="logout()">
-Logout
+class="primary"
+onclick="scrollToId('api')">
+API Tester
 </button>
+
+</div>
 
 </nav>
 
-
-<!-- DASHBOARD -->
-
-<section
-id="page-home"
-class="page active">
-
-<div class="card">
-
-<div class="profile">
-
-<div class="avatar">
-X
 </div>
 
-<div>
 
-<div
-class="profile-name"
-id="homeName">
-XYRO User
+<!-- HERO -->
+
+<section class="hero">
+
+<div class="container">
+
+<div class="hero-content">
+
+<div class="badge">
+<span class="status-dot"></span>
+REALTIME API
 </div>
 
-<div
-class="muted"
-id="homeEmail">
--
-</div>
+<h1>
+Alight Motion
+<br>
+<span class="gradient">
+Premium API
+</span>
+</h1>
 
-</div>
+<p>
+REST API dashboard untuk integrasi layanan
+Alight Motion. Kirim request, lihat response
+JSON dan kelola API Key dari satu dashboard.
+</p>
 
-</div>
+<div class="hero-actions">
 
-<div class="stat-grid">
+<button
+class="primary"
+onclick="scrollToId('api')">
+Try API
+</button>
 
-<div class="stat">
-
-<div
-class="stat-value"
-id="statRequests">
-0
-</div>
-
-<div class="stat-label">
-API Requests
-</div>
-
-</div>
-
-<div class="stat">
-
-<div
-class="stat-value"
-id="statKeys">
-0
-</div>
-
-<div class="stat-label">
-API Keys
-</div>
-
-</div>
-
-<div class="stat">
-
-<div
-class="stat-value">
-Active
-</div>
-
-<div class="stat-label">
-Account
-</div>
+<button
+class="btn"
+onclick="scrollToId('profile')">
+My Profile
+</button>
 
 </div>
 
 </div>
-
-</div>
-
-
-<div class="card">
-
-<div class="card-title">
-API Base URL
-</div>
-
-<pre>https://api.xyro.dev</pre>
 
 </div>
 
 </section>
 
 
-<!-- API TESTER -->
+<!-- API -->
 
-<section
-id="page-api"
-class="page">
+<section id="api">
 
-<div class="card">
+<div class="container">
+
+<div class="section-title">
+
+<h2>API Tester</h2>
+
+<p>
+Request realtime ke backend.
+</p>
+
+</div>
+
+
+<div class="panel">
 
 <div class="endpoint">
 
@@ -554,121 +847,127 @@ class="page">
 GET
 </span>
 
-<span class="endpoint-url">
-/api/premium/alightmotion
-</span>
-
 <span
-class="status"
-id="apiStatus">
-
-<span class="dot"></span>
-Ready
-
+class="endpoint-url"
+id="endpoint">
+https://api.xyro.dev/api/premium/alightmotion
 </span>
 
 </div>
 
 
-<div class="grid">
+<div class="form-grid">
 
-<div class="full">
+<div class="field">
 
-<label>
-Base URL
-</label>
+<label>TYPE</label>
 
-<input
-id="baseUrl"
-value="https://api.xyro.dev">
+<select id="type">
+
+<option value="1bulan">
+1 Bulan
+</option>
+
+<option value="3bulan">
+3 Bulan
+</option>
+
+<option value="6bulan">
+6 Bulan
+</option>
+
+<option value="1tahun">
+1 Tahun
+</option>
+
+</select>
 
 </div>
 
 
-<div>
+<div class="field">
 
-<label>
-Type
-</label>
-
-<input
-id="type"
-value="1tahun"
-placeholder="1tahun">
-
-</div>
-
-
-<div>
-
-<label>
-Email
-</label>
+<label>EMAIL</label>
 
 <input
 id="email"
+type="email"
 placeholder="user@gmail.com">
 
 </div>
 
 
-<div class="full">
+<div class="field">
 
-<label>
-Verification Link
-</label>
+<label>VERIFICATION LINK</label>
 
 <input
-id="verifyLink"
-placeholder="https://...">
+id="link"
+type="url"
+placeholder="Paste verification link">
 
 </div>
 
 </div>
 
 
-<div class="btns">
+<div class="action-row">
 
 <button
-class="btn primary"
-id="executeBtn"
+class="primary"
+id="execute"
 onclick="executeAPI()">
-Execute
+Execute Request
 </button>
 
 <button
-class="btn secondary"
-onclick="copyAPIURL()">
+class="btn"
+onclick="copyURL()">
 Copy URL
 </button>
 
-</div>
+<button
+class="btn"
+onclick="clearAPI()">
+Reset
+</button>
 
 </div>
 
 
-<div class="card">
+<div class="response-title">
 
-<div class="card-title">
-Request Preview
+<strong>Request Preview</strong>
+
+<span id="requestTime">
+Ready
+</span>
+
 </div>
 
 <pre id="requestPreview">
-GET https://api.xyro.dev/api/premium/alightmotion
+GET /api/premium/alightmotion
+</pre>
+
+
+<div class="response-title">
+
+<strong>Response</strong>
+
+<span id="httpStatus">
+—
+</span>
+
+</div>
+
+<pre id="response">
+{
+  "success": false,
+  "message": "Ready"
+}
 </pre>
 
 </div>
-
-
-<div class="card">
-
-<div class="card-title">
-Response
-</div>
-
-<pre id="apiResponse">{
-  "message": "Execute request untuk melihat response"
-}</pre>
 
 </div>
 
@@ -677,455 +976,237 @@ Response
 
 <!-- PROFILE -->
 
-<section
-id="page-profile"
-class="page">
+<section id="profile">
 
-<div class="card">
+<div class="container">
 
-<div class="card-title">
-Profile
-</div>
+<div class="section-title">
 
-<div class="profile">
+<h2>Profile</h2>
 
-<div class="avatar">
-X
-</div>
-
-<div>
-
-<div
-class="profile-name"
-id="profileName">
--
-</div>
-
-<div
-class="muted"
-id="profileEmail">
--
-</div>
-
-</div>
-
-</div>
+<p>
+API Key otomatis untuk autentikasi request.
+</p>
 
 </div>
 
 
-<div class="card">
+<div class="profile-grid">
 
-<div class="card-title">
-API Key
-</div>
+<div class="profile-box">
 
-<div
-class="keybox"
-id="apiKey">
-Belum ada API Key
-</div>
+<h3>API Key</h3>
 
-<div class="btns">
+<div class="key">
+
+<input
+id="apiKey"
+readonly
+value="Belum dibuat">
 
 <button
-class="btn primary"
+class="primary"
 onclick="generateAPIKey()">
-Generate API Key
-</button>
-
-<button
-class="btn secondary"
-onclick="copyAPIKey()">
-Copy
-</button>
-
-<button
-class="btn danger"
-onclick="revokeAPIKey()">
-Revoke
+Generate
 </button>
 
 </div>
 
-<pre
-id="keyResponse"
-style="margin-top:15px;display:none">
-</pre>
+<div class="action-row">
+
+<button
+class="btn"
+onclick="copyAPIKey()">
+Copy API Key
+</button>
+
+</div>
+
+</div>
+
+
+<div class="profile-box">
+
+<h3>Account Status</h3>
+
+<div class="status-line">
+
+<span
+class="status-dot">
+</span>
+
+<span id="accountStatus">
+Guest
+</span>
+
+</div>
+
+<div
+style="
+margin-top:15px;
+font-size:12px;
+color:#777;
+line-height:1.7;
+">
+
+API Key demo dibuat di browser.
+Untuk production, pembuatan API Key
+harus dilakukan oleh backend setelah
+user login.
+
+</div>
+
+</div>
+
+</div>
 
 </div>
 
 </section>
 
+
+<!-- FEATURES -->
+
+<section>
+
+<div class="container">
+
+<div class="section-title">
+
+<h2>Features</h2>
+
+<p>
+Native interactive dashboard.
+</p>
+
 </div>
 
 
+<div class="cards">
+
+<div class="card">
+
+<div class="card-icon">⚡</div>
+
+<h3>Realtime Request</h3>
+
+<p>
+Setiap Execute melakukan request
+langsung ke backend API.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-icon">🔑</div>
+
+<h3>API Key</h3>
+
+<p>
+Profile menyediakan tempat untuk
+API Key autentikasi pengguna.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-icon">▣</div>
+
+<h3>JSON Response</h3>
+
+<p>
+Response backend ditampilkan langsung
+dengan HTTP status dan response time.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
 <footer>
-XYRO API · Secure REST API Platform
+© 2026 XYRO AM API
 </footer>
 
+
+<div
+class="toast"
+id="toast">
+Copied
 </div>
 
 
 <script>
 
+/*
+==================================================
+BACKEND CONFIG
+==================================================
+*/
+
 const API_BASE =
 "https://api.xyro.dev";
 
-const API_PATH =
+const API_ENDPOINT =
+API_BASE +
 "/api/premium/alightmotion";
 
-let registerMode = false;
 
-let authToken =
-localStorage.getItem("xyro_token") || "";
+/*
+==================================================
+ELEMENTS
+==================================================
+*/
 
+const typeInput =
+document.getElementById("type");
 
-function headers(){
+const emailInput =
+document.getElementById("email");
 
-return {
-"Content-Type":"application/json",
-"Accept":"application/json",
-"Authorization":
-authToken
-? "Bearer " + authToken
-: ""
-};
+const linkInput =
+document.getElementById("link");
 
-}
+const responseBox =
+document.getElementById("response");
 
+const requestPreview =
+document.getElementById("requestPreview");
 
-function toggleAuth(){
+const httpStatus =
+document.getElementById("httpStatus");
 
-registerMode =
-!registerMode;
+const requestTime =
+document.getElementById("requestTime");
 
-document.getElementById(
-"authTitle"
-).textContent =
-registerMode
-? "Register"
-: "Login";
 
-document.getElementById(
-"authButtonText"
-).textContent =
-registerMode
-? "Register"
-: "Login";
+/*
+==================================================
+BUILD URL
+==================================================
+*/
 
-document.getElementById(
-"toggleText"
-).textContent =
-registerMode
-? "Login"
-: "Register";
-
-}
-
-
-async function authSubmit(){
-
-const username =
-document.getElementById(
-"authUser"
-).value.trim();
-
-const password =
-document.getElementById(
-"authPass"
-).value;
-
-const output =
-document.getElementById(
-"authResponse"
-);
-
-if(!username || !password){
-
-output.style.display="block";
-
-output.textContent =
-JSON.stringify({
-success:false,
-error:"Username dan password wajib diisi"
-},null,2);
-
-return;
-
-}
-
-
-const endpoint =
-registerMode
-? "/api/auth/register"
-: "/api/auth/login";
-
-
-const body =
-registerMode
-? {
-username,
-email:username,
-password
-}
-: {
-username,
-password
-};
-
-
-try{
-
-const res =
-await fetch(
-API_BASE + endpoint,
-{
-method:"POST",
-headers:{
-"Content-Type":
-"application/json",
-"Accept":
-"application/json"
-},
-body:JSON.stringify(body)
-}
-);
-
-
-const data =
-await res.json();
-
-
-output.style.display="block";
-
-output.textContent =
-JSON.stringify(
-data,
-null,
-2
-);
-
-
-if(
-res.ok &&
-!registerMode
-){
-
-const token =
-data.token ||
-data.accessToken ||
-data.data?.token;
-
-
-if(token){
-
-authToken =
-token;
-
-localStorage.setItem(
-"xyro_token",
-token
-);
-
-await loadProfile();
-
-showDashboard();
-
-}
-
-}
-
-}catch(error){
-
-output.style.display="block";
-
-output.textContent =
-JSON.stringify({
-success:false,
-error:error.message,
-note:
-"Pastikan backend mengaktifkan CORS."
-},null,2);
-
-}
-
-}
-
-
-function showDashboard(){
-
-document.getElementById(
-"authPage"
-).classList.add(
-"hidden"
-);
-
-document.getElementById(
-"dashboard"
-).classList.remove(
-"hidden"
-);
-
-}
-
-
-function showPage(
-page,
-button
-){
-
-document
-.querySelectorAll(".page")
-.forEach(
-x => x.classList.remove("active")
-);
-
-document
-.getElementById(
-"page-" + page
-)
-.classList.add("active");
-
-
-document
-.querySelectorAll(".nav button")
-.forEach(
-x => x.classList.remove("active")
-);
-
-if(button)
-button.classList.add("active");
-
-}
-
-
-async function loadProfile(){
-
-if(!authToken)
-return;
-
-
-try{
-
-const res =
-await fetch(
-API_BASE + "/api/user/profile",
-{
-headers:headers()
-}
-);
-
-
-if(!res.ok)
-return;
-
-
-const data =
-await res.json();
-
-const user =
-data.user ||
-data.data ||
-data;
-
-
-const name =
-user.username ||
-user.name ||
-"XYRO User";
-
-const email =
-user.email ||
-"-";
-
-
-document.getElementById(
-"homeName"
-).textContent =
-name;
-
-document.getElementById(
-"homeEmail"
-).textContent =
-email;
-
-document.getElementById(
-"profileName"
-).textContent =
-name;
-
-document.getElementById(
-"profileEmail"
-).textContent =
-email;
-
-
-document.getElementById(
-"statRequests"
-).textContent =
-user.requests ||
-user.totalRequests ||
-0;
-
-
-document.getElementById(
-"statKeys"
-).textContent =
-user.apiKeys ||
-user.totalApiKeys ||
-0;
-
-
-if(user.apiKey){
-
-document.getElementById(
-"apiKey"
-).textContent =
-user.apiKey;
-
-}
-
-}catch(error){
-
-console.log(error);
-
-}
-
-}
-
-
-function buildAPIURL(){
-
-const base =
-document.getElementById(
-"baseUrl"
-).value
-.trim()
-.replace(/\/+$/,"");
-
-
-const type =
-document.getElementById(
-"type"
-).value.trim();
-
-const email =
-document.getElementById(
-"email"
-).value.trim();
-
-const link =
-document.getElementById(
-"verifyLink"
-).value.trim();
-
+function buildURL(){
 
 const url =
-new URL(
-base + API_PATH
-);
+new URL(API_ENDPOINT);
 
+const type =
+typeInput.value.trim();
+
+const email =
+emailInput.value.trim();
+
+const link =
+linkInput.value.trim();
 
 if(type)
 url.searchParams.set(
@@ -1145,103 +1226,80 @@ url.searchParams.set(
 link
 );
 
-
 return url.toString();
 
 }
 
 
-function updatePreview(){
-
-try{
-
-const url =
-buildAPIURL();
-
-document.getElementById(
-"requestPreview"
-).textContent =
-"GET " + url;
-
-}catch(error){
-
-document.getElementById(
-"requestPreview"
-).textContent =
-error.message;
-
-}
-
-}
-
-
-document
-.querySelectorAll(
-"#baseUrl,#type,#email,#verifyLink"
-)
-.forEach(
-input =>
-input.addEventListener(
-"input",
-updatePreview
-)
-);
-
+/*
+==================================================
+EXECUTE REAL BACKEND REQUEST
+==================================================
+*/
 
 async function executeAPI(){
 
-const button =
-document.getElementById(
-"executeBtn"
+const email =
+emailInput.value.trim();
+
+const link =
+linkInput.value.trim();
+
+if(!email){
+
+toast(
+"Email wajib diisi"
 );
 
-const output =
-document.getElementById(
-"apiResponse"
+emailInput.focus();
+
+return;
+
+}
+
+if(!link){
+
+toast(
+"Verification link wajib diisi"
 );
 
-const status =
-document.getElementById(
-"apiStatus"
-);
-
-
-let url;
-
-try{
-
-url =
-buildAPIURL();
-
-}catch(error){
-
-output.textContent =
-JSON.stringify({
-success:false,
-error:error.message
-},null,2);
+linkInput.focus();
 
 return;
 
 }
 
 
-button.disabled=true;
+const button =
+document.getElementById(
+"execute"
+);
 
-button.textContent=
-"Executing...";
-
-status.className=
-"status";
-
-status.innerHTML=
-'<span class="dot"></span> Requesting';
+const url =
+buildURL();
 
 
-updatePreview();
+requestPreview.textContent =
+"GET " + url;
+
+responseBox.textContent =
+"Connecting to backend...";
+
+httpStatus.textContent =
+"Loading";
+
+requestTime.textContent =
+"Requesting";
 
 
-const started =
+button.disabled =
+true;
+
+button.innerHTML =
+'<span class="loading"></span>Executing';
+
+
+const start =
 performance.now();
 
 
@@ -1254,11 +1312,7 @@ url,
 method:"GET",
 headers:{
 "Accept":
-"application/json",
-"Authorization":
-authToken
-? "Bearer " + authToken
-: ""
+"application/json"
 }
 }
 );
@@ -1266,120 +1320,150 @@ authToken
 
 const elapsed =
 Math.round(
-performance.now()
-- started
+performance.now()-start
 );
 
 
-const text =
+requestTime.textContent =
+elapsed+" ms";
+
+httpStatus.textContent =
+"HTTP "+response.status;
+
+
+const raw =
 await response.text();
 
 let data;
 
+
 try{
 
 data =
-JSON.parse(text);
+JSON.parse(raw);
 
 }catch{
 
-data =
-text;
+data = {
+success:false,
+error:"Invalid JSON response",
+raw:raw
+};
 
 }
 
 
-output.textContent =
+responseBox.textContent =
 JSON.stringify(
-{
-httpStatus:
-response.status,
-
-success:
-response.ok,
-
-responseTime:
-elapsed + " ms",
-
-data
-
-},
+data,
 null,
 2
 );
 
 
-if(response.ok){
+if(
+response.ok &&
+data.success === true
+){
 
-status.className=
-"status ok";
+responseBox.classList.remove(
+"error"
+);
 
-status.innerHTML=
-'<span class="dot"></span> '+
-response.status;
+responseBox.classList.add(
+"success"
+);
+
+toast(
+"Request berhasil"
+);
 
 }else{
 
-status.className=
-"status err";
+responseBox.classList.remove(
+"success"
+);
 
-status.innerHTML=
-'<span class="dot"></span> '+
-response.status;
+responseBox.classList.add(
+"error"
+);
 
 }
 
-
 }catch(error){
 
-output.textContent =
-JSON.stringify(
-{
+const errorData = {
+
 success:false,
-error:error.message,
+
+error:
+"Failed to fetch",
+
+message:
+error.message,
+
 note:
-"Backend harus mengizinkan CORS dari domain frontend."
-},
+"Pastikan backend aktif, HTTPS aktif dan CORS mengizinkan frontend ini."
+
+};
+
+
+responseBox.textContent =
+JSON.stringify(
+errorData,
 null,
 2
 );
 
+responseBox.classList.add(
+"error"
+);
 
-status.className=
-"status err";
+httpStatus.textContent =
+"NETWORK ERROR";
 
-status.innerHTML=
-'<span class="dot"></span> Error';
+requestTime.textContent =
+"Failed";
 
+toast(
+"Backend tidak dapat diakses"
+);
 
 }finally{
 
-button.disabled=false;
+button.disabled =
+false;
 
-button.textContent=
-"Execute";
+button.textContent =
+"Execute Request";
 
 }
 
 }
 
 
-async function copyAPIURL(){
+/*
+==================================================
+COPY URL
+==================================================
+*/
+
+async function copyURL(){
 
 try{
 
 await navigator.clipboard.writeText(
-buildAPIURL()
+buildURL()
 );
 
-alert(
-"URL berhasil disalin"
+toast(
+"Request URL copied"
 );
 
-}catch(error){
+}catch{
 
-alert(
-error.message
+toast(
+"Gagal copy URL"
 );
 
 }
@@ -1387,169 +1471,96 @@ error.message
 }
 
 
-async function generateAPIKey(){
+/*
+==================================================
+API KEY
+==================================================
+*/
 
-const output =
-document.getElementById(
-"keyResponse"
+function generateAPIKey(){
+
+let key =
+localStorage.getItem(
+"xyro_api_key"
 );
 
-output.style.display="block";
+if(!key){
 
-output.textContent=
-"Generating...";
+const random =
+crypto.randomUUID()
+.replaceAll(
+"-",
+""
+);
 
+key =
+"xyro_live_" +
+random;
 
-try{
+localStorage.setItem(
+"xyro_api_key",
+key
+);
 
-const res =
-await fetch(
-API_BASE +
-"/api/apikey/generate",
-{
-method:"POST",
-headers:headers()
 }
-);
-
-
-const data =
-await res.json();
-
-
-output.textContent =
-JSON.stringify(
-data,
-null,
-2
-);
-
-
-if(res.ok){
-
-const key =
-data.apiKey ||
-data.key ||
-data.data?.apiKey;
-
-
-if(key){
 
 document.getElementById(
 "apiKey"
-).textContent =
+).value =
 key;
 
-}
-
-}
-
-}catch(error){
-
-output.textContent =
-JSON.stringify({
-success:false,
-error:error.message
-},null,2);
-
-}
-
-}
-
-
-async function revokeAPIKey(){
-
-const output =
 document.getElementById(
-"keyResponse"
-);
-
-output.style.display="block";
-
-
-try{
-
-const res =
-await fetch(
-API_BASE +
-"/api/apikey/revoke",
-{
-method:"POST",
-headers:headers()
-}
-);
-
-
-const data =
-await res.json();
-
-
-output.textContent =
-JSON.stringify(
-data,
-null,
-2
-);
-
-
-if(res.ok){
-
-document.getElementById(
-"apiKey"
+"accountStatus"
 ).textContent =
-"API Key tidak aktif";
+"API Key tersedia";
+
+toast(
+"API Key dibuat"
+);
 
 }
 
-}catch(error){
 
-output.textContent =
-JSON.stringify({
-success:false,
-error:error.message
-},null,2);
-
-}
-
-}
-
+/*
+==================================================
+COPY API KEY
+==================================================
+*/
 
 async function copyAPIKey(){
 
 const key =
 document.getElementById(
 "apiKey"
-).textContent;
-
+).value;
 
 if(
 !key ||
-key === "Belum ada API Key"
+key === "Belum dibuat"
 ){
 
-alert(
-"Belum ada API Key"
+toast(
+"Generate API Key terlebih dahulu"
 );
 
 return;
 
 }
 
-
 try{
 
-await navigator
-.clipboard
-.writeText(key);
+await navigator.clipboard.writeText(
+key
+);
 
-alert(
-"API Key berhasil disalin"
+toast(
+"API Key copied"
 );
 
 }catch{
 
-alert(
-"Gagal menyalin API Key"
+toast(
+"Gagal copy API Key"
 );
 
 }
@@ -1557,35 +1568,160 @@ alert(
 }
 
 
-function logout(){
+/*
+==================================================
+RESET
+==================================================
+*/
 
-localStorage.removeItem(
-"xyro_token"
+function clearAPI(){
+
+typeInput.value =
+"1tahun";
+
+emailInput.value =
+"";
+
+linkInput.value =
+"";
+
+requestPreview.textContent =
+"GET /api/premium/alightmotion";
+
+responseBox.textContent =
+`{
+  "success": false,
+  "message": "Ready"
+}`;
+
+httpStatus.textContent =
+"—";
+
+requestTime.textContent =
+"Ready";
+
+}
+
+
+/*
+==================================================
+TOAST
+==================================================
+*/
+
+function toast(message){
+
+const el =
+document.getElementById(
+"toast"
 );
 
-authToken="";
+el.textContent =
+message;
 
-location.reload();
+el.classList.add(
+"show"
+);
+
+clearTimeout(
+window.__toast
+);
+
+window.__toast =
+setTimeout(
+()=>{
+el.classList.remove(
+"show"
+);
+},
+2200
+);
 
 }
 
 
-async function init(){
+/*
+==================================================
+SCROLL
+==================================================
+*/
 
-if(authToken){
+function scrollToId(id){
 
-await loadProfile();
-
-showDashboard();
+document
+.getElementById(id)
+.scrollIntoView({
+behavior:"smooth"
+});
 
 }
 
-updatePreview();
+
+/*
+==================================================
+PARTICLES
+==================================================
+*/
+
+for(
+let i=0;
+i<70;
+i++
+){
+
+const p =
+document.createElement(
+"div"
+);
+
+p.className =
+"particle";
+
+p.style.left =
+Math.random()*100+"%";
+
+p.style.animationDuration =
+(5+Math.random()*12)+"s";
+
+p.style.animationDelay =
+Math.random()*10+"s";
+
+p.style.opacity =
+Math.random();
+
+document
+.getElementById(
+"particles"
+)
+.appendChild(p);
 
 }
 
 
-init();
+/*
+==================================================
+LOAD API KEY
+==================================================
+*/
+
+const savedKey =
+localStorage.getItem(
+"xyro_api_key"
+);
+
+if(savedKey){
+
+document.getElementById(
+"apiKey"
+).value =
+savedKey;
+
+document.getElementById(
+"accountStatus"
+).textContent =
+"API Key tersedia";
+
+}
 
 </script>
 

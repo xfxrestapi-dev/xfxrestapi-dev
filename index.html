@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07080d">
+<title>XYRO API</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+--bg:#07080d;
+--card:#101219;
+--card2:#151821;
+--border:#252934;
+--text:#f5f6f8;
+--muted:#858b98;
+--primary:#8b5cf6;
+--primary2:#6d3eea;
+--green:#35d58b;
+--red:#ff5964;
+}
+
+body{
+font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+background:
+radial-gradient(circle at 50% -10%,rgba(139,92,246,.20),transparent 34%),
+var(--bg);
+color:var(--text);
+min-height:100vh;
+}
+
+button,input{
+font:inherit
+}
+
+button{
+cursor:pointer
+}
+
+.container{
+width:min(1150px,94%);
+margin:auto
+}
+
+header{
+padding:35px 0 20px
+}
+
+.logo{
+font-size:26px;
+font-weight:900;
+letter-spacing:-1px
+}
+
+.logo span{
+color:var(--primary)
+}
+
+.subtitle{
+color:var(--muted);
+font-size:13px;
+margin-top:6px
+}
+
+.nav{
+display:flex;
+gap:8px;
+margin:25px 0;
+overflow:auto
+}
+
+.nav button{
+border:1px solid var(--border);
+background:var(--card);
+color:#aaa;
+padding:10px 15px;
+border-radius:10px;
+white-space:nowrap
+}
+
+.nav button.active{
+background:var(--primary);
+border-color:var(--primary);
+color:#fff
+}
+
+.page{
+display:none
+}
+
+.page.active{
+display:block
+}
+
+.card{
+background:rgba(16,18,25,.92);
+border:1px solid var(--border);
+border-radius:18px;
+padding:20px;
+margin-bottom:16px;
+box-shadow:0 20px 60px rgba(0,0,0,.15)
+}
+
+.card-title{
+font-weight:850;
+font-size:15px;
+margin-bottom:15px
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px
+}
+
+.full{
+grid-column:1/-1
+}
+
+label{
+display:block;
+font-size:12px;
+font-weight:800;
+color:#cdd0d8;
+margin-bottom:7px
+}
+
+input{
+width:100%;
+background:#080a0f;
+border:1px solid var(--border);
+color:#fff;
+border-radius:10px;
+padding:13px;
+outline:none
+}
+
+input:focus{
+border-color:var(--primary);
+box-shadow:0 0 0 3px rgba(139,92,246,.10)
+}
+
+.btns{
+display:flex;
+gap:9px;
+flex-wrap:wrap;
+margin-top:16px
+}
+
+.btn{
+border:0;
+padding:12px 16px;
+border-radius:10px;
+font-weight:850
+}
+
+.primary{
+background:var(--primary);
+color:white
+}
+
+.secondary{
+background:#20232c;
+border:1px solid #30343e;
+color:white
+}
+
+.danger{
+background:#35171b;
+border:1px solid #63242b;
+color:#ff8790
+}
+
+.btn:disabled{
+opacity:.5;
+cursor:not-allowed
+}
+
+.endpoint{
+display:flex;
+align-items:center;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:18px
+}
+
+.method{
+background:#103827;
+border:1px solid #1b6847;
+color:#54df9a;
+padding:7px 11px;
+border-radius:8px;
+font-size:11px;
+font-weight:900
+}
+
+.endpoint-url{
+font-family:monospace;
+font-size:13px;
+word-break:break-all;
+color:#ddd
+}
+
+.status{
+margin-left:auto;
+display:flex;
+gap:7px;
+align-items:center;
+font-size:11px;
+color:#8d929d
+}
+
+.dot{
+width:7px;
+height:7px;
+border-radius:50%;
+background:#777
+}
+
+.status.ok .dot{
+background:var(--green)
+}
+
+.status.err .dot{
+background:var(--red)
+}
+
+pre{
+background:#07090d;
+border:1px solid #20232c;
+border-radius:12px;
+padding:15px;
+overflow:auto;
+white-space:pre-wrap;
+word-break:break-word;
+font:12px/1.65 Consolas,monospace;
+color:#d2d5dc
+}
+
+.keybox{
+background:#090b10;
+border:1px solid #292d38;
+border-radius:12px;
+padding:14px;
+font-family:monospace;
+word-break:break-all;
+color:#bfa5ff
+}
+
+.profile{
+display:grid;
+grid-template-columns:100px 1fr;
+gap:18px;
+align-items:center
+}
+
+.avatar{
+width:85px;
+height:85px;
+border-radius:22px;
+display:grid;
+place-items:center;
+background:linear-gradient(135deg,var(--primary),#4c1d95);
+font-size:30px;
+font-weight:900
+}
+
+.profile-name{
+font-size:21px;
+font-weight:900
+}
+
+.muted{
+color:var(--muted);
+font-size:13px;
+margin-top:5px
+}
+
+.stat-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:12px;
+margin-top:18px
+}
+
+.stat{
+background:var(--card2);
+border:1px solid var(--border);
+padding:16px;
+border-radius:12px
+}
+
+.stat-value{
+font-size:21px;
+font-weight:900
+}
+
+.stat-label{
+color:var(--muted);
+font-size:11px;
+margin-top:4px
+}
+
+.auth{
+max-width:430px;
+margin:70px auto
+}
+
+.auth h1{
+font-size:30px;
+margin-bottom:7px
+}
+
+.auth p{
+color:var(--muted);
+font-size:13px;
+margin-bottom:20px
+}
+
+.auth .field{
+margin-bottom:13px
+}
+
+.hidden{
+display:none!important
+}
+
+footer{
+text-align:center;
+color:#5e6470;
+font-size:11px;
+padding:25px 0 40px
+}
+
+@media(max-width:700px){
+.grid{
+grid-template-columns:1fr
+}
+
+.full{
+grid-column:auto
+}
+
+.stat-grid{
+grid-template-columns:1fr
+}
+
+.profile{
+grid-template-columns:1fr
+}
+
+.status{
+margin-left:0
+}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+<div class="logo">
+<span>XYRO</span> API
+</div>
+<div class="subtitle">
+REST API Dashboard · Alight Motion Premium
+</div>
+</header>
+
+<div id="authPage">
+
+<div class="card auth">
+
+<h1 id="authTitle">
+Login
+</h1>
+
+<p>
+Masuk ke dashboard API XYRO.
+</p>
+
+<div class="field">
+<label>Username / Email</label>
+<input id="authUser" autocomplete="username">
+</div>
+
+<div class="field">
+<label>Password</label>
+<input id="authPass" type="password" autocomplete="current-password">
+</div>
+
+<div class="btns">
+
+<button
+class="btn primary"
+onclick="authSubmit()">
+<span id="authButtonText">Login</span>
+</button>
+
+<button
+class="btn secondary"
+onclick="toggleAuth()">
+<span id="toggleText">Register</span>
+</button>
+
+</div>
+
+<pre id="authResponse" style="margin-top:15px;display:none"></pre>
+
+</div>
+
+</div>
+
+
+<div id="dashboard" class="hidden">
+
+<nav class="nav">
+
+<button
+class="active"
+data-page="home"
+onclick="showPage('home',this)">
+Dashboard
+</button>
+
+<button
+data-page="api"
+onclick="showPage('api',this)">
+API Tester
+</button>
+
+<button
+data-page="profile"
+onclick="showPage('profile',this)">
+Profile
+</button>
+
+<button
+onclick="logout()">
+Logout
+</button>
+
+</nav>
+
+
+<!-- DASHBOARD -->
+
+<section
+id="page-home"
+class="page active">
+
+<div class="card">
+
+<div class="profile">
+
+<div class="avatar">
+X
+</div>
+
+<div>
+
+<div
+class="profile-name"
+id="homeName">
+XYRO User
+</div>
+
+<div
+class="muted"
+id="homeEmail">
+-
+</div>
+
+</div>
+
+</div>
+
+<div class="stat-grid">
+
+<div class="stat">
+
+<div
+class="stat-value"
+id="statRequests">
+0
+</div>
+
+<div class="stat-label">
+API Requests
+</div>
+
+</div>
+
+<div class="stat">
+
+<div
+class="stat-value"
+id="statKeys">
+0
+</div>
+
+<div class="stat-label">
+API Keys
+</div>
+
+</div>
+
+<div class="stat">
+
+<div
+class="stat-value">
+Active
+</div>
+
+<div class="stat-label">
+Account
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-title">
+API Base URL
+</div>
+
+<pre>https://api.xyro.dev</pre>
+
+</div>
+
+</section>
+
+
+<!-- API TESTER -->
+
+<section
+id="page-api"
+class="page">
+
+<div class="card">
+
+<div class="endpoint">
+
+<span class="method">
+GET
+</span>
+
+<span class="endpoint-url">
+/api/premium/alightmotion
+</span>
+
+<span
+class="status"
+id="apiStatus">
+
+<span class="dot"></span>
+Ready
+
+</span>
+
+</div>
+
+
+<div class="grid">
+
+<div class="full">
+
+<label>
+Base URL
+</label>
+
+<input
+id="baseUrl"
+value="https://api.xyro.dev">
+
+</div>
+
+
+<div>
+
+<label>
+Type
+</label>
+
+<input
+id="type"
+value="1tahun"
+placeholder="1tahun">
+
+</div>
+
+
+<div>
+
+<label>
+Email
+</label>
+
+<input
+id="email"
+placeholder="user@gmail.com">
+
+</div>
+
+
+<div class="full">
+
+<label>
+Verification Link
+</label>
+
+<input
+id="verifyLink"
+placeholder="https://...">
+
+</div>
+
+</div>
+
+
+<div class="btns">
+
+<button
+class="btn primary"
+id="executeBtn"
+onclick="executeAPI()">
+Execute
+</button>
+
+<button
+class="btn secondary"
+onclick="copyAPIURL()">
+Copy URL
+</button>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-title">
+Request Preview
+</div>
+
+<pre id="requestPreview">
+GET https://api.xyro.dev/api/premium/alightmotion
+</pre>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-title">
+Response
+</div>
+
+<pre id="apiResponse">{
+  "message": "Execute request untuk melihat response"
+}</pre>
+
+</div>
+
+</section>
+
+
+<!-- PROFILE -->
+
+<section
+id="page-profile"
+class="page">
+
+<div class="card">
+
+<div class="card-title">
+Profile
+</div>
+
+<div class="profile">
+
+<div class="avatar">
+X
+</div>
+
+<div>
+
+<div
+class="profile-name"
+id="profileName">
+-
+</div>
+
+<div
+class="muted"
+id="profileEmail">
+-
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-title">
+API Key
+</div>
+
+<div
+class="keybox"
+id="apiKey">
+Belum ada API Key
+</div>
+
+<div class="btns">
+
+<button
+class="btn primary"
+onclick="generateAPIKey()">
+Generate API Key
+</button>
+
+<button
+class="btn secondary"
+onclick="copyAPIKey()">
+Copy
+</button>
+
+<button
+class="btn danger"
+onclick="revokeAPIKey()">
+Revoke
+</button>
+
+</div>
+
+<pre
+id="keyResponse"
+style="margin-top:15px;display:none">
+</pre>
+
+</div>
+
+</section>
+
+</div>
+
+
+<footer>
+XYRO API · Secure REST API Platform
+</footer>
+
+</div>
+
+
+<script>
+
+const API_BASE =
+"https://api.xyro.dev";
+
+const API_PATH =
+"/api/premium/alightmotion";
+
+let registerMode = false;
+
+let authToken =
+localStorage.getItem("xyro_token") || "";
+
+
+function headers(){
+
+return {
+"Content-Type":"application/json",
+"Accept":"application/json",
+"Authorization":
+authToken
+? "Bearer " + authToken
+: ""
+};
+
+}
+
+
+function toggleAuth(){
+
+registerMode =
+!registerMode;
+
+document.getElementById(
+"authTitle"
+).textContent =
+registerMode
+? "Register"
+: "Login";
+
+document.getElementById(
+"authButtonText"
+).textContent =
+registerMode
+? "Register"
+: "Login";
+
+document.getElementById(
+"toggleText"
+).textContent =
+registerMode
+? "Login"
+: "Register";
+
+}
+
+
+async function authSubmit(){
+
+const username =
+document.getElementById(
+"authUser"
+).value.trim();
+
+const password =
+document.getElementById(
+"authPass"
+).value;
+
+const output =
+document.getElementById(
+"authResponse"
+);
+
+if(!username || !password){
+
+output.style.display="block";
+
+output.textContent =
+JSON.stringify({
+success:false,
+error:"Username dan password wajib diisi"
+},null,2);
+
+return;
+
+}
+
+
+const endpoint =
+registerMode
+? "/api/auth/register"
+: "/api/auth/login";
+
+
+const body =
+registerMode
+? {
+username,
+email:username,
+password
+}
+: {
+username,
+password
+};
+
+
+try{
+
+const res =
+await fetch(
+API_BASE + endpoint,
+{
+method:"POST",
+headers:{
+"Content-Type":
+"application/json",
+"Accept":
+"application/json"
+},
+body:JSON.stringify(body)
+}
+);
+
+
+const data =
+await res.json();
+
+
+output.style.display="block";
+
+output.textContent =
+JSON.stringify(
+data,
+null,
+2
+);
+
+
+if(
+res.ok &&
+!registerMode
+){
+
+const token =
+data.token ||
+data.accessToken ||
+data.data?.token;
+
+
+if(token){
+
+authToken =
+token;
+
+localStorage.setItem(
+"xyro_token",
+token
+);
+
+await loadProfile();
+
+showDashboard();
+
+}
+
+}
+
+}catch(error){
+
+output.style.display="block";
+
+output.textContent =
+JSON.stringify({
+success:false,
+error:error.message,
+note:
+"Pastikan backend mengaktifkan CORS."
+},null,2);
+
+}
+
+}
+
+
+function showDashboard(){
+
+document.getElementById(
+"authPage"
+).classList.add(
+"hidden"
+);
+
+document.getElementById(
+"dashboard"
+).classList.remove(
+"hidden"
+);
+
+}
+
+
+function showPage(
+page,
+button
+){
+
+document
+.querySelectorAll(".page")
+.forEach(
+x => x.classList.remove("active")
+);
+
+document
+.getElementById(
+"page-" + page
+)
+.classList.add("active");
+
+
+document
+.querySelectorAll(".nav button")
+.forEach(
+x => x.classList.remove("active")
+);
+
+if(button)
+button.classList.add("active");
+
+}
+
+
+async function loadProfile(){
+
+if(!authToken)
+return;
+
+
+try{
+
+const res =
+await fetch(
+API_BASE + "/api/user/profile",
+{
+headers:headers()
+}
+);
+
+
+if(!res.ok)
+return;
+
+
+const data =
+await res.json();
+
+const user =
+data.user ||
+data.data ||
+data;
+
+
+const name =
+user.username ||
+user.name ||
+"XYRO User";
+
+const email =
+user.email ||
+"-";
+
+
+document.getElementById(
+"homeName"
+).textContent =
+name;
+
+document.getElementById(
+"homeEmail"
+).textContent =
+email;
+
+document.getElementById(
+"profileName"
+).textContent =
+name;
+
+document.getElementById(
+"profileEmail"
+).textContent =
+email;
+
+
+document.getElementById(
+"statRequests"
+).textContent =
+user.requests ||
+user.totalRequests ||
+0;
+
+
+document.getElementById(
+"statKeys"
+).textContent =
+user.apiKeys ||
+user.totalApiKeys ||
+0;
+
+
+if(user.apiKey){
+
+document.getElementById(
+"apiKey"
+).textContent =
+user.apiKey;
+
+}
+
+}catch(error){
+
+console.log(error);
+
+}
+
+}
+
+
+function buildAPIURL(){
+
+const base =
+document.getElementById(
+"baseUrl"
+).value
+.trim()
+.replace(/\/+$/,"");
+
+
+const type =
+document.getElementById(
+"type"
+).value.trim();
+
+const email =
+document.getElementById(
+"email"
+).value.trim();
+
+const link =
+document.getElementById(
+"verifyLink"
+).value.trim();
+
+
+const url =
+new URL(
+base + API_PATH
+);
+
+
+if(type)
+url.searchParams.set(
+"type",
+type
+);
+
+if(email)
+url.searchParams.set(
+"email",
+email
+);
+
+if(link)
+url.searchParams.set(
+"link",
+link
+);
+
+
+return url.toString();
+
+}
+
+
+function updatePreview(){
+
+try{
+
+const url =
+buildAPIURL();
+
+document.getElementById(
+"requestPreview"
+).textContent =
+"GET " + url;
+
+}catch(error){
+
+document.getElementById(
+"requestPreview"
+).textContent =
+error.message;
+
+}
+
+}
+
+
+document
+.querySelectorAll(
+"#baseUrl,#type,#email,#verifyLink"
+)
+.forEach(
+input =>
+input.addEventListener(
+"input",
+updatePreview
+)
+);
+
+
+async function executeAPI(){
+
+const button =
+document.getElementById(
+"executeBtn"
+);
+
+const output =
+document.getElementById(
+"apiResponse"
+);
+
+const status =
+document.getElementById(
+"apiStatus"
+);
+
+
+let url;
+
+try{
+
+url =
+buildAPIURL();
+
+}catch(error){
+
+output.textContent =
+JSON.stringify({
+success:false,
+error:error.message
+},null,2);
+
+return;
+
+}
+
+
+button.disabled=true;
+
+button.textContent=
+"Executing...";
+
+status.className=
+"status";
+
+status.innerHTML=
+'<span class="dot"></span> Requesting';
+
+
+updatePreview();
+
+
+const started =
+performance.now();
+
+
+try{
+
+const response =
+await fetch(
+url,
+{
+method:"GET",
+headers:{
+"Accept":
+"application/json",
+"Authorization":
+authToken
+? "Bearer " + authToken
+: ""
+}
+}
+);
+
+
+const elapsed =
+Math.round(
+performance.now()
+- started
+);
+
+
+const text =
+await response.text();
+
+let data;
+
+try{
+
+data =
+JSON.parse(text);
+
+}catch{
+
+data =
+text;
+
+}
+
+
+output.textContent =
+JSON.stringify(
+{
+httpStatus:
+response.status,
+
+success:
+response.ok,
+
+responseTime:
+elapsed + " ms",
+
+data
+
+},
+null,
+2
+);
+
+
+if(response.ok){
+
+status.className=
+"status ok";
+
+status.innerHTML=
+'<span class="dot"></span> '+
+response.status;
+
+}else{
+
+status.className=
+"status err";
+
+status.innerHTML=
+'<span class="dot"></span> '+
+response.status;
+
+}
+
+
+}catch(error){
+
+output.textContent =
+JSON.stringify(
+{
+success:false,
+error:error.message,
+note:
+"Backend harus mengizinkan CORS dari domain frontend."
+},
+null,
+2
+);
+
+
+status.className=
+"status err";
+
+status.innerHTML=
+'<span class="dot"></span> Error';
+
+
+}finally{
+
+button.disabled=false;
+
+button.textContent=
+"Execute";
+
+}
+
+}
+
+
+async function copyAPIURL(){
+
+try{
+
+await navigator.clipboard.writeText(
+buildAPIURL()
+);
+
+alert(
+"URL berhasil disalin"
+);
+
+}catch(error){
+
+alert(
+error.message
+);
+
+}
+
+}
+
+
+async function generateAPIKey(){
+
+const output =
+document.getElementById(
+"keyResponse"
+);
+
+output.style.display="block";
+
+output.textContent=
+"Generating...";
+
+
+try{
+
+const res =
+await fetch(
+API_BASE +
+"/api/apikey/generate",
+{
+method:"POST",
+headers:headers()
+}
+);
+
+
+const data =
+await res.json();
+
+
+output.textContent =
+JSON.stringify(
+data,
+null,
+2
+);
+
+
+if(res.ok){
+
+const key =
+data.apiKey ||
+data.key ||
+data.data?.apiKey;
+
+
+if(key){
+
+document.getElementById(
+"apiKey"
+).textContent =
+key;
+
+}
+
+}
+
+}catch(error){
+
+output.textContent =
+JSON.stringify({
+success:false,
+error:error.message
+},null,2);
+
+}
+
+}
+
+
+async function revokeAPIKey(){
+
+const output =
+document.getElementById(
+"keyResponse"
+);
+
+output.style.display="block";
+
+
+try{
+
+const res =
+await fetch(
+API_BASE +
+"/api/apikey/revoke",
+{
+method:"POST",
+headers:headers()
+}
+);
+
+
+const data =
+await res.json();
+
+
+output.textContent =
+JSON.stringify(
+data,
+null,
+2
+);
+
+
+if(res.ok){
+
+document.getElementById(
+"apiKey"
+).textContent =
+"API Key tidak aktif";
+
+}
+
+}catch(error){
+
+output.textContent =
+JSON.stringify({
+success:false,
+error:error.message
+},null,2);
+
+}
+
+}
+
+
+async function copyAPIKey(){
+
+const key =
+document.getElementById(
+"apiKey"
+).textContent;
+
+
+if(
+!key ||
+key === "Belum ada API Key"
+){
+
+alert(
+"Belum ada API Key"
+);
+
+return;
+
+}
+
+
+try{
+
+await navigator
+.clipboard
+.writeText(key);
+
+alert(
+"API Key berhasil disalin"
+);
+
+}catch{
+
+alert(
+"Gagal menyalin API Key"
+);
+
+}
+
+}
+
+
+function logout(){
+
+localStorage.removeItem(
+"xyro_token"
+);
+
+authToken="";
+
+location.reload();
+
+}
+
+
+async function init(){
+
+if(authToken){
+
+await loadProfile();
+
+showDashboard();
+
+}
+
+updatePreview();
+
+}
+
+
+init();
+
+</script>
+
+</body>
+</html>

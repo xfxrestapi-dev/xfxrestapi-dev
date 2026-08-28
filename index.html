@@ -3,22 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#08090c">
 
-  <title>ANYAAPI • Dashboard</title>
+  <title>ANYAAPI</title>
 
   <style>
-    :root {
-      --bg: #080808;
-      --card: #111111;
-      --card2: #0d0d0d;
-      --border: #252525;
-      --text: #ffffff;
-      --muted: #777777;
-      --pink: #ff4b7d;
-      --green: #5ee890;
-      --red: #ff6464;
-    }
-
     * {
       margin: 0;
       padding: 0;
@@ -26,9 +15,27 @@
       font-family: Arial, Helvetica, sans-serif;
     }
 
+    :root {
+      --bg: #08090c;
+      --card: #101217;
+      --card2: #0b0d11;
+      --border: #242731;
+      --text: #ffffff;
+      --muted: #858a96;
+      --pink: #ff4f87;
+      --pink2: #ff6b9b;
+      --green: #54df91;
+      --red: #ff6464;
+    }
+
     body {
       min-height: 100vh;
-      background: var(--bg);
+      background:
+        radial-gradient(
+          circle at top,
+          #21121a 0,
+          #08090c 42%
+        );
       color: var(--text);
     }
 
@@ -41,22 +48,85 @@
       cursor: pointer;
     }
 
-    .app {
-      width: 100%;
-      max-width: 560px;
-      margin: auto;
-      padding: 22px 15px 35px;
+    .hidden {
+      display: none !important;
     }
 
-    /* HEADER */
+    /* =========================
+       LOADING
+    ========================= */
 
-    .header {
-      padding: 8px 2px 22px;
+    #loading {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+    }
+
+    .loader-box {
+      text-align: center;
+    }
+
+    .loader-logo {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .loader-logo span {
+      color: var(--pink);
+    }
+
+    .loader-text {
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .loader {
+      width: 25px;
+      height: 25px;
+      margin: 18px auto 0;
+      border-radius: 50%;
+      border: 3px solid #25272d;
+      border-top-color: var(--pink);
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* =========================
+       AUTH
+    ========================= */
+
+    .auth-screen {
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .auth-container {
+      width: 100%;
+      max-width: 410px;
+    }
+
+    .brand-area {
+      text-align: center;
+      margin-bottom: 25px;
     }
 
     .brand {
-      font-size: 28px;
-      font-weight: 800;
+      font-size: 32px;
+      font-weight: 900;
       letter-spacing: 1px;
     }
 
@@ -64,110 +134,296 @@
       color: var(--pink);
     }
 
-    .subtitle {
-      margin-top: 6px;
+    .brand-subtitle {
+      margin-top: 7px;
       color: var(--muted);
-      font-size: 12px;
+      font-size: 11px;
     }
 
-    /* CARD */
+    .auth-card {
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: rgba(16,18,23,.96);
+      box-shadow: 0 20px 70px rgba(0,0,0,.4);
+    }
+
+    .auth-title {
+      font-size: 19px;
+      font-weight: 800;
+    }
+
+    .auth-desc {
+      margin-top: 6px;
+      margin-bottom: 20px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .form-group {
+      margin-bottom: 13px;
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 7px;
+      color: #a5a9b2;
+      font-size: 11px;
+    }
+
+    .input {
+      width: 100%;
+      height: 47px;
+      padding: 0 14px;
+      outline: none;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: #090b0f;
+      color: #fff;
+      font-size: 13px;
+      transition: .2s;
+    }
+
+    .input:focus {
+      border-color: var(--pink);
+    }
+
+    .password-box {
+      position: relative;
+    }
+
+    .password-box .input {
+      padding-right: 55px;
+    }
+
+    .show-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 0;
+      background: transparent;
+      color: #747984;
+      font-size: 10px;
+    }
+
+    .primary-button {
+      width: 100%;
+      height: 47px;
+      margin-top: 4px;
+      border: 0;
+      border-radius: 11px;
+      background: var(--pink);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      transition: .2s;
+    }
+
+    .primary-button:hover {
+      background: var(--pink2);
+    }
+
+    .primary-button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .switch {
+      margin-top: 17px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .switch span {
+      color: var(--pink);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* =========================
+       MESSAGE
+    ========================= */
+
+    .message {
+      display: none;
+      padding: 11px 12px;
+      margin-bottom: 13px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #15171c;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .message.success {
+      display: block;
+      color: var(--green);
+    }
+
+    .message.error {
+      display: block;
+      color: var(--red);
+    }
+
+    /* =========================
+       DASHBOARD
+    ========================= */
+
+    .dashboard {
+      width: 100%;
+      max-width: 560px;
+      margin: auto;
+      padding: 24px 15px 40px;
+    }
+
+    .dash-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .dash-brand {
+      font-size: 27px;
+      font-weight: 900;
+    }
+
+    .dash-brand span {
+      color: var(--pink);
+    }
+
+    .dash-sub {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .online {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 10px;
+      border: 1px solid #193628;
+      border-radius: 20px;
+      background: #0d1914;
+      color: var(--green);
+      font-size: 9px;
+    }
+
+    .online-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    /* =========================
+       CARDS
+    ========================= */
 
     .card {
-      background: var(--card);
+      padding: 18px;
+      margin-bottom: 14px;
       border: 1px solid var(--border);
       border-radius: 17px;
-      padding: 19px;
-      margin-bottom: 14px;
+      background: rgba(16,18,23,.96);
     }
 
     .card-title {
-      font-size: 14px;
-      font-weight: 700;
       margin-bottom: 15px;
+      font-size: 13px;
+      font-weight: 800;
     }
 
-    /* ACCOUNT */
+    /* =========================
+       ACCOUNT
+    ========================= */
 
     .account {
       display: flex;
       align-items: center;
-      gap: 13px;
+      gap: 12px;
     }
 
     .avatar {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      background: #1b1b1b;
-      border: 1px solid #2c2c2c;
+      width: 46px;
+      height: 46px;
+      min-width: 46px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
-      font-weight: 700;
+      border: 1px solid #3a202c;
+      border-radius: 50%;
+      background: #1a1017;
       color: var(--pink);
-      flex-shrink: 0;
+      font-size: 17px;
+      font-weight: 900;
     }
 
-    .account-info {
+    .account-data {
       min-width: 0;
       flex: 1;
     }
 
     .account-email {
-      font-size: 13px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      font-size: 13px;
     }
 
-    .account-status {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      color: var(--green);
-      font-size: 11px;
+    .account-id {
       margin-top: 5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--muted);
+      font-size: 9px;
     }
 
-    .dot {
-      width: 6px;
-      height: 6px;
-      background: var(--green);
-      border-radius: 50%;
-    }
-
-    /* STATS */
+    /* =========================
+       STATS
+    ========================= */
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3,1fr);
       gap: 8px;
     }
 
     .stat {
-      background: var(--card2);
-      border: 1px solid #202020;
-      border-radius: 11px;
-      padding: 12px 8px;
+      padding: 12px 6px;
       text-align: center;
+      border: 1px solid #20232a;
+      border-radius: 11px;
+      background: var(--card2);
     }
 
     .stat-value {
-      font-size: 15px;
-      font-weight: 700;
+      font-size: 14px;
+      font-weight: 800;
     }
 
     .stat-label {
-      color: #666;
-      font-size: 9px;
       margin-top: 5px;
+      color: #696e79;
+      font-size: 8px;
       text-transform: uppercase;
     }
 
-    /* API KEY */
+    .green {
+      color: var(--green);
+    }
 
-    .key-wrapper {
+    /* =========================
+       API KEY
+    ========================= */
+
+    .key-row {
       display: flex;
       gap: 8px;
     }
@@ -175,61 +431,56 @@
     .key-input {
       width: 100%;
       min-width: 0;
-      background: #080808;
-      border: 1px solid #292929;
-      border-radius: 10px;
-      color: #fff;
-      padding: 13px;
+      height: 45px;
+      padding: 0 12px;
       outline: none;
-      font-size: 12px;
-    }
-
-    .key-input:focus {
-      border-color: var(--pink);
-    }
-
-    .copy-button {
-      width: auto;
-      padding: 0 15px;
+      border: 1px solid var(--border);
       border-radius: 10px;
-      border: 1px solid #292929;
-      background: #1a1a1a;
+      background: #080a0d;
       color: #fff;
-      font-size: 12px;
+      font-size: 11px;
+    }
+
+    .copy-btn {
+      height: 45px;
+      padding: 0 15px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #191b20;
+      color: #fff;
+      font-size: 11px;
       font-weight: 700;
       white-space: nowrap;
     }
 
-    .generate-button {
+    .generate-btn {
       width: 100%;
+      height: 45px;
+      margin-top: 10px;
       border: 0;
       border-radius: 10px;
-      padding: 14px;
-      margin-top: 10px;
       background: var(--pink);
       color: #fff;
-      font-size: 13px;
-      font-weight: 700;
+      font-size: 12px;
+      font-weight: 800;
     }
 
-    button:hover {
-      opacity: .86;
-    }
-
-    button:disabled {
+    .generate-btn:disabled {
       opacity: .5;
       cursor: not-allowed;
     }
 
-    /* API INFO */
+    /* =========================
+       INFO
+    ========================= */
 
     .info-row {
       display: flex;
       justify-content: space-between;
       gap: 20px;
       padding: 11px 0;
-      border-bottom: 1px solid #202020;
-      font-size: 12px;
+      border-bottom: 1px solid #202229;
+      font-size: 11px;
     }
 
     .info-row:first-child {
@@ -237,481 +488,815 @@
     }
 
     .info-row:last-child {
-      border-bottom: 0;
       padding-bottom: 0;
+      border-bottom: 0;
     }
 
     .info-label {
-      color: #707070;
+      color: #747984;
     }
 
     .info-value {
+      max-width: 65%;
       text-align: right;
       word-break: break-all;
     }
 
-    .active {
-      color: var(--green);
-    }
-
-    /* MESSAGE */
-
-    .message {
-      display: none;
-      margin-top: 11px;
-      padding: 11px 12px;
-      background: #181818;
-      border: 1px solid #252525;
-      border-radius: 9px;
-      font-size: 11px;
-      line-height: 1.5;
-    }
-
-    .message.success {
-      color: var(--green);
-    }
-
-    .message.error {
-      color: var(--red);
-    }
-
-    /* LOGOUT */
+    /* =========================
+       LOGOUT
+    ========================= */
 
     .logout {
       width: 100%;
-      padding: 13px;
+      height: 45px;
+      border: 1px solid #292c34;
       border-radius: 10px;
-      background: #151515;
-      border: 1px solid #292929;
+      background: #14161a;
       color: #fff;
       font-size: 12px;
       font-weight: 700;
     }
 
-    /* LOADING */
-
-    .loading {
-      color: #666;
-      font-size: 12px;
+    .logout:disabled {
+      opacity: .5;
     }
 
-    /* FOOTER */
+    /* =========================
+       FOOTER
+    ========================= */
 
     .footer {
-      text-align: center;
-      color: #444;
-      font-size: 10px;
       margin-top: 22px;
+      text-align: center;
+      color: #454850;
+      font-size: 9px;
     }
 
-    /* MOBILE */
+    /* =========================
+       MOBILE
+    ========================= */
 
-    @media (max-width: 400px) {
+    @media(max-width:400px) {
 
-      .key-wrapper {
+      .key-row {
         flex-direction: column;
       }
 
-      .copy-button {
+      .copy-btn {
         width: 100%;
-        padding: 11px;
       }
 
-      .stats {
-        gap: 6px;
+      .dash-header {
+        align-items: flex-start;
       }
-
     }
   </style>
 </head>
 
 <body>
 
-  <main class="app">
 
-    <!-- HEADER -->
+<!-- ==================================================
+     LOADING
+================================================== -->
 
-    <header class="header">
+<div id="loading">
+
+  <div class="loader-box">
+
+    <div class="loader-logo">
+      ANYA<span>API</span>
+    </div>
+
+    <div class="loader-text">
+      Checking session...
+    </div>
+
+    <div class="loader"></div>
+
+  </div>
+
+</div>
+
+
+<!-- ==================================================
+     LOGIN / REGISTER
+================================================== -->
+
+<section
+  id="auth"
+  class="auth-screen hidden"
+>
+
+  <div class="auth-container">
+
+    <div class="brand-area">
 
       <div class="brand">
         ANYA<span>API</span>
       </div>
 
-      <div class="subtitle">
-        API Management Dashboard
+      <div class="brand-subtitle">
+        API Management System
       </div>
 
-    </header>
+    </div>
 
 
-    <!-- ACCOUNT -->
-
-    <section class="card">
-
-      <div class="card-title">
-        Account
-      </div>
-
-      <div class="account">
-
-        <div
-          class="avatar"
-          id="avatar"
-        >
-          A
-        </div>
-
-        <div class="account-info">
-
-          <div
-            class="account-email"
-            id="email"
-          >
-            <span class="loading">
-              Loading...
-            </span>
-          </div>
-
-          <div class="account-status">
-
-            <span class="dot"></span>
-
-            Session Active
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- STATISTICS -->
-
-    <section class="card">
-
-      <div class="card-title">
-        Overview
-      </div>
-
-      <div class="stats">
-
-        <div class="stat">
-
-          <div
-            class="stat-value active"
-            id="sessionStatus"
-          >
-            Active
-          </div>
-
-          <div class="stat-label">
-            Session
-          </div>
-
-        </div>
-
-        <div class="stat">
-
-          <div
-            class="stat-value"
-            id="keyStatus"
-          >
-            None
-          </div>
-
-          <div class="stat-label">
-            API Key
-          </div>
-
-        </div>
-
-        <div class="stat">
-
-          <div
-            class="stat-value"
-          >
-            API
-          </div>
-
-          <div class="stat-label">
-            Type
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- API KEY -->
-
-    <section class="card">
-
-      <div class="card-title">
-        API Key
-      </div>
-
-      <div class="key-wrapper">
-
-        <input
-          id="apiKey"
-          class="key-input"
-          type="text"
-          readonly
-          placeholder="Generate API Key..."
-        >
-
-        <button
-          id="copyButton"
-          class="copy-button"
-          onclick="copyApiKey()"
-        >
-          Copy
-        </button>
-
-      </div>
-
-      <button
-        id="generateButton"
-        class="generate-button"
-        onclick="generateApiKey()"
-      >
-        Generate API Key
-      </button>
+    <div class="auth-card">
 
       <div
-        id="message"
+        id="authTitle"
+        class="auth-title"
+      >
+        Login
+      </div>
+
+      <div
+        id="authDesc"
+        class="auth-desc"
+      >
+        Login untuk mengakses dashboard ANYAAPI.
+      </div>
+
+
+      <div
+        id="authMessage"
         class="message"
       ></div>
 
-    </section>
 
+      <!-- EMAIL -->
 
-    <!-- INFORMATION -->
+      <div class="form-group">
 
-    <section class="card">
+        <label class="label">
+          Email
+        </label>
 
-      <div class="card-title">
-        Information
+        <input
+          id="email"
+          class="input"
+          type="email"
+          placeholder="you@example.com"
+          autocomplete="email"
+        >
+
       </div>
 
-      <div class="info-row">
 
-        <div class="info-label">
-          Account
+      <!-- PASSWORD -->
+
+      <div class="form-group">
+
+        <label class="label">
+          Password
+        </label>
+
+        <div class="password-box">
+
+          <input
+            id="password"
+            class="input"
+            type="password"
+            placeholder="Minimal 6 karakter"
+            autocomplete="current-password"
+          >
+
+          <button
+            type="button"
+            class="show-password"
+            onclick="togglePassword()"
+          >
+            Show
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- SUBMIT -->
+
+      <button
+        id="authButton"
+        class="primary-button"
+        onclick="submitAuth()"
+      >
+        Login
+      </button>
+
+
+      <!-- SWITCH -->
+
+      <div class="switch">
+
+        <span
+          id="switchAuth"
+          onclick="toggleMode()"
+        >
+          Belum punya akun? Register
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="footer">
+      ANYAAPI • Secure API Dashboard
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ==================================================
+     DASHBOARD
+================================================== -->
+
+<section
+  id="dashboard"
+  class="dashboard hidden"
+>
+
+
+  <!-- HEADER -->
+
+  <header class="dash-header">
+
+    <div>
+
+      <div class="dash-brand">
+        ANYA<span>API</span>
+      </div>
+
+      <div class="dash-sub">
+        API Management Dashboard
+      </div>
+
+    </div>
+
+
+    <div class="online">
+
+      <span class="online-dot"></span>
+
+      Online
+
+    </div>
+
+  </header>
+
+
+  <!-- ACCOUNT -->
+
+  <section class="card">
+
+    <div class="card-title">
+      Account
+    </div>
+
+
+    <div class="account">
+
+      <div
+        id="avatar"
+        class="avatar"
+      >
+        A
+      </div>
+
+
+      <div class="account-data">
+
+        <div
+          id="dashboardEmail"
+          class="account-email"
+        >
+          -
         </div>
 
         <div
-          class="info-value"
-          id="infoEmail"
+          id="dashboardId"
+          class="account-id"
         >
           -
         </div>
 
       </div>
 
-      <div class="info-row">
+    </div>
 
-        <div class="info-label">
-          Account ID
-        </div>
+  </section>
+
+
+  <!-- OVERVIEW -->
+
+  <section class="card">
+
+    <div class="card-title">
+      Overview
+    </div>
+
+
+    <div class="stats">
+
+      <div class="stat">
 
         <div
-          class="info-value"
-          id="userId"
+          id="sessionStat"
+          class="stat-value green"
         >
-          -
+          Active
         </div>
 
-      </div>
-
-      <div class="info-row">
-
-        <div class="info-label">
-          API Status
-        </div>
-
-        <div class="info-value active">
-          Online
-        </div>
-
-      </div>
-
-      <div class="info-row">
-
-        <div class="info-label">
+        <div class="stat-label">
           Session
         </div>
 
-        <div class="info-value active">
-          Protected
+      </div>
+
+
+      <div class="stat">
+
+        <div
+          id="keyStat"
+          class="stat-value"
+        >
+          None
+        </div>
+
+        <div class="stat-label">
+          API Key
         </div>
 
       </div>
 
-    </section>
+
+      <div class="stat">
+
+        <div class="stat-value">
+          API
+        </div>
+
+        <div class="stat-label">
+          Type
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
 
 
-    <!-- LOGOUT -->
+  <!-- API KEY -->
+
+  <section class="card">
+
+    <div class="card-title">
+      API Key
+    </div>
+
+
+    <div class="key-row">
+
+      <input
+        id="apiKey"
+        class="key-input"
+        type="text"
+        readonly
+        placeholder="Generate API Key..."
+      >
+
+
+      <button
+        id="copyButton"
+        class="copy-btn"
+        onclick="copyKey()"
+      >
+        Copy
+      </button>
+
+    </div>
+
 
     <button
-      id="logoutButton"
-      class="logout"
-      onclick="logout()"
+      id="generateButton"
+      class="generate-btn"
+      onclick="generateKey()"
     >
-      Logout
+      Generate API Key
     </button>
 
 
-    <footer class="footer">
-      ANYAAPI • API Management System
-    </footer>
+    <div
+      id="dashboardMessage"
+      class="message"
+      style="margin-top:11px;margin-bottom:0;"
+    ></div>
 
-  </main>
+  </section>
+
+
+  <!-- INFORMATION -->
+
+  <section class="card">
+
+    <div class="card-title">
+      Information
+    </div>
+
+
+    <div class="info-row">
+
+      <div class="info-label">
+        Email
+      </div>
+
+      <div
+        id="infoEmail"
+        class="info-value"
+      >
+        -
+      </div>
+
+    </div>
+
+
+    <div class="info-row">
+
+      <div class="info-label">
+        Account ID
+      </div>
+
+      <div
+        id="infoId"
+        class="info-value"
+      >
+        -
+      </div>
+
+    </div>
+
+
+    <div class="info-row">
+
+      <div class="info-label">
+        Session
+      </div>
+
+      <div class="info-value green">
+        Protected
+      </div>
+
+    </div>
+
+
+    <div class="info-row">
+
+      <div class="info-label">
+        API Status
+      </div>
+
+      <div class="info-value green">
+        Online
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- LOGOUT -->
+
+  <button
+    id="logoutButton"
+    class="logout"
+    onclick="logout()"
+  >
+    Logout
+  </button>
+
+
+  <div class="footer">
+    ANYAAPI • API Management System
+  </div>
+
+</section>
 
 
 <script>
 
-/*
-|--------------------------------------------------------------------------
-| LOAD USER
-|--------------------------------------------------------------------------
-*/
+/* ==================================================
+   CONFIG
+================================================== */
 
-async function loadUser() {
+const API = "";
+
+
+/* ==================================================
+   STATE
+================================================== */
+
+let registerMode = false;
+
+
+/* ==================================================
+   ELEMENTS
+================================================== */
+
+const loading =
+  document.getElementById("loading");
+
+const auth =
+  document.getElementById("auth");
+
+const dashboard =
+  document.getElementById("dashboard");
+
+
+/* ==================================================
+   CHECK SESSION
+================================================== */
+
+async function checkSession() {
 
   try {
 
-    const response =
-      await fetch(
-        "/api/auth/me",
-        {
-          method: "GET",
-          credentials: "include"
+    const response = await fetch(
+      API + "/api/auth/me",
+      {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Accept": "application/json"
         }
-      );
+      }
+    );
 
-    if (!response.ok) {
-
-      window.location.href =
-        "/login";
-
-      return;
-
-    }
 
     const data =
-      await response.json();
+      await response.json()
+        .catch(() => null);
 
-    if (!data.ok || !data.user) {
 
-      window.location.href =
-        "/login";
+    if (
+      response.ok &&
+      data &&
+      data.ok &&
+      data.user
+    ) {
 
-      return;
+      showDashboard(data.user);
+
+    } else {
+
+      showAuth();
 
     }
-
-    const user =
-      data.user;
-
-    document.getElementById(
-      "email"
-    ).textContent =
-      user.email;
-
-    document.getElementById(
-      "infoEmail"
-    ).textContent =
-      user.email;
-
-    document.getElementById(
-      "userId"
-    ).textContent =
-      user.id;
-
-    /*
-      Ambil huruf pertama email
-      untuk avatar.
-    */
-
-    document.getElementById(
-      "avatar"
-    ).textContent =
-      user.email
-        .charAt(0)
-        .toUpperCase();
 
   } catch (error) {
 
-    console.error(error);
+    console.error(
+      "Session check:",
+      error
+    );
 
-    window.location.href =
-      "/login";
+    showAuth();
 
   }
 
 }
 
 
-/*
-|--------------------------------------------------------------------------
-| GENERATE API KEY
-|--------------------------------------------------------------------------
-*/
+/* ==================================================
+   SHOW AUTH
+================================================== */
 
-async function generateApiKey() {
+function showAuth() {
+
+  loading.classList.add("hidden");
+
+  dashboard.classList.add("hidden");
+
+  auth.classList.remove("hidden");
+
+}
+
+
+/* ==================================================
+   SHOW DASHBOARD
+================================================== */
+
+function showDashboard(user) {
+
+  loading.classList.add("hidden");
+
+  auth.classList.add("hidden");
+
+  dashboard.classList.remove("hidden");
+
+
+  const email =
+    user.email || "-";
+
+  const id =
+    user.id || "-";
+
+
+  document.getElementById(
+    "dashboardEmail"
+  ).textContent = email;
+
+
+  document.getElementById(
+    "dashboardId"
+  ).textContent = id;
+
+
+  document.getElementById(
+    "infoEmail"
+  ).textContent = email;
+
+
+  document.getElementById(
+    "infoId"
+  ).textContent = id;
+
+
+  document.getElementById(
+    "avatar"
+  ).textContent =
+    email.charAt(0).toUpperCase();
+
+}
+
+
+/* ==================================================
+   TOGGLE LOGIN / REGISTER
+================================================== */
+
+function toggleMode() {
+
+  registerMode =
+    !registerMode;
+
+
+  document.getElementById(
+    "authTitle"
+  ).textContent =
+    registerMode
+      ? "Register"
+      : "Login";
+
+
+  document.getElementById(
+    "authDesc"
+  ).textContent =
+    registerMode
+      ? "Buat akun baru untuk menggunakan ANYAAPI."
+      : "Login untuk mengakses dashboard ANYAAPI.";
+
+
+  document.getElementById(
+    "authButton"
+  ).textContent =
+    registerMode
+      ? "Create Account"
+      : "Login";
+
+
+  document.getElementById(
+    "switchAuth"
+  ).textContent =
+    registerMode
+      ? "Sudah punya akun? Login"
+      : "Belum punya akun? Register";
+
+
+  hideAuthMessage();
+
+}
+
+
+/* ==================================================
+   SUBMIT LOGIN / REGISTER
+================================================== */
+
+async function submitAuth() {
+
+  const email =
+    document.getElementById(
+      "email"
+    ).value.trim().toLowerCase();
+
+
+  const password =
+    document.getElementById(
+      "password"
+    ).value;
+
 
   const button =
     document.getElementById(
-      "generateButton"
+      "authButton"
     );
 
-  const input =
-    document.getElementById(
-      "apiKey"
+
+  if (!email) {
+
+    showAuthMessage(
+      "Email wajib diisi.",
+      "error"
     );
+
+    return;
+
+  }
+
+
+  if (!password) {
+
+    showAuthMessage(
+      "Password wajib diisi.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if (
+    registerMode &&
+    password.length < 6
+  ) {
+
+    showAuthMessage(
+      "Password minimal 6 karakter.",
+      "error"
+    );
+
+    return;
+
+  }
+
 
   button.disabled = true;
 
   button.textContent =
-    "Generating...";
+    registerMode
+      ? "Creating..."
+      : "Logging in...";
 
-  hideMessage();
+
+  hideAuthMessage();
+
 
   try {
 
+    const endpoint =
+      registerMode
+        ? "/api/auth/register"
+        : "/api/auth/login";
+
+
     const response =
       await fetch(
-        "/api/key/generate",
+        API + endpoint,
         {
-          method: "GET",
+          method: "POST",
+
           credentials: "include",
+
           headers: {
+            "Content-Type":
+              "application/json",
+
             "Accept":
               "application/json"
-          }
+          },
+
+          body:
+            JSON.stringify({
+              email,
+              password
+            })
         }
       );
 
+
     const data =
-      await response.json();
+      await response.json()
+        .catch(() => ({
+          ok: false,
+          message:
+            "Response server tidak valid."
+        }));
 
-    /*
-      Session expired.
-    */
-
-    if (response.status === 401) {
-
-      window.location.href =
-        "/login";
-
-      return;
-
-    }
 
     if (
       !response.ok ||
@@ -720,42 +1305,245 @@ async function generateApiKey() {
 
       throw new Error(
         data.message ||
-        "Gagal membuat API key"
+        "Request gagal."
       );
 
     }
 
-    /*
-      Otomatis masukkan key
-      ke input.
-    */
 
-    input.value =
-      data.apiKey;
+    /* REGISTER */
 
-    document.getElementById(
-      "keyStatus"
-    ).textContent =
-      "Active";
+    if (registerMode) {
 
-    document.getElementById(
-      "keyStatus"
-    ).classList.add(
-      "active"
+      showAuthMessage(
+        "Registrasi berhasil. Silakan login.",
+        "success"
+      );
+
+
+      registerMode = false;
+
+
+      document.getElementById(
+        "authTitle"
+      ).textContent =
+        "Login";
+
+
+      document.getElementById(
+        "authDesc"
+      ).textContent =
+        "Login untuk mengakses dashboard ANYAAPI.";
+
+
+      document.getElementById(
+        "authButton"
+      ).textContent =
+        "Login";
+
+
+      document.getElementById(
+        "switchAuth"
+      ).textContent =
+        "Belum punya akun? Register";
+
+
+      document.getElementById(
+        "password"
+      ).value = "";
+
+
+      return;
+
+    }
+
+
+    /* LOGIN */
+
+    await loadUser();
+
+  } catch (error) {
+
+    console.error(error);
+
+    showAuthMessage(
+      error.message ||
+      "Terjadi kesalahan.",
+      "error"
     );
 
-    showMessage(
-      "API Key berhasil dibuat dan otomatis ditempel.",
-      "success"
+  } finally {
+
+    button.disabled = false;
+
+    button.textContent =
+      registerMode
+        ? "Create Account"
+        : "Login";
+
+  }
+
+}
+
+
+/* ==================================================
+   LOAD USER
+================================================== */
+
+async function loadUser() {
+
+  try {
+
+    const response =
+      await fetch(
+        API + "/api/auth/me",
+        {
+          method: "GET",
+          credentials: "include"
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (
+      !response.ok ||
+      !data.ok ||
+      !data.user
+    ) {
+
+      showAuth();
+
+      return;
+
+    }
+
+
+    showDashboard(
+      data.user
     );
 
   } catch (error) {
 
     console.error(error);
 
-    showMessage(
+    showAuth();
+
+  }
+
+}
+
+
+/* ==================================================
+   GENERATE API KEY
+================================================== */
+
+async function generateKey() {
+
+  const button =
+    document.getElementById(
+      "generateButton"
+    );
+
+
+  button.disabled = true;
+
+  button.textContent =
+    "Generating...";
+
+
+  hideDashboardMessage();
+
+
+  try {
+
+    const response =
+      await fetch(
+        API + "/api/key/generate",
+        {
+          method: "GET",
+          credentials: "include",
+
+          headers: {
+            "Accept":
+              "application/json"
+          }
+        }
+      );
+
+
+    const data =
+      await response.json()
+        .catch(() => ({
+          ok: false,
+          message:
+            "Response tidak valid."
+        }));
+
+
+    if (
+      response.status === 401
+    ) {
+
+      showAuth();
+
+      return;
+
+    }
+
+
+    if (
+      !response.ok ||
+      !data.ok
+    ) {
+
+      throw new Error(
+        data.message ||
+        "Gagal membuat API key."
+      );
+
+    }
+
+
+    /*
+     * OTOMATIS TEMPEL
+     */
+
+    document.getElementById(
+      "apiKey"
+    ).value =
+      data.apiKey || "";
+
+
+    document.getElementById(
+      "keyStat"
+    ).textContent =
+      "Active";
+
+
+    document.getElementById(
+      "keyStat"
+    ).classList.add(
+      "green"
+    );
+
+
+    showDashboardMessage(
+      data.message ||
+      "API Key berhasil dibuat.",
+      "success"
+    );
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    showDashboardMessage(
       error.message ||
-      "Terjadi kesalahan.",
+      "Gagal membuat API key.",
       "error"
     );
 
@@ -771,23 +1559,22 @@ async function generateApiKey() {
 }
 
 
-/*
-|--------------------------------------------------------------------------
-| COPY API KEY
-|--------------------------------------------------------------------------
-*/
+/* ==================================================
+   COPY API KEY
+================================================== */
 
-async function copyApiKey() {
+async function copyKey() {
 
   const input =
     document.getElementById(
       "apiKey"
     );
 
+
   if (!input.value) {
 
-    showMessage(
-      "Generate API key terlebih dahulu.",
+    showDashboardMessage(
+      "Generate API Key terlebih dahulu.",
       "error"
     );
 
@@ -795,27 +1582,32 @@ async function copyApiKey() {
 
   }
 
+
   try {
 
     await navigator.clipboard.writeText(
       input.value
     );
 
-    showMessage(
+
+    showDashboardMessage(
       "API Key berhasil disalin.",
       "success"
     );
 
-  } catch (error) {
+
+  } catch {
 
     input.focus();
+
     input.select();
 
     document.execCommand(
       "copy"
     );
 
-    showMessage(
+
+    showDashboardMessage(
       "API Key berhasil disalin.",
       "success"
     );
@@ -825,11 +1617,9 @@ async function copyApiKey() {
 }
 
 
-/*
-|--------------------------------------------------------------------------
-| LOGOUT
-|--------------------------------------------------------------------------
-*/
+/* ==================================================
+   LOGOUT
+================================================== */
 
 async function logout() {
 
@@ -838,15 +1628,17 @@ async function logout() {
       "logoutButton"
     );
 
+
   button.disabled = true;
 
   button.textContent =
     "Logging out...";
 
+
   try {
 
     await fetch(
-      "/api/auth/logout",
+      API + "/api/auth/logout",
       {
         method: "POST",
         credentials: "include"
@@ -857,64 +1649,179 @@ async function logout() {
 
     console.error(error);
 
-  } finally {
+  }
 
-    window.location.href =
-      "/login";
+
+  document.getElementById(
+    "apiKey"
+  ).value = "";
+
+
+  button.disabled = false;
+
+  button.textContent =
+    "Logout";
+
+
+  showAuth();
+
+}
+
+
+/* ==================================================
+   PASSWORD VISIBILITY
+================================================== */
+
+function togglePassword() {
+
+  const input =
+    document.getElementById(
+      "password"
+    );
+
+  const button =
+    document.querySelector(
+      ".show-password"
+    );
+
+
+  if (
+    input.type === "password"
+  ) {
+
+    input.type = "text";
+
+    button.textContent =
+      "Hide";
+
+  } else {
+
+    input.type = "password";
+
+    button.textContent =
+      "Show";
 
   }
 
 }
 
 
-/*
-|--------------------------------------------------------------------------
-| MESSAGE
-|--------------------------------------------------------------------------
-*/
+/* ==================================================
+   AUTH MESSAGE
+================================================== */
 
-function showMessage(
+function showAuthMessage(
   text,
   type
 ) {
 
-  const message =
+  const box =
     document.getElementById(
-      "message"
+      "authMessage"
     );
 
-  message.style.display =
-    "block";
 
-  message.textContent =
+  box.textContent =
     text;
 
-  message.className =
+
+  box.className =
     "message " + type;
 
 }
 
 
-function hideMessage() {
+function hideAuthMessage() {
 
-  const message =
+  const box =
     document.getElementById(
-      "message"
+      "authMessage"
     );
 
-  message.style.display =
-    "none";
+
+  box.textContent = "";
+
+  box.className =
+    "message";
 
 }
 
 
-/*
-|--------------------------------------------------------------------------
-| START
-|--------------------------------------------------------------------------
-*/
+/* ==================================================
+   DASHBOARD MESSAGE
+================================================== */
 
-loadUser();
+function showDashboardMessage(
+  text,
+  type
+) {
+
+  const box =
+    document.getElementById(
+      "dashboardMessage"
+    );
+
+
+  box.textContent =
+    text;
+
+
+  box.className =
+    "message " + type;
+
+
+  box.style.marginTop =
+    "11px";
+
+  box.style.marginBottom =
+    "0";
+
+}
+
+
+function hideDashboardMessage() {
+
+  const box =
+    document.getElementById(
+      "dashboardMessage"
+    );
+
+
+  box.textContent = "";
+
+  box.className =
+    "message";
+
+}
+
+
+/* ==================================================
+   ENTER TO LOGIN
+================================================== */
+
+document
+  .getElementById("password")
+  .addEventListener(
+    "keydown",
+    function(event) {
+
+      if (
+        event.key === "Enter"
+      ) {
+
+        submitAuth();
+
+      }
+
+    }
+  );
+
+
+/* ==================================================
+   START
+================================================== */
+
+checkSession();
 
 </script>
 

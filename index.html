@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xtzyyyy - Netflix Token API</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎬</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* ============================================
+           STYLE LENGKAP
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a12;
+            --bg-secondary: #111120;
+            --bg-card: #1a1a2e;
+            --bg-card-hover: #222244;
+            --text-primary: #ffffff;
+            --text-secondary: #9090b0;
+            --accent: #e50914;
+            --accent-hover: #ff1a2a;
+            --gradient: linear-gradient(135deg, #e50914, #ff6b35);
+            --border: rgba(255, 255, 255, 0.06);
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(229, 9, 20, 0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 50%, rgba(255, 107, 53, 0.04) 0%, transparent 50%);
+        }
+
+        .container {
+            max-width: 440px;
+            margin: 0 auto;
+            padding: 16px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 36px 28px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(20px);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            border-color: rgba(229, 9, 20, 0.15);
+            box-shadow: 0 30px 80px rgba(229, 9, 20, 0.06);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ============================================
+           LOGO
+           ============================================ */
+        .logo {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .logo i {
+            font-size: 44px;
+            color: var(--accent);
+            background: rgba(229, 9, 20, 0.1);
+            padding: 14px;
+            border-radius: 50%;
+        }
+
+        .logo h1 {
+            font-size: 26px;
+            font-weight: 800;
+            margin-top: 10px;
+        }
+
+        .logo .highlight {
+            color: var(--accent);
+        }
+
+        .logo p {
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-top: 2px;
+        }
+
+        /* ============================================
+           STATUS BAR
+           ============================================ */
+        .status-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 14px;
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-dot.online {
+            background: #22c55e;
+            animation: pulse-dot 2s infinite;
+        }
+
+        .status-dot.offline {
+            background: var(--accent);
+        }
+
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        /* ============================================
+           FORM
+           ============================================ */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        /* ============================================
+           BUTTONS
+           ============================================ */
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(229, 9, 20, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(229, 9, 20, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-danger-outline {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid rgba(229, 9, 20, 0.25);
+        }
+
+        .btn-danger-outline:hover {
+            background: rgba(229, 9, 20, 0.08);
+            border-color: var(--accent);
+        }
+
+        /* ============================================
+           DIVIDER
+           ============================================ */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 20px 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .divider span {
+            color: var(--text-secondary);
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        /* ============================================
+           SWITCH TEXT
+           ============================================ */
+        .switch-text {
+            text-align: center;
+            margin-top: 16px;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .switch-text a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .switch-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* ============================================
+           ALERT
+           ============================================ */
+        .alert {
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            margin-bottom: 14px;
+            display: none;
+        }
+
+        .alert-success {
+            background: rgba(34, 197, 94, 0.08);
+            border: 1px solid rgba(34, 197, 94, 0.15);
+            color: #22c55e;
+            display: block;
+        }
+
+        .alert-error {
+            background: rgba(229, 9, 20, 0.08);
+            border: 1px solid rgba(229, 9, 20, 0.15);
+            color: var(--accent);
+            display: block;
+        }
+
+        .alert-info {
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            color: #3b82f6;
+            display: block;
+        }
+
+        /* ============================================
+           SPINNER
+           ============================================ */
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ============================================
+           API KEY BOX
+           ============================================ */
+        .api-key-box {
+            background: var(--bg-primary);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            margin: 10px 0;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .api-key-box code {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: var(--text-primary);
+            word-break: break-all;
+            flex: 1;
+        }
+
+        .api-key-box .copy-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: none;
+            color: var(--text-secondary);
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 13px;
+        }
+
+        .api-key-box .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+        }
+
+        /* ============================================
+           QUOTA GRID
+           ============================================ */
+        .quota-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 14px 0;
+        }
+
+        .quota-item {
+            background: var(--bg-primary);
+            padding: 10px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .quota-item span {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .quota-item p {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-top: 2px;
+        }
+
+        .quota-item p.accent {
+            color: var(--accent);
+        }
+
+        /* ============================================
+           BUTTON GROUP
+           ============================================ */
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        /* ============================================
+           RESULT BOX
+           ============================================ */
+        .result-box {
+            margin-top: 14px;
+            background: var(--bg-primary);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            border: 1px solid var(--border);
+            display: none;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .result-box pre {
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: var(--text-secondary);
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin: 0;
+        }
+
+        /* ============================================
+           TOAST
+           ============================================ */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow);
+            font-size: 13px;
+            color: var(--text-primary);
+            z-index: 999;
+            opacity: 0;
+            transition: all 0.4s ease;
+            pointer-events: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast.success {
+            border-color: #22c55e;
+        }
+
+        .toast.error {
+            border-color: var(--accent);
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 480px) {
+            .card {
+                padding: 20px 16px;
+            }
+            .logo h1 {
+                font-size: 22px;
+            }
+            .logo i {
+                font-size: 36px;
+                padding: 12px;
+            }
+            .api-key-box {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .api-key-box code {
+                font-size: 11px;
+            }
+            .quota-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+            .quota-item p {
+                font-size: 18px;
+            }
+            .btn {
+                font-size: 14px;
+                padding: 10px;
+            }
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="particles"></div>
+
+    <div class="container">
+
+        <!-- ============================================
+        LOGIN CARD
+        ============================================ -->
+        <div class="card" id="loginCard">
+            <div class="logo">
+                <i class="fas fa-film"></i>
+                <h1>xtzy<span class="highlight">yyy</span></h1>
+                <p>Netflix Token API</p>
+            </div>
+
+            <div class="status-bar">
+                <span class="status-dot" id="statusDot"></span>
+                <span id="statusText">Mengecek koneksi...</span>
+            </div>
+
+            <div class="alert" id="loginAlert"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="loginEmail" placeholder="your@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+
+            <div class="divider"><span>atau</span></div>
+
+            <button class="btn btn-outline" id="showRegisterBtn">
+                <i class="fas fa-user-plus"></i> Daftar Akun Baru
+            </button>
+
+            <div class="switch-text">
+                <span>Belum punya akun? <a id="switchToRegister">Daftar Sekarang</a></span>
+            </div>
+        </div>
+
+        <!-- ============================================
+        REGISTER CARD
+        ============================================ -->
+        <div class="card hidden" id="registerCard">
+            <div class="logo">
+                <i class="fas fa-user-plus"></i>
+                <h1>Daftar <span class="highlight">Akun</span></h1>
+                <p>Mulai gunakan API sekarang</p>
+            </div>
+
+            <div class="status-bar">
+                <span class="status-dot" id="statusDotReg"></span>
+                <span id="statusTextReg">Mengecek koneksi...</span>
+            </div>
+
+            <div class="alert" id="registerAlert"></div>
+
+            <form id="registerForm">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Username</label>
+                    <input type="text" id="registerUsername" placeholder="username" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="registerEmail" placeholder="your@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="registerPassword" placeholder="Minimal 6 karakter" required minlength="6">
+                </div>
+                <button type="submit" class="btn btn-primary" id="registerBtn">
+                    <i class="fas fa-user-plus"></i> Daftar
+                </button>
+            </form>
+
+            <div class="switch-text">
+                <span>Sudah punya akun? <a id="switchToLogin">Login Sekarang</a></span>
+            </div>
+        </div>
+
+        <!-- ============================================
+        DASHBOARD CARD
+        ============================================ -->
+        <div class="card hidden" id="dashboardCard">
+            <div class="logo">
+                <i class="fas fa-rocket"></i>
+                <h1>xtzy<span class="highlight">yyy</span></h1>
+                <p id="dashboardUser">Welcome, User!</p>
+            </div>
+
+            <div class="alert" id="dashboardAlert"></div>
+
+            <!-- API Key -->
+            <div class="form-group">
+                <label><i class="fas fa-key"></i> API Key</label>
+                <div class="api-key-box">
+                    <code id="apiKeyDisplay">Belum ada API Key</code>
+                    <button class="copy-btn" id="copyApiKeyBtn" title="Copy">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quota -->
+            <div class="quota-grid">
+                <div class="quota-item">
+                    <span>Total Quota</span>
+                    <p id="quotaTotal">0</p>
+                </div>
+                <div class="quota-item">
+                    <span>Used</span>
+                    <p class="accent" id="quotaUsed">0</p>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="btn-group">
+                <button class="btn btn-primary" id="generateApiKeyBtn">
+                    <i class="fas fa-sync-alt"></i> Generate API Key
+                </button>
+                <button class="btn btn-primary" id="generateTokenBtn">
+                    <i class="fas fa-ticket-alt"></i> Generate Token (US)
+                </button>
+                <button class="btn btn-outline" id="checkStatusBtn">
+                    <i class="fas fa-chart-bar"></i> Check Status
+                </button>
+                <button class="btn btn-danger-outline" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+
+            <!-- Result -->
+            <div class="result-box" id="resultBox">
+                <pre id="resultContent"></pre>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ============================================
+        // 🔧 KONFIGURASI BACKEND
+        // ============================================
+
+        // 🔥 GANTI DENGAN URL BACKEND ANDA
+        // Untuk localhost:
+        const API_BASE = 'http://localhost:3000';
+
+        // Untuk production (domain):
+        // const API_BASE = 'https://domain-anda.com';
+
+        // Untuk Cloudflare Worker:
+        // const API_BASE = 'https://xtzyyyy.pages.dev';
+
+        // ============================================
+        // 📦 DOM ELEMENTS
+        // ============================================
+
+        // Cards
+        const loginCard = document.getElementById('loginCard');
+        const registerCard = document.getElementById('registerCard');
+        const dashboardCard = document.getElementById('dashboardCard');
+
+        // Status
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const statusDotReg = document.getElementById('statusDotReg');
+        const statusTextReg = document.getElementById('statusTextReg');
+
+        // Login
+        const loginForm = document.getElementById('loginForm');
+        const loginEmail = document.getElementById('loginEmail');
+        const loginPassword = document.getElementById('loginPassword');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginAlert = document.getElementById('loginAlert');
+
+        // Register
+        const registerForm = document.getElementById('registerForm');
+        const registerUsername = document.getElementById('registerUsername');
+        const registerEmail = document.getElementById('registerEmail');
+        const registerPassword = document.getElementById('registerPassword');
+        const registerBtn = document.getElementById('registerBtn');
+        const registerAlert = document.getElementById('registerAlert');
+
+        // Dashboard
+        const dashboardUser = document.getElementById('dashboardUser');
+        const apiKeyDisplay = document.getElementById('apiKeyDisplay');
+        const copyApiKeyBtn = document.getElementById('copyApiKeyBtn');
+        const generateApiKeyBtn = document.getElementById('generateApiKeyBtn');
+        const generateTokenBtn = document.getElementById('generateTokenBtn');
+        const checkStatusBtn = document.getElementById('checkStatusBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const quotaTotal = document.getElementById('quotaTotal');
+        const quotaUsed = document.getElementById('quotaUsed');
+        const dashboardAlert = document.getElementById('dashboardAlert');
+        const resultBox = document.getElementById('resultBox');
+        const resultContent = document.getElementById('resultContent');
+
+        // Switches
+        const switchToRegister = document.getElementById('switchToRegister');
+        const switchToLogin = document.getElementById('switchToLogin');
+        const showRegisterBtn = document.getElementById('showRegisterBtn');
+
+        // Toast
+        const toast = document.getElementById('toast');
+
+        // ============================================
+        // 🛠️ FUNGSI
+        // ============================================
+
+        function showAlert(el, message, type = 'error') {
+            el.textContent = message;
+            el.className = 'alert alert-' + type;
+        }
+
+        function hideAlert(el) {
+            el.className = 'alert';
+            el.textContent = '';
+        }
+
+        function showCard(card) {
+            [loginCard, registerCard, dashboardCard].forEach(c => c.classList.add('hidden'));
+            card.classList.remove('hidden');
+        }
+
+        function setLoading(btn, loading = true) {
+            if (loading) {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner"></span> Loading...';
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = btn.dataset.original || btn.textContent;
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            toast.textContent = message;
+            toast.className = 'toast show ' + type;
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function copyToClipboard(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('✅ API Key copied!', 'success');
+                }).catch(() => {
+                    fallbackCopy(text);
+                });
+            } else {
+                fallbackCopy(text);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            showToast('✅ API Key copied!', 'success');
+        }
+
+        function showResult(data) {
+            resultBox.style.display = 'block';
+            resultContent.textContent = JSON.stringify(data, null, 2);
+        }
+
+        function hideResult() {
+            resultBox.style.display = 'none';
+            resultContent.textContent = '';
+        }
+
+        // ============================================
+        // 📊 CEK API
+        // ============================================
+
+        async function checkAPI() {
+            try {
+                const response = await fetch(API_BASE, {
+                    method: 'GET',
+                    signal: AbortSignal.timeout(5000)
+                });
+
+                if (response.ok) {
+                    statusDot.className = 'status-dot online';
+                    statusText.textContent = '✅ API Online - ' + API_BASE;
+                    if (statusDotReg) {
+                        statusDotReg.className = 'status-dot online';
+                        statusTextReg.textContent = '✅ API Online';
+                    }
+                    return true;
+                } else {
+                    throw new Error('API offline');
+                }
+            } catch (error) {
+                statusDot.className = 'status-dot offline';
+                statusText.textContent = '❌ API Offline - Periksa koneksi';
+                if (statusDotReg) {
+                    statusDotReg.className = 'status-dot offline';
+                    statusTextReg.textContent = '❌ API Offline';
+                }
+                return false;
+            }
+        }
+
+        // ============================================
+        // 📞 API CALLS
+        // ============================================
+
+        async function apiCall(endpoint, options = {}) {
+            const url = API_BASE + endpoint;
+
+            const response = await fetch(url, {
+                ...options,
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(options.headers || {})
+                }
+            });
+
+            const data = await response.json();
+            return { status: response.status, data };
+        }
+
+        // ----- REGISTER -----
+        async function register(username, email, password) {
+            return await apiCall('/api/v1/auth/register', {
+                method: 'POST',
+                body: JSON.stringify({ username, email, password })
+            });
+        }
+
+        // ----- LOGIN -----
+        async function login(email, password) {
+            return await apiCall('/api/v1/auth/login', {
+                method: 'POST',
+                body: JSON.stringify({ email, password })
+            });
+        }
+
+        // ----- GENERATE API KEY -----
+        async function generateApiKey(token) {
+            return await apiCall('/api/v1/auth/generate-apikey', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+        }
+
+        // ----- GENERATE TOKEN -----
+        async function generateToken(token, country = 'US') {
+            return await apiCall(`/api/v1/netflix/generate?country=${country}`, {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+        }
+
+        // ----- CHECK STATUS -----
+        async function checkStatus(token) {
+            return await apiCall('/api/v1/netflix/status', {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+        }
+
+        // ============================================
+        // 🔐 SESSION
+        // ============================================
+
+        function getToken() {
+            return localStorage.getItem('xtzy_token');
+        }
+
+        function getApiKey() {
+            return localStorage.getItem('xtzy_apikey');
+        }
+
+        function getUser() {
+            try {
+                return JSON.parse(localStorage.getItem('xtzy_user') || '{}');
+            } catch {
+                return {};
+            }
+        }
+
+        function setSession(data) {
+            localStorage.setItem('xtzy_token', data.token);
+            localStorage.setItem('xtzy_apikey', data.api_key);
+            localStorage.setItem('xtzy_user', JSON.stringify(data.user));
+        }
+
+        function clearSession() {
+            localStorage.removeItem('xtzy_token');
+            localStorage.removeItem('xtzy_apikey');
+            localStorage.removeItem('xtzy_user');
+        }
+
+        function isLoggedIn() {
+            return !!getToken();
+        }
+
+        // ============================================
+        // 🖥️ DASHBOARD
+        // ============================================
+
+        function updateDashboard(user, apiKey, quota) {
+            dashboardUser.textContent = `Welcome, ${user?.username || 'User'}!`;
+            apiKeyDisplay.textContent = apiKey || 'Belum ada API Key';
+            quotaTotal.textContent = quota?.total || 0;
+            quotaUsed.textContent = quota?.used || 0;
+        }
+
+        async function refreshDashboard() {
+            try {
+                const token = getToken();
+                if (!token) {
+                    showCard(loginCard);
+                    return;
+                }
+
+                const result = await checkStatus(token);
+                if (result.status === 200 && result.data.status) {
+                    updateDashboard(getUser(), getApiKey(), result.data.quota);
+                    hideAlert(dashboardAlert);
+                } else {
+                    showAlert(dashboardAlert, 'Gagal refresh dashboard', 'error');
+                }
+            } catch (error) {
+                showAlert(dashboardAlert, 'Network error: ' + error.message, 'error');
+            }
+        }
+
+        // ============================================
+        // 🚀 EVENT HANDLERS
+        // ============================================
+
+        // ----- SWITCH -----
+        switchToRegister.addEventListener('click', () => {
+            showCard(registerCard);
+            hideAlert(loginAlert);
+            hideAlert(registerAlert);
+        });
+
+        switchToLogin.addEventListener('click', () => {
+            showCard(loginCard);
+            hideAlert(loginAlert);
+            hideAlert(registerAlert);
+        });
+
+        showRegisterBtn.addEventListener('click', () => {
+            showCard(registerCard);
+            hideAlert(loginAlert);
+            hideAlert(registerAlert);
+        });
+
+        // ----- LOGIN -----
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideAlert(loginAlert);
+
+            const email = loginEmail.value.trim();
+            const password = loginPassword.value;
+
+            if (!email || !password) {
+                showAlert(loginAlert, 'Isi semua field!', 'error');
+                return;
+            }
+
+            setLoading(loginBtn, true);
+            loginBtn.dataset.original = loginBtn.innerHTML;
+
+            try {
+                const result = await login(email, password);
+                if (result.status === 200 && result.data.status) {
+                    setSession(result.data.data);
+                    showCard(dashboardCard);
+                    await refreshDashboard();
+                    showToast('✅ Login berhasil!', 'success');
+                } else {
+                    showAlert(loginAlert, result.data.error || 'Login gagal', 'error');
+                }
+            } catch (error) {
+                showAlert(loginAlert, 'Network error: ' + error.message, 'error');
+            }
+
+            setLoading(loginBtn, false);
+        });
+
+        // ----- REGISTER -----
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideAlert(registerAlert);
+
+            const username = registerUsername.value.trim();
+            const email = registerEmail.value.trim();
+            const password = registerPassword.value;
+
+            if (!username || !email || !password) {
+                showAlert(registerAlert, 'Isi semua field!', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showAlert(registerAlert, 'Password minimal 6 karakter!', 'error');
+                return;
+            }
+
+            setLoading(registerBtn, true);
+            registerBtn.dataset.original = registerBtn.innerHTML;
+
+            try {
+                const result = await register(username, email, password);
+                if (result.status === 201 && result.data.status) {
+                    const data = result.data.data;
+                    showAlert(registerAlert,
+                        `✅ Registrasi berhasil!\n\n👤 Username: ${data.user.username}\n📧 Email: ${data.user.email}\n🔑 API Key: ${data.api_key}\n📊 Quota: ${data.quota || 10}`,
+                        'success'
+                    );
+                    setTimeout(() => {
+                        showCard(loginCard);
+                        loginEmail.value = email;
+                        hideAlert(registerAlert);
+                    }, 3000);
+                } else {
+                    showAlert(registerAlert, result.data.error || 'Registrasi gagal', 'error');
+                }
+            } catch (error) {
+                showAlert(registerAlert, 'Network error: ' + error.message, 'error');
+            }
+
+            setLoading(registerBtn, false);
+        });
+
+        // ----- GENERATE API KEY -----
+        generateApiKeyBtn.addEventListener('click', async () => {
+            const token = getToken();
+            if (!token) {
+                showAlert(dashboardAlert, 'Anda belum login!', 'error');
+                return;
+            }
+
+            hideAlert(dashboardAlert);
+            setLoading(generateApiKeyBtn, true);
+            generateApiKeyBtn.dataset.original = generateApiKeyBtn.innerHTML;
+
+            try {
+                const result = await generateApiKey(token);
+                if (result.status === 200 && result.data.status) {
+                    const newKey = result.data.api_key;
+                    localStorage.setItem('xtzy_apikey', newKey);
+                    apiKeyDisplay.textContent = newKey;
+                    showToast('✅ API Key generated!', 'success');
+                    showResult(result.data);
+                    await refreshDashboard();
+                } else {
+                    showAlert(dashboardAlert, result.data.error || 'Gagal generate API Key', 'error');
+                }
+            } catch (error) {
+                showAlert(dashboardAlert, 'Network error: ' + error.message, 'error');
+            }
+
+            setLoading(generateApiKeyBtn, false);
+        });
+
+        // ----- COPY -----
+        copyApiKeyBtn.addEventListener('click', () => {
+            const text = apiKeyDisplay.textContent;
+            if (text && text !== 'Belum ada API Key') {
+                copyToClipboard(text);
+            } else {
+                showToast('⚠️ Belum ada API Key', 'error');
+            }
+        });
+
+        // ----- GENERATE TOKEN -----
+        generateTokenBtn.addEventListener('click', async () => {
+            const token = getToken();
+            if (!token) {
+                showAlert(dashboardAlert, 'Anda belum login!', 'error');
+                return;
+            }
+
+            hideAlert(dashboardAlert);
+            setLoading(generateTokenBtn, true);
+            generateTokenBtn.dataset.original = generateTokenBtn.innerHTML;
+
+            try {
+                const result = await generateToken(token, 'US');
+                if (result.status === 200 && result.data.status) {
+                    showToast('✅ Token generated!', 'success');
+                    showResult(result.data);
+                    await refreshDashboard();
+                } else {
+                    showAlert(dashboardAlert, result.data.error || 'Gagal generate token', 'error');
+                }
+            } catch (error) {
+                showAlert(dashboardAlert, 'Network error: ' + error.message, 'error');
+            }
+
+            setLoading(generateTokenBtn, false);
+        });
+
+        // ----- CHECK STATUS -----
+        checkStatusBtn.addEventListener('click', async () => {
+            const token = getToken();
+            if (!token) {
+                showAlert(dashboardAlert, 'Anda belum login!', 'error');
+                return;
+            }
+
+            hideAlert(dashboardAlert);
+            setLoading(checkStatusBtn, true);
+            checkStatusBtn.dataset.original = checkStatusBtn.innerHTML;
+
+            try {
+                const result = await checkStatus(token);
+                if (result.status === 200 && result.data.status) {
+                    showToast('✅ Status updated!', 'success');
+                    showResult(result.data);
+                    await refreshDashboard();
+                } else {
+                    showAlert(dashboardAlert, result.data.error || 'Gagal cek status', 'error');
+                }
+            } catch (error) {
+                showAlert(dashboardAlert, 'Network error: ' + error.message, 'error');
+            }
+
+            setLoading(checkStatusBtn, false);
+        });
+
+        // ----- LOGOUT -----
+        logoutBtn.addEventListener('click', () => {
+            clearSession();
+            showCard(loginCard);
+            hideResult();
+            hideAlert(loginAlert);
+            showToast('👋 Logout berhasil!', 'success');
+        });
+
+        // ============================================
+        // 🚀 INIT
+        // ============================================
+
+        // Cek API
+        checkAPI();
+
+        // Cek session
+        if (isLoggedIn()) {
+            showCard(dashboardCard);
+            refreshDashboard();
+        } else {
+            showCard(loginCard);
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                if (!loginCard.classList.contains('hidden')) {
+                    loginForm.dispatchEvent(new Event('submit'));
+                } else if (!registerCard.classList.contains('hidden')) {
+                    registerForm.dispatchEvent(new Event('submit'));
+                }
+            }
+            if (e.key === 'Escape' && !dashboardCard.classList.contains('hidden')) {
+                logoutBtn.click();
+            }
+        });
+
+        console.log('🎬 xtzyyyy API Client loaded!');
+        console.log(`🌐 API: ${API_BASE}`);
+        console.log('📌 Full button native flow ready.');
+        console.log('📌 Ganti API_BASE jika backend di domain lain.');
+    </script>
+
+</body>
+</html>

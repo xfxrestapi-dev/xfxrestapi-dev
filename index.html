@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#08090d">
 <title>ANYAAPI</title>
 
@@ -11,545 +11,392 @@
   box-sizing:border-box;
   margin:0;
   padding:0;
-  font-family:Arial,Helvetica,sans-serif;
-}
-
-:root{
-  --bg:#08090d;
-  --card:#101116;
-  --card2:#0b0c10;
-  --border:#252730;
-  --text:#fff;
-  --muted:#8b8e99;
-  --pink:#ff4b86;
-  --pink2:#ff6a9a;
-  --green:#52db8c;
-  --red:#ff626d;
+  font-family:Arial,sans-serif
 }
 
 body{
   min-height:100vh;
-  color:var(--text);
-  background:
-    radial-gradient(circle at 50% -10%,#2a111d 0,#100b10 32%,#08090d 65%);
+  background:#08090d;
+  color:#fff
 }
 
-button,input{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-}
-
-.hidden{
-  display:none!important;
-}
-
-/* LOADING */
+.hidden{display:none!important}
 
 #loading{
   position:fixed;
   inset:0;
-  z-index:9999;
   display:flex;
   align-items:center;
   justify-content:center;
   background:#08090d;
+  z-index:99
 }
 
-.loading-box{
-  text-align:center;
+.loader{
+  text-align:center
 }
 
-.loading-logo{
-  font-size:29px;
-  font-weight:900;
-  letter-spacing:1px;
+.loader b{
+  font-size:30px
 }
 
-.loading-logo span{
-  color:var(--pink);
-}
-
-.loading-text{
-  margin-top:8px;
-  color:var(--muted);
-  font-size:11px;
+.loader b span,
+.logo span{
+  color:#ff4b87
 }
 
 .spinner{
-  width:26px;
-  height:26px;
-  margin:17px auto 0;
-  border:3px solid #24262d;
-  border-top-color:var(--pink);
+  width:28px;
+  height:28px;
+  margin:18px auto;
+  border:3px solid #292c34;
+  border-top-color:#ff4b87;
   border-radius:50%;
-  animation:spin .8s linear infinite;
+  animation:spin .8s linear infinite
 }
 
 @keyframes spin{
   to{transform:rotate(360deg)}
 }
 
-/* AUTH */
+.auth,
+.dashboard{
+  width:100%;
+  max-width:600px;
+  margin:auto;
+  padding:25px 15px
+}
 
 .auth{
   min-height:100vh;
   display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:25px 16px;
+  align-items:center
 }
 
-.auth-wrap{
-  width:100%;
-  max-width:430px;
-}
-
-.logo-area{
-  text-align:center;
-  margin-bottom:25px;
+.auth-box{
+  width:100%
 }
 
 .logo{
-  font-size:36px;
+  text-align:center;
+  font-size:38px;
   font-weight:900;
-  letter-spacing:1px;
-}
-
-.logo span{
-  color:var(--pink);
+  margin-bottom:7px
 }
 
 .subtitle{
-  margin-top:7px;
-  color:var(--muted);
-  font-size:12px;
+  text-align:center;
+  color:#777b85;
+  font-size:11px;
+  margin-bottom:25px
 }
 
-.auth-card{
-  padding:25px;
-  border:1px solid var(--border);
-  border-radius:22px;
-  background:rgba(16,17,22,.96);
-  box-shadow:0 25px 80px rgba(0,0,0,.45);
+.card{
+  background:#101116;
+  border:1px solid #282b34;
+  border-radius:20px;
+  padding:22px;
+  margin-bottom:14px
 }
 
 .title{
-  font-size:23px;
-  font-weight:800;
+  font-size:24px;
+  font-weight:800
 }
 
 .desc{
-  margin-top:7px;
-  margin-bottom:21px;
-  color:var(--muted);
-  font-size:12px;
+  color:#858892;
+  font-size:11px;
   line-height:1.5;
+  margin:7px 0 20px
 }
 
 .message{
   display:none;
-  margin-bottom:14px;
-  padding:12px 13px;
+  padding:11px;
   border-radius:11px;
-  border:1px solid var(--border);
-  background:#15161c;
   font-size:11px;
   line-height:1.5;
+  margin-bottom:14px
 }
 
-.message.success{
+.message.show{display:block}
+.success{
+  color:#4ddd8a;
+  background:#0c1711;
+  border:1px solid #214d34
+}
+.error{
+  color:#ff6670;
+  background:#180c0f;
+  border:1px solid #54262d
+}
+.warning{
+  color:#ffc857;
+  background:#181308;
+  border:1px solid #50431e
+}
+
+label{
   display:block;
-  color:var(--green);
+  color:#a7aab3;
+  font-size:10px;
+  margin-bottom:7px
 }
 
-.message.error{
-  display:block;
-  color:var(--red);
+.field{
+  margin-bottom:15px
 }
 
-.label{
-  display:block;
-  margin-bottom:8px;
-  color:#a8abb5;
-  font-size:11px;
-}
-
-.form{
-  margin-bottom:14px;
-}
-
-.input{
+input{
   width:100%;
   height:49px;
-  padding:0 14px;
-  outline:none;
-  border:1px solid var(--border);
+  border:1px solid #292c34;
   border-radius:12px;
+  outline:none;
   background:#090a0e;
   color:#fff;
-  font-size:13px;
+  padding:0 13px;
+  font-size:12px
 }
 
-.input:focus{
-  border-color:var(--pink);
-  box-shadow:0 0 0 2px rgba(255,75,134,.08);
+input:focus{
+  border-color:#ff4b87
 }
 
-.password{
-  position:relative;
+.password-box{
+  position:relative
 }
 
-.password .input{
-  padding-right:65px;
+.password-box input{
+  padding-right:55px
 }
 
-.show{
+.show-pass{
   position:absolute;
+  right:12px;
   top:50%;
-  right:13px;
   transform:translateY(-50%);
-  border:0;
   background:none;
-  color:#777b86;
+  border:0;
+  color:#777b84;
   font-size:10px;
+  cursor:pointer
 }
 
-.main-btn{
+.btn{
   width:100%;
   height:49px;
   border:0;
   border-radius:12px;
-  background:var(--pink);
+  background:#ff4b87;
   color:#fff;
-  font-size:13px;
   font-weight:800;
-  transition:.2s;
+  cursor:pointer
 }
 
-.main-btn:hover{
-  background:var(--pink2);
-}
-
-.main-btn:disabled{
-  opacity:.55;
-  cursor:not-allowed;
+.btn:disabled{
+  opacity:.5
 }
 
 .switch{
-  margin-top:18px;
   text-align:center;
-  color:var(--muted);
-  font-size:11px;
+  color:#70747e;
+  font-size:10px;
+  margin-top:17px
 }
 
 .switch span{
-  color:var(--pink);
-  font-weight:700;
-  cursor:pointer;
-}
-
-.footer{
-  margin-top:22px;
-  text-align:center;
-  color:#484b54;
-  font-size:9px;
-}
-
-/* DASHBOARD */
-
-.dashboard{
-  width:100%;
-  max-width:570px;
-  margin:auto;
-  padding:25px 15px 45px;
+  color:#ff4b87;
+  font-weight:bold;
+  cursor:pointer
 }
 
 .header{
   display:flex;
+  align-items:center;
   justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  margin-bottom:24px;
+  margin-bottom:18px
 }
 
-.dash-logo{
-  font-size:28px;
-  font-weight:900;
+.logo-small{
+  font-size:27px;
+  font-weight:900
 }
 
-.dash-logo span{
-  color:var(--pink);
-}
-
-.dash-sub{
-  margin-top:5px;
-  color:var(--muted);
-  font-size:10px;
-}
-
-.online{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  padding:8px 10px;
-  border:1px solid #193829;
+.status{
+  padding:7px 10px;
   border-radius:20px;
-  background:#0c1712;
-  color:var(--green);
-  font-size:9px;
-}
-
-.dot{
-  width:6px;
-  height:6px;
-  border-radius:50%;
-  background:var(--green);
-}
-
-.card{
-  margin-bottom:14px;
-  padding:18px;
-  border:1px solid var(--border);
-  border-radius:17px;
-  background:rgba(16,17,22,.96);
-}
-
-.card-title{
-  margin-bottom:15px;
-  font-size:13px;
-  font-weight:800;
+  border:1px solid #204832;
+  background:#0c1511;
+  color:#4ddd8a;
+  font-size:9px
 }
 
 .account{
   display:flex;
   align-items:center;
-  gap:12px;
+  gap:12px
 }
 
 .avatar{
-  width:47px;
-  height:47px;
-  min-width:47px;
+  width:48px;
+  height:48px;
   display:flex;
   align-items:center;
   justify-content:center;
-  border:1px solid #472132;
   border-radius:50%;
-  background:#1a0e15;
-  color:var(--pink);
-  font-size:17px;
-  font-weight:900;
+  background:#1c0d15;
+  border:1px solid #4b2439;
+  color:#ff4b87;
+  font-weight:900
 }
 
 .email{
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  font-size:13px;
+  font-size:12px;
+  word-break:break-all
 }
 
 .uid{
+  color:#656973;
+  font-size:8px;
   margin-top:5px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  color:var(--muted);
-  font-size:9px;
+  word-break:break-all
 }
-
-/* STATS */
 
 .stats{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:8px;
+  gap:8px
 }
 
 .stat{
-  padding:13px 5px;
+  padding:14px 5px;
   text-align:center;
-  border:1px solid #202229;
+  border:1px solid #22252d;
   border-radius:11px;
-  background:var(--card2);
+  background:#0b0c10
 }
 
-.stat-value{
-  font-size:13px;
-  font-weight:800;
+.stat b{
+  display:block;
+  font-size:12px
 }
 
-.stat-label{
-  margin-top:5px;
-  color:#696d77;
-  font-size:8px;
-  text-transform:uppercase;
+.stat small{
+  color:#686b74;
+  font-size:8px
 }
 
-.green{
-  color:var(--green);
-}
-
-/* API KEY */
+.green{color:#4ddd8a}
 
 .key-row{
   display:flex;
-  gap:8px;
+  gap:8px
 }
 
-.key{
-  flex:1;
-  min-width:0;
-  height:46px;
-  padding:0 12px;
-  outline:none;
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:#08090c;
-  color:#fff;
-  font-size:10px;
+.key-row input{
+  flex:1
 }
 
 .copy{
-  height:46px;
-  padding:0 15px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:#191a20;
+  width:70px;
+  border:1px solid #292c34;
+  border-radius:11px;
+  background:#181a20;
   color:#fff;
-  font-size:11px;
-  font-weight:700;
+  cursor:pointer
 }
 
 .generate{
   width:100%;
-  height:46px;
-  margin-top:10px;
+  height:48px;
+  margin-top:9px;
   border:0;
-  border-radius:10px;
-  background:var(--pink);
+  border-radius:11px;
+  background:#ff4b87;
   color:#fff;
-  font-size:12px;
   font-weight:800;
+  cursor:pointer
 }
 
-.generate:disabled{
-  opacity:.5;
-  cursor:not-allowed;
+.endpoint{
+  padding:11px;
+  border:1px solid #202229;
+  background:#0b0c10;
+  border-radius:10px;
+  margin-bottom:8px;
+  font-size:10px
 }
 
-/* INFO */
-
-.info-row{
-  display:flex;
-  justify-content:space-between;
-  gap:15px;
-  padding:11px 0;
-  border-bottom:1px solid #202229;
-  font-size:11px;
+.method{
+  color:#4ddd8a;
+  font-weight:bold;
+  margin-right:7px
 }
-
-.info-row:first-child{
-  padding-top:0;
-}
-
-.info-row:last-child{
-  padding-bottom:0;
-  border-bottom:0;
-}
-
-.info-label{
-  color:#747882;
-}
-
-.info-value{
-  max-width:68%;
-  text-align:right;
-  word-break:break-all;
-}
-
-/* LOGOUT */
 
 .logout{
   width:100%;
-  height:46px;
+  height:47px;
   border:1px solid #292c34;
   border-radius:11px;
   background:#14161b;
   color:#fff;
-  font-size:12px;
-  font-weight:700;
+  cursor:pointer
 }
 
-.logout:disabled{
-  opacity:.5;
+.footer{
+  text-align:center;
+  color:#444750;
+  font-size:8px;
+  margin-top:20px
 }
 
-/* MOBILE */
-
-@media(max-width:420px){
-
-  .auth-card{
-    padding:21px;
-  }
-
-  .logo{
-    font-size:32px;
+@media(max-width:400px){
+  .stats{
+    grid-template-columns:1fr
   }
 
   .key-row{
-    flex-direction:column;
+    flex-direction:column
   }
 
   .copy{
     width:100%;
+    height:45px
   }
-
-  .header{
-    align-items:flex-start;
-  }
-
 }
 </style>
 </head>
 
 <body>
 
-<!-- LOADING -->
 <div id="loading">
-  <div class="loading-box">
-    <div class="loading-logo">
-      ANYA<span>API</span>
-    </div>
-
-    <div class="loading-text">
-      Checking session...
-    </div>
-
+  <div class="loader">
+    <b>ANYA<span>API</span></b>
     <div class="spinner"></div>
+    <small style="color:#666;font-size:10px">
+      Checking session...
+    </small>
   </div>
 </div>
 
 
-<!-- AUTH -->
-<section id="auth" class="auth hidden">
+<!-- LOGIN / REGISTER -->
 
-  <div class="auth-wrap">
+<section id="authPage" class="auth hidden">
 
-    <div class="logo-area">
-      <div class="logo">
-        ANYA<span>API</span>
-      </div>
+  <div class="auth-box">
 
-      <div class="subtitle">
-        API Management System
-      </div>
+    <div class="logo">
+      ANYA<span>API</span>
     </div>
 
+    <div class="subtitle">
+      Secure API Management System
+    </div>
 
-    <div class="auth-card">
+    <div class="card">
 
       <div id="authTitle" class="title">
         Login
@@ -559,48 +406,33 @@ button{
         Login untuk mengakses dashboard ANYAAPI.
       </div>
 
-
       <div id="authMessage" class="message"></div>
 
-
-      <div class="form">
-
-        <label class="label">
-          Email
-        </label>
-
+      <div class="field">
+        <label>Email</label>
         <input
           id="email"
-          class="input"
           type="email"
           placeholder="you@example.com"
-          autocomplete="email"
-        >
-
+          autocomplete="email">
       </div>
 
+      <div class="field">
 
-      <div class="form">
+        <label>Password</label>
 
-        <label class="label">
-          Password
-        </label>
-
-        <div class="password">
+        <div class="password-box">
 
           <input
             id="password"
-            class="input"
             type="password"
             placeholder="Minimal 6 karakter"
-            autocomplete="current-password"
-          >
+            autocomplete="current-password">
 
           <button
-            type="button"
-            class="show"
-            onclick="togglePassword()"
-          >
+            id="showPassword"
+            class="show-pass"
+            type="button">
             Show
           </button>
 
@@ -608,30 +440,23 @@ button{
 
       </div>
 
-
       <button
         id="authButton"
-        class="main-btn"
-        onclick="submitAuth()"
-      >
+        class="btn"
+        type="button">
         Login
       </button>
 
-
       <div class="switch">
-        <span
-          id="switchAuth"
-          onclick="toggleMode()"
-        >
+        <span id="switchButton">
           Belum punya akun? Register
         </span>
       </div>
 
     </div>
 
-
     <div class="footer">
-      ANYAAPI • Secure API Dashboard
+      ANYAAPI • Secure Access
     </div>
 
   </div>
@@ -640,33 +465,33 @@ button{
 
 
 <!-- DASHBOARD -->
+
 <section id="dashboard" class="dashboard hidden">
 
-  <header class="header">
+  <div class="header">
 
     <div>
-      <div class="dash-logo">
+      <div class="logo-small">
         ANYA<span>API</span>
       </div>
 
-      <div class="dash-sub">
+      <div style="color:#777;font-size:9px;margin-top:4px">
         API Management Dashboard
       </div>
     </div>
 
-    <div class="online">
-      <span class="dot"></span>
-      Online
+    <div class="status">
+      ● Online
     </div>
 
-  </header>
+  </div>
 
 
   <!-- ACCOUNT -->
 
   <div class="card">
 
-    <div class="card-title">
+    <div style="font-size:12px;font-weight:bold;margin-bottom:15px">
       Account
     </div>
 
@@ -676,19 +501,13 @@ button{
         A
       </div>
 
-      <div style="min-width:0;flex:1">
+      <div>
 
-        <div
-          id="dashboardEmail"
-          class="email"
-        >
+        <div id="userEmail" class="email">
           -
         </div>
 
-        <div
-          id="dashboardId"
-          class="uid"
-        >
+        <div id="userId" class="uid">
           -
         </div>
 
@@ -699,44 +518,29 @@ button{
   </div>
 
 
-  <!-- OVERVIEW -->
+  <!-- STATS -->
 
   <div class="card">
 
-    <div class="card-title">
+    <div style="font-size:12px;font-weight:bold;margin-bottom:14px">
       Overview
     </div>
 
     <div class="stats">
 
       <div class="stat">
-        <div class="stat-value green">
-          Active
-        </div>
-        <div class="stat-label">
-          Session
-        </div>
+        <b class="green">Active</b>
+        <small>SESSION</small>
       </div>
 
       <div class="stat">
-        <div
-          id="keyStat"
-          class="stat-value"
-        >
-          None
-        </div>
-        <div class="stat-label">
-          API Key
-        </div>
+        <b id="keyStatus">None</b>
+        <small>API KEY</small>
       </div>
 
       <div class="stat">
-        <div class="stat-value">
-          REST
-        </div>
-        <div class="stat-label">
-          API Type
-        </div>
+        <b>REST</b>
+        <small>API TYPE</small>
       </div>
 
     </div>
@@ -748,7 +552,7 @@ button{
 
   <div class="card">
 
-    <div class="card-title">
+    <div style="font-size:12px;font-weight:bold;margin-bottom:14px">
       API Key
     </div>
 
@@ -756,103 +560,104 @@ button{
 
       <input
         id="apiKey"
-        class="key"
         type="text"
         readonly
-        placeholder="API Key belum dibuat"
-      >
+        placeholder="API Key belum tersedia">
 
       <button
         id="copyButton"
         class="copy"
-        onclick="copyKey()"
-      >
+        type="button">
         Copy
       </button>
 
     </div>
 
-
     <button
       id="generateButton"
       class="generate"
-      onclick="generateKey()"
-    >
+      type="button">
       Generate API Key
     </button>
 
-
-    <div
-      id="dashboardMessage"
-      class="message"
-      style="margin-top:10px;margin-bottom:0"
-    ></div>
+    <div id="keyMessage"
+         class="message"
+         style="margin-top:10px;margin-bottom:0">
+    </div>
 
   </div>
 
 
-  <!-- INFORMATION -->
+  <!-- ENDPOINTS -->
 
   <div class="card">
 
-    <div class="card-title">
+    <div style="font-size:12px;font-weight:bold;margin-bottom:14px">
+      API Endpoint
+    </div>
+
+    <div class="endpoint">
+      <span class="method">POST</span>
+      /api/auth/register
+    </div>
+
+    <div class="endpoint">
+      <span class="method">POST</span>
+      /api/auth/login
+    </div>
+
+    <div class="endpoint">
+      <span class="method">GET</span>
+      /api/auth/me
+    </div>
+
+    <div class="endpoint">
+      <span class="method">GET</span>
+      /api/key/generate
+    </div>
+
+    <div class="endpoint">
+      <span class="method">POST</span>
+      /api/auth/logout
+    </div>
+
+  </div>
+
+
+  <!-- INFO -->
+
+  <div class="card">
+
+    <div style="font-size:12px;font-weight:bold;margin-bottom:14px">
       Information
     </div>
 
-    <div class="info-row">
+    <div style="display:flex;justify-content:space-between;
+                padding:10px 0;border-bottom:1px solid #202229;
+                font-size:10px">
 
-      <span class="info-label">
-        Email
-      </span>
+      <span style="color:#70737d">Email</span>
 
-      <span
-        id="infoEmail"
-        class="info-value"
-      >
-        -
-      </span>
+      <span id="infoEmail">-</span>
 
     </div>
 
+    <div style="display:flex;justify-content:space-between;
+                padding:10px 0;border-bottom:1px solid #202229;
+                font-size:10px">
 
-    <div class="info-row">
+      <span style="color:#70737d">Account ID</span>
 
-      <span class="info-label">
-        Account ID
-      </span>
-
-      <span
-        id="infoId"
-        class="info-value"
-      >
-        -
-      </span>
+      <span id="infoId">-</span>
 
     </div>
 
+    <div style="display:flex;justify-content:space-between;
+                padding:10px 0;font-size:10px">
 
-    <div class="info-row">
+      <span style="color:#70737d">Session</span>
 
-      <span class="info-label">
-        Session
-      </span>
-
-      <span class="info-value green">
-        Protected
-      </span>
-
-    </div>
-
-
-    <div class="info-row">
-
-      <span class="info-label">
-        API Status
-      </span>
-
-      <span class="info-value green">
-        Online
-      </span>
+      <span class="green">Protected</span>
 
     </div>
 
@@ -862,11 +667,9 @@ button{
   <button
     id="logoutButton"
     class="logout"
-    onclick="logout()"
-  >
+    type="button">
     Logout
   </button>
-
 
   <div class="footer">
     ANYAAPI • API Management System
@@ -877,213 +680,168 @@ button{
 
 <script>
 
-/* ==============================================
-   API
-   Kosong = otomatis memakai domain Worker
-============================================== */
+/* ==========================================
+   ANYAAPI WORKER
+========================================== */
 
-const API = "";
+const API =
+  "https://xfxrestapi-com.xyroxyz9.workers.dev";
 
-
-/* ==============================================
-   STATE
-============================================== */
 
 let registerMode = false;
 
 
-/* ==============================================
-   HELPERS
-============================================== */
+/* ==========================================
+   HELPER
+========================================== */
 
-function $(id){
-  return document.getElementById(id);
+const $ = id =>
+  document.getElementById(id);
+
+
+function showAuth(){
+
+  $("loading").classList.add("hidden");
+
+  $("dashboard").classList.add("hidden");
+
+  $("authPage").classList.remove("hidden");
 }
 
 
-/* ==============================================
-   MESSAGE
-============================================== */
+function showDashboard(){
 
-function authMessage(text,type){
+  $("loading").classList.add("hidden");
 
-  const box = $("authMessage");
+  $("authPage").classList.add("hidden");
+
+  $("dashboard").classList.remove("hidden");
+}
+
+
+function authMessage(text,type="error"){
+
+  const box =
+    $("authMessage");
 
   box.textContent = text;
 
-  box.className = "message " + type;
+  box.className =
+    "message show " + type;
 }
 
 
-function hideAuthMessage(){
+function keyMessage(text,type="error"){
 
-  const box = $("authMessage");
-
-  box.textContent = "";
-
-  box.className = "message";
-}
-
-
-function dashboardMessage(text,type){
-
-  const box = $("dashboardMessage");
+  const box =
+    $("keyMessage");
 
   box.textContent = text;
 
-  box.className = "message " + type;
-
-  box.style.marginTop = "10px";
-  box.style.marginBottom = "0";
+  box.className =
+    "message show " + type;
 }
 
 
-function hideDashboardMessage(){
+/* ==========================================
+   SAFE JSON
+========================================== */
 
-  const box = $("dashboardMessage");
+async function request(url,options={}){
 
-  box.textContent = "";
+  const response =
+    await fetch(
+      API + url,
+      {
+        credentials:"include",
+        ...options,
+        headers:{
+          "Accept":"application/json",
+          ...(options.headers || {})
+        }
+      }
+    );
 
-  box.className = "message";
-}
+  const text =
+    await response.text();
 
-
-/* ==============================================
-   RESPONSE HANDLER
-
-   Penting:
-   response dibaca sebagai text dulu.
-   Jadi HTML error Cloudflare tidak membuat
-   JSON.parse error yang membingungkan.
-============================================== */
-
-async function readResponse(response){
-
-  const text = await response.text();
-
-  let data = null;
+  let data;
 
   try{
     data = JSON.parse(text);
-  }catch(e){
-    console.error(
-      "SERVER RAW RESPONSE:",
-      text
-    );
+  }catch{
+    data = null;
   }
 
   return {
-    status: response.status,
-    ok: response.ok,
-    data: data,
-    raw: text
+    response,
+    data,
+    text
   };
 }
 
 
-/* ==============================================
+/* ==========================================
    CHECK SESSION
-============================================== */
+========================================== */
 
 async function checkSession(){
 
   try{
 
-    const response = await fetch(
-      API + "/api/auth/me",
-      {
-        method:"GET",
-        credentials:"include",
-        headers:{
-          "Accept":"application/json"
-        }
-      }
-    );
-
     const result =
-      await readResponse(response);
-
-    console.log(
-      "SESSION:",
-      result
-    );
-
+      await request(
+        "/api/auth/me"
+      );
 
     if(
-      result.ok &&
+      result.response.ok &&
       result.data &&
       result.data.ok &&
       result.data.user
     ){
 
-      showDashboard(
+      setUser(
         result.data.user
       );
 
-    }else{
+      showDashboard();
 
-      showAuth();
-
+      return;
     }
 
   }catch(error){
 
-    console.error(
-      "SESSION ERROR:",
+    console.log(
+      "Session check:",
       error
     );
 
-    showAuth();
-
   }
 
+  showAuth();
 }
 
 
-/* ==============================================
-   SHOW AUTH
-============================================== */
+/* ==========================================
+   SET USER
+========================================== */
 
-function showAuth(){
-
-  $("loading")
-    .classList.add("hidden");
-
-  $("dashboard")
-    .classList.add("hidden");
-
-  $("auth")
-    .classList.remove("hidden");
-}
-
-
-/* ==============================================
-   SHOW DASHBOARD
-============================================== */
-
-function showDashboard(user){
-
-  $("loading")
-    .classList.add("hidden");
-
-  $("auth")
-    .classList.add("hidden");
-
-  $("dashboard")
-    .classList.remove("hidden");
-
+function setUser(user){
 
   const email =
     user.email || "-";
 
   const id =
-    user.id || "-";
+    user.id ||
+    user.userId ||
+    "-";
 
 
-  $("dashboardEmail")
+  $("userEmail")
     .textContent = email;
 
-  $("dashboardId")
+  $("userId")
     .textContent = id;
 
   $("infoEmail")
@@ -1092,90 +850,32 @@ function showDashboard(user){
   $("infoId")
     .textContent = id;
 
-
   $("avatar")
     .textContent =
-    email.charAt(0)
-      .toUpperCase();
+      email
+        .charAt(0)
+        .toUpperCase();
 
 
-  /*
-    Coba ambil API key yang sudah ada.
-    Kalau backend mengembalikan key pada
-    endpoint generate, key akan otomatis tampil.
-  */
+  if(
+    user.apiKey ||
+    user.hasApiKey
+  ){
 
-}
+    $("keyStatus")
+      .textContent = "Active";
 
-
-/* ==============================================
-   LOGIN / REGISTER MODE
-============================================== */
-
-function toggleMode(){
-
-  registerMode =
-    !registerMode;
-
-
-  if(registerMode){
-
-    $("authTitle")
-      .textContent = "Register";
-
-    $("authDesc")
-      .textContent =
-      "Buat akun baru untuk menggunakan ANYAAPI.";
-
-    $("authButton")
-      .textContent =
-      "Create Account";
-
-    $("switchAuth")
-      .textContent =
-      "Sudah punya akun? Login";
-
-    $("password")
-      .setAttribute(
-        "autocomplete",
-        "new-password"
-      );
-
-  }else{
-
-    $("authTitle")
-      .textContent = "Login";
-
-    $("authDesc")
-      .textContent =
-      "Login untuk mengakses dashboard ANYAAPI.";
-
-    $("authButton")
-      .textContent =
-      "Login";
-
-    $("switchAuth")
-      .textContent =
-      "Belum punya akun? Register";
-
-    $("password")
-      .setAttribute(
-        "autocomplete",
-        "current-password"
-      );
-
+    $("keyStatus")
+      .classList.add("green");
   }
-
-
-  hideAuthMessage();
 }
 
 
-/* ==============================================
-   AUTH SUBMIT
-============================================== */
+/* ==========================================
+   LOGIN / REGISTER
+========================================== */
 
-async function submitAuth(){
+async function auth(){
 
   const email =
     $("email")
@@ -1187,31 +887,23 @@ async function submitAuth(){
     $("password")
       .value;
 
-  const button =
-    $("authButton");
-
-
   if(!email){
 
     authMessage(
-      "Email wajib diisi.",
-      "error"
+      "Email wajib diisi."
     );
 
     return;
   }
-
 
   if(!password){
 
     authMessage(
-      "Password wajib diisi.",
-      "error"
+      "Password wajib diisi."
     );
 
     return;
   }
-
 
   if(
     registerMode &&
@@ -1219,157 +911,125 @@ async function submitAuth(){
   ){
 
     authMessage(
-      "Password minimal 6 karakter.",
-      "error"
+      "Password minimal 6 karakter."
     );
 
     return;
   }
 
 
+  const button =
+    $("authButton");
+
   button.disabled = true;
 
   button.textContent =
     registerMode
       ? "Creating..."
-      : "Logging in...";
+      : "Login...";
 
-  hideAuthMessage();
+
+  const route =
+    registerMode
+      ? "/api/auth/register"
+      : "/api/auth/login";
 
 
   try{
 
-    const endpoint =
-      registerMode
-        ? "/api/auth/register"
-        : "/api/auth/login";
-
-
-    const response =
-      await fetch(
-        API + endpoint,
+    const result =
+      await request(
+        route,
         {
           method:"POST",
-
-          credentials:"include",
-
           headers:{
             "Content-Type":
-              "application/json",
-
-            "Accept":
               "application/json"
           },
-
           body:
             JSON.stringify({
-              email:email,
-              password:password
+              email,
+              password
             })
         }
       );
 
 
-    const result =
-      await readResponse(response);
-
-
-    console.log(
-      "AUTH RESPONSE:",
-      result
-    );
-
-
-    /*
-      SERVER TIDAK MENGEMBALIKAN JSON
-    */
-
     if(!result.data){
 
       throw new Error(
         "Endpoint tidak mengembalikan JSON. HTTP " +
-        result.status +
-        ". Pastikan route /api/auth/" +
-        (registerMode ? "register" : "login") +
-        " sudah dibuat di Worker."
+        result.response.status +
+        ". Pastikan route " +
+        route +
+        " tersedia di Worker."
       );
-
     }
 
 
     if(
-      !result.ok ||
-      !result.data.ok
+      !result.response.ok ||
+      result.data.ok === false
     ){
 
       throw new Error(
         result.data.message ||
-        "Request gagal. HTTP " +
-        result.status
+        result.data.error ||
+        "Request gagal."
       );
-
     }
 
-
-    /*
-      REGISTER
-    */
 
     if(registerMode){
 
       authMessage(
-        "Registrasi berhasil. Silakan login.",
+        result.data.message ||
+        "Register berhasil. Silakan login.",
         "success"
       );
 
-
       registerMode = false;
-
 
       $("authTitle")
         .textContent = "Login";
 
       $("authDesc")
         .textContent =
-        "Login untuk mengakses dashboard ANYAAPI.";
+          "Login untuk mengakses dashboard ANYAAPI.";
 
       $("authButton")
         .textContent = "Login";
 
-      $("switchAuth")
+      $("switchButton")
         .textContent =
-        "Belum punya akun? Register";
-
+          "Belum punya akun? Register";
 
       $("password")
         .value = "";
-
 
       return;
     }
 
 
-    /*
-      LOGIN
-    */
+    if(result.data.user){
 
-    await loadUser();
+      setUser(
+        result.data.user
+      );
+    }
+
+
+    showDashboard();
 
 
   }catch(error){
 
-    console.error(
-      "AUTH ERROR:",
-      error
-    );
-
+    console.error(error);
 
     authMessage(
       error.message ||
-      "Terjadi kesalahan.",
-      "error"
+      "Terjadi kesalahan."
     );
-
 
   }finally{
 
@@ -1379,185 +1039,219 @@ async function submitAuth(){
       registerMode
         ? "Create Account"
         : "Login";
-
   }
-
 }
 
 
-/* ==============================================
-   LOAD USER
-============================================== */
+/* ==========================================
+   SWITCH AUTH
+========================================== */
 
-async function loadUser(){
+$("switchButton")
+  .onclick = function(){
 
-  try{
+    registerMode =
+      !registerMode;
 
-    const response =
-      await fetch(
-        API + "/api/auth/me",
-        {
-          method:"GET",
-          credentials:"include"
-        }
-      );
+    $("authMessage")
+      .className =
+        "message";
 
 
-    const result =
-      await readResponse(response);
+    if(registerMode){
 
+      $("authTitle")
+        .textContent =
+          "Register";
+
+      $("authDesc")
+        .textContent =
+          "Buat akun baru untuk menggunakan ANYAAPI.";
+
+      $("authButton")
+        .textContent =
+          "Create Account";
+
+      $("switchButton")
+        .textContent =
+          "Sudah punya akun? Login";
+
+    }else{
+
+      $("authTitle")
+        .textContent =
+          "Login";
+
+      $("authDesc")
+        .textContent =
+          "Login untuk mengakses dashboard ANYAAPI.";
+
+      $("authButton")
+        .textContent =
+          "Login";
+
+      $("switchButton")
+        .textContent =
+          "Belum punya akun? Register";
+    }
+  };
+
+
+/* ==========================================
+   PASSWORD
+========================================== */
+
+$("showPassword")
+  .onclick = function(){
+
+    const input =
+      $("password");
 
     if(
-      !result.ok ||
-      !result.data ||
-      !result.data.ok ||
-      !result.data.user
+      input.type === "password"
     ){
 
-      showAuth();
+      input.type = "text";
 
-      return;
+      this.textContent =
+        "Hide";
+
+    }else{
+
+      input.type = "password";
+
+      this.textContent =
+        "Show";
     }
+  };
 
 
-    showDashboard(
-      result.data.user
-    );
+/* ==========================================
+   AUTH BUTTON
+========================================== */
+
+$("authButton")
+  .onclick = auth;
 
 
-  }catch(error){
+/* ==========================================
+   ENTER LOGIN
+========================================== */
 
-    console.error(
-      "LOAD USER ERROR:",
-      error
-    );
+$("password")
+  .addEventListener(
+    "keydown",
+    event => {
 
-    showAuth();
+      if(event.key === "Enter"){
 
-  }
+        auth();
 
-}
+      }
+
+    }
+  );
 
 
-/* ==============================================
+/* ==========================================
    GENERATE API KEY
-============================================== */
+========================================== */
 
 async function generateKey(){
 
   const button =
     $("generateButton");
 
-
   button.disabled = true;
 
   button.textContent =
     "Generating...";
 
-  hideDashboardMessage();
+  $("keyMessage")
+    .className =
+      "message";
 
 
   try{
 
-    const response =
-      await fetch(
-        API + "/api/key/generate",
+    const result =
+      await request(
+        "/api/key/generate",
         {
-          method:"GET",
-          credentials:"include",
-          headers:{
-            "Accept":
-              "application/json"
-          }
+          method:"GET"
         }
       );
 
 
-    const result =
-      await readResponse(response);
-
-
-    console.log(
-      "KEY RESPONSE:",
-      result
-    );
-
-
-    /*
-      SESSION HABIS
-    */
-
-    if(result.status === 401){
-
-      dashboardMessage(
-        "Session sudah berakhir. Silakan login kembali.",
-        "error"
-      );
-
-      setTimeout(
-        showAuth,
-        1200
-      );
-
-      return;
-    }
-
-
-    /*
-      RESPONSE BUKAN JSON
-    */
-
     if(!result.data){
 
       throw new Error(
-        "Endpoint /api/key/generate tidak mengembalikan JSON. HTTP " +
-        result.status
+        "Endpoint tidak mengembalikan JSON. HTTP " +
+        result.response.status +
+        ". Pastikan route /api/key/generate tersedia di Worker."
       );
     }
 
 
     if(
-      !result.ok ||
-      !result.data.ok
+      result.response.status === 401
+    ){
+
+      throw new Error(
+        "Session expired. Silakan login kembali."
+      );
+    }
+
+
+    if(
+      !result.response.ok ||
+      result.data.ok === false
     ){
 
       throw new Error(
         result.data.message ||
+        result.data.error ||
         "Gagal membuat API Key."
       );
     }
 
 
     /*
-      API KEY OTOMATIS DITEMPEL
+      Mendukung beberapa format response:
+      apiKey
+      api_key
+      key
     */
 
     const key =
       result.data.apiKey ||
-      result.data.key ||
-      result.data.api_key;
+      result.data.api_key ||
+      result.data.key;
 
 
     if(!key){
 
       throw new Error(
-        "Server berhasil merespons tetapi API Key tidak ditemukan."
+        "Response berhasil tetapi API Key tidak ditemukan."
       );
     }
 
+
+    /* AUTO TEMPEL */
 
     $("apiKey")
       .value = key;
 
 
-    $("keyStat")
-      .textContent = "Active";
+    $("keyStatus")
+      .textContent =
+        "Active";
 
-    $("keyStat")
+    $("keyStatus")
       .classList.add("green");
 
 
-    dashboardMessage(
+    keyMessage(
       result.data.message ||
       "API Key berhasil dibuat.",
       "success"
@@ -1566,18 +1260,12 @@ async function generateKey(){
 
   }catch(error){
 
-    console.error(
-      "GENERATE KEY ERROR:",
-      error
-    );
+    console.error(error);
 
-
-    dashboardMessage(
+    keyMessage(
       error.message ||
-      "Gagal membuat API Key.",
-      "error"
+      "Gagal membuat API Key."
     );
-
 
   }finally{
 
@@ -1585,190 +1273,122 @@ async function generateKey(){
 
     button.textContent =
       "Generate API Key";
-
   }
-
 }
 
 
-/* ==============================================
-   COPY KEY
-============================================== */
-
-async function copyKey(){
-
-  const input =
-    $("apiKey");
-
-  const key =
-    input.value.trim();
+$("generateButton")
+  .onclick =
+    generateKey;
 
 
-  if(!key){
+/* ==========================================
+   COPY
+========================================== */
 
-    dashboardMessage(
-      "Generate API Key terlebih dahulu.",
-      "error"
-    );
+$("copyButton")
+  .onclick = async function(){
 
-    return;
-  }
+    const key =
+      $("apiKey")
+        .value
+        .trim();
 
+    if(!key){
 
-  try{
+      keyMessage(
+        "API Key belum tersedia.",
+        "warning"
+      );
 
-    await navigator.clipboard
-      .writeText(key);
-
-
-    dashboardMessage(
-      "API Key berhasil disalin.",
-      "success"
-    );
-
-
-  }catch(error){
-
-    input.focus();
-
-    input.select();
-
-    document.execCommand("copy");
+      return;
+    }
 
 
-    dashboardMessage(
-      "API Key berhasil disalin.",
-      "success"
-    );
+    try{
 
-  }
+      await navigator.clipboard
+        .writeText(key);
 
-}
+      keyMessage(
+        "API Key berhasil disalin.",
+        "success"
+      );
+
+    }catch{
+
+      $("apiKey").select();
+
+      document.execCommand(
+        "copy"
+      );
+
+      keyMessage(
+        "API Key berhasil disalin.",
+        "success"
+      );
+    }
+  };
 
 
-/* ==============================================
+/* ==========================================
    LOGOUT
-============================================== */
+========================================== */
 
-async function logout(){
+$("logoutButton")
+  .onclick = async function(){
 
-  const button =
-    $("logoutButton");
+    const button =
+      this;
 
-
-  button.disabled = true;
-
-  button.textContent =
-    "Logging out...";
-
-
-  try{
-
-    await fetch(
-      API + "/api/auth/logout",
-      {
-        method:"POST",
-        credentials:"include"
-      }
-    );
-
-  }catch(error){
-
-    console.error(
-      "LOGOUT ERROR:",
-      error
-    );
-
-  }
-
-
-  $("apiKey").value = "";
-
-  $("keyStat").textContent =
-    "None";
-
-  $("keyStat")
-    .classList.remove("green");
-
-
-  button.disabled = false;
-
-  button.textContent =
-    "Logout";
-
-
-  showAuth();
-
-}
-
-
-/* ==============================================
-   PASSWORD SHOW/HIDE
-============================================== */
-
-function togglePassword(){
-
-  const input =
-    $("password");
-
-  const button =
-    document.querySelector(".show");
-
-
-  if(
-    input.type === "password"
-  ){
-
-    input.type = "text";
+    button.disabled = true;
 
     button.textContent =
-      "Hide";
+      "Logging out...";
 
-  }else{
 
-    input.type = "password";
+    try{
+
+      await request(
+        "/api/auth/logout",
+        {
+          method:"POST"
+        }
+      );
+
+    }catch(error){
+
+      console.log(
+        "Logout:",
+        error
+      );
+
+    }
+
+
+    $("apiKey")
+      .value = "";
+
+    $("keyStatus")
+      .textContent = "None";
+
+    $("keyStatus")
+      .classList.remove("green");
+
+
+    button.disabled = false;
 
     button.textContent =
-      "Show";
-
-  }
-
-}
+      "Logout";
 
 
-/* ==============================================
-   ENTER KEY
-============================================== */
-
-$("password")
-  .addEventListener(
-    "keydown",
-    function(event){
-
-      if(event.key === "Enter"){
-        submitAuth();
-      }
-
-    }
-  );
+    showAuth();
+  };
 
 
-$("email")
-  .addEventListener(
-    "keydown",
-    function(event){
-
-      if(event.key === "Enter"){
-        $("password").focus();
-      }
-
-    }
-  );
-
-
-/* ==============================================
-   START APP
-============================================== */
+/* ==========================================
+   START
+========================================== */
 
 checkSession();
 

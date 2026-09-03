@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Xyrooo · REST API Platform</title>
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0b0b0b;
+            --bg-card: #121212;
+            --bg-card-hover: #1a1a1a;
+            --border-subtle: rgba(255, 255, 255, 0.05);
+            --border-glow: rgba(255, 255, 255, 0.08);
+            --text-primary: #f0f0f0;
+            --text-secondary: #a0a0a0;
+            --text-muted: #6a6a6a;
+            --accent-white: #ffffff;
+            --radius: 14px;
+            --radius-sm: 8px;
+            --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.6);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button {
+            cursor: pointer;
+            font-family: inherit;
+            border: none;
+            outline: none;
+        }
+
+        /* scrollbar */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* ===== ANIMATED BG ===== */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(120, 120, 255, 0.04) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(200, 200, 255, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        /* ===== GLOW LINE ===== */
+        .glow-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, #fff, transparent);
+            z-index: 9999;
+            opacity: 0.2;
+            animation: glowSlide 8s ease-in-out infinite;
+        }
+
+        @keyframes glowSlide {
+            0%,
+            100% {
+                transform: translateX(-100%);
+                opacity: 0.1;
+            }
+            50% {
+                transform: translateX(100%);
+                opacity: 0.5;
+            }
+        }
+
+        .container {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 14px 0;
+            background: rgba(11, 11, 11, 0.8);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border-subtle);
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            background: rgba(11, 11, 11, 0.95);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 1.4rem;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-logo img {
+            height: 40px;
+            width: 40px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .nav-logo span {
+            background: linear-gradient(135deg, #fff 70%, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1.5px;
+            background: #fff;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .btn-ghost:hover {
+            color: #fff;
+            border-color: var(--border-subtle);
+        }
+
+        .btn-primary {
+            background: #fff;
+            color: #0b0b0b;
+            padding: 10px 28px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.06);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-primary-outline {
+            background: transparent;
+            color: #fff;
+            padding: 10px 28px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border: 1.5px solid rgba(255, 255, 255, 0.12);
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary-outline:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            padding: 4px;
+        }
+
+        .hamburger span {
+            width: 26px;
+            height: 2px;
+            background: #fff;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            padding: 140px 0 80px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-subtle);
+            padding: 6px 18px 6px 12px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        .hero-badge .dot {
+            width: 7px;
+            height: 7px;
+            background: #4f9;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulseDot 2s infinite;
+        }
+
+        @keyframes pulseDot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.6rem, 5.5vw, 4.6rem);
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -2px;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, #fff 50%, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin-bottom: 32px;
+            line-height: 1.7;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            margin-top: 40px;
+            padding-top: 28px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .hero-stats .stat h3 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-stats .stat p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        /* Hero code block */
+        .hero-code {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow-card);
+            backdrop-filter: blur(4px);
+        }
+
+        .hero-code .code-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .hero-code .code-header .dot-group {
+            display: flex;
+            gap: 6px;
+        }
+
+        .hero-code .code-header .dot-group span {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .hero-code .code-header .dot-group span:nth-child(1) {
+            background: #ff5f57;
+        }
+        .hero-code .code-header .dot-group span:nth-child(2) {
+            background: #ffbd2e;
+        }
+        .hero-code .code-header .dot-group span:nth-child(3) {
+            background: #28c840;
+        }
+
+        .hero-code .code-header .lang-tag {
+            margin-left: auto;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.04);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .hero-code pre {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.8rem;
+            line-height: 1.9;
+            color: #ccc;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+
+        .hero-code pre .kw {
+            color: #c792ea;
+        }
+        .hero-code pre .str {
+            color: #c3e88d;
+        }
+        .hero-code pre .fn {
+            color: #82aaff;
+        }
+        .hero-code pre .cmt {
+            color: #546e7a;
+        }
+        .hero-code pre .num {
+            color: #f78c6c;
+        }
+
+        /* ===== SECTION ===== */
+        .section {
+            padding: 80px 0;
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .section-title {
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 14px;
+        }
+
+        .section-sub {
+            color: var(--text-secondary);
+            max-width: 600px;
+            font-size: 1rem;
+        }
+
+        /* ===== ENDPOINT GRID ===== */
+        .endpoint-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 18px;
+            margin-top: 36px;
+        }
+
+        .endpoint-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius);
+            padding: 22px 20px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .endpoint-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-glow);
+            background: var(--bg-card-hover);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .endpoint-card .icon {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .endpoint-card h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .endpoint-card p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .endpoint-card .tag {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 3px 12px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .endpoint-card .tag.real {
+            background: rgba(79, 255, 153, 0.07);
+            color: #4f9;
+            border-color: rgba(79, 255, 153, 0.1);
+        }
+
+        .endpoint-card .tag.free {
+            background: rgba(130, 170, 255, 0.07);
+            color: #82aaff;
+            border-color: rgba(130, 170, 255, 0.1);
+        }
+
+        .endpoint-card .tag.premium {
+            background: rgba(255, 215, 0, 0.07);
+            color: #ffd700;
+            border-color: rgba(255, 215, 0, 0.1);
+        }
+
+        .endpoint-card .badge-new {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            background: #fff;
+            color: #000;
+            padding: 2px 12px;
+            border-radius: 20px;
+            letter-spacing: 0.3px;
+        }
+
+        /* ===== DASHBOARD ===== */
+        .dashboard-preview {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-subtle);
+            padding: 32px;
+            margin-top: 48px;
+            box-shadow: var(--shadow-card);
+        }
+
+        .dash-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .dash-header h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .dash-header .dash-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .dash-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .dash-stat-box {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius-sm);
+            padding: 16px 18px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .dash-stat-box .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .dash-stat-box .value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-top: 2px;
+        }
+
+        .dash-stat-box .change {
+            font-size: 0.7rem;
+            color: #4f9;
+        }
+
+        .dash-table-wrap {
+            overflow-x: auto;
+        }
+
+        .dash-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .dash-table th {
+            text-align: left;
+            padding: 10px 10px 10px 0;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .dash-table td {
+            padding: 12px 10px 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .dash-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .dash-table .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dash-table .status .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .dash-table .status .dot.green {
+            background: #4f9;
+        }
+        .dash-table .status .dot.yellow {
+            background: #ffd700;
+        }
+        .dash-table .status .dot.red {
+            background: #ff5f57;
+        }
+
+        /* Language pills */
+        .lang-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .lang-pill {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-subtle);
+            padding: 8px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+        }
+
+        .lang-pill:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .lang-pill i {
+            font-size: 1.1rem;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            padding: 60px 0 30px;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 20px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand p {
+            color: var(--text-secondary);
+            max-width: 300px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .footer-col h5 {
+            font-weight: 700;
+            margin-bottom: 14px;
+            font-size: 0.95rem;
+        }
+
+        .footer-col a {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            transition: var(--transition);
+        }
+
+        .footer-col a:hover {
+            color: #fff;
+        }
+
+        .footer-bottom {
+            padding-top: 20px;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            z-index: 99999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 24px;
+            max-width: 440px;
+            width: 100%;
+            padding: 36px 32px;
+            position: relative;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-box .close-modal {
+            position: absolute;
+            top: 14px;
+            right: 18px;
+            background: none;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .modal-box .close-modal:hover {
+            color: #fff;
+            transform: rotate(90deg);
+        }
+
+        .modal-box h2 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .modal-box .sub {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            font-size: 0.9rem;
+        }
+
+        .modal-box .form-group {
+            margin-bottom: 16px;
+        }
+
+        .modal-box .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+        }
+
+        .modal-box .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            color: #fff;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .modal-box .form-group input:focus {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .modal-box .form-group input::placeholder {
+            color: #555;
+        }
+
+        .modal-box .btn-full {
+            width: 100%;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 0.95rem;
+            background: #fff;
+            color: #000;
+            transition: var(--transition);
+            margin-top: 6px;
+        }
+
+        .modal-box .btn-full:hover {
+            transform: scale(1.01);
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.08);
+        }
+
+        .modal-box .btn-google {
+            width: 100%;
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.04);
+            color: #fff;
+            border: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: var(--transition);
+            margin-top: 10px;
+        }
+
+        .modal-box .btn-google:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .modal-box .switch-auth {
+            margin-top: 18px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .modal-box .switch-auth a {
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .modal-box .switch-auth a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .hero {
+                padding: 120px 0 60px;
+            }
+            .hero p {
+                max-width: 100%;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 68px;
+                left: 0;
+                width: 100%;
+                background: rgba(11, 11, 11, 0.98);
+                padding: 24px;
+                border-bottom: 1px solid var(--border-subtle);
+                gap: 16px;
+                backdrop-filter: blur(20px);
+            }
+            .nav-links.open {
+                display: flex;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .nav-actions .btn-ghost {
+                display: none;
+            }
+            .hero-stats {
+                flex-wrap: wrap;
+                gap: 20px;
+            }
+            .dashboard-preview {
+                padding: 18px;
+            }
+            .dash-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+            .modal-box {
+                padding: 24px 18px;
+            }
+            .endpoint-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .dash-stats {
+                grid-template-columns: 1fr;
+            }
+            .hero-buttons .btn-primary,
+            .hero-buttons .btn-primary-outline {
+                width: 100%;
+                justify-content: center;
+            }
+            .nav-logo span {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== ANIMATED BG ===== -->
+    <canvas id="particles-canvas"></canvas>
+    <div class="bg-glow"></div>
+    <div class="glow-line"></div>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-inner">
+            <a href="#" class="nav-logo">
+                <img src="https://h.uguu.se/bkumeurk.jpg" alt="Xyrooo" />
+                <span>Xyrooo</span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#endpoints">Endpoint</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#docs">Docs</a></li>
+                <li><a href="#pricing">Harga</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="btn-ghost" onclick="openModal('login')">Login</button>
+                <button class="btn-primary" onclick="openModal('register')">
+                    <i class="fas fa-bolt"></i> Mulai
+                </button>
+                <button class="hamburger" id="hamburger" aria-label="Menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero" id="home">
+        <div class="container hero-grid">
+            <div class="hero-left">
+                <div class="hero-badge">
+                    <span class="dot"></span>
+                    <span>380+ Endpoint • Real-time</span>
+                </div>
+                <h1>
+                    API Platform<br />
+                    <span class="highlight">Premium &amp; Terpercaya</span>
+                </h1>
+                <p>
+                    Akses 380+ endpoint API canggih: AI generatif, downloader, stalker,
+                    dan banyak lagi. Didukung Node.js, Python, PHP, Go.
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn-primary" onclick="openModal('register')">
+                        <i class="fas fa-bolt"></i> Mulai Gratis
+                    </button>
+                    <button class="btn-primary-outline" onclick="document.getElementById('endpoints').scrollIntoView()">
+                        <i class="fas fa-chevron-right"></i> Jelajahi
+                    </button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <h3 id="statEndpoints">380+</h3>
+                        <p>Endpoint API</p>
+                    </div>
+                    <div class="stat">
+                        <h3 id="statUptime">99.9%</h3>
+                        <p>Uptime</p>
+                    </div>
+                    <div class="stat">
+                        <h3 id="statUsers">12K+</h3>
+                        <p>Developer</p>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-code">
+                <div class="code-header">
+                    <div class="dot-group">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <span class="lang-tag">JavaScript</span>
+                </div>
+                <pre>
+                    <span class="cmt">// Xyrooo Rest API — Contoh</span>
+                    <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'https://api.xyrooo.com/v1/ai/suno'</span>, {
+                    method: <span class="str">'POST'</span>,
+                    headers: { <span class="str">'Authorization'</span>: <span class="str">'Bearer key-anda'</span> },
+                    body: <span class="fn">JSON</span>.<span class="fn">stringify</span>({ prompt: <span class="str">'epic orchestral'</span> })
+                    });
+                    <span class="kw">const</span> data = <span class="kw">await</span> res.<span class="fn">json</span>();
+                    <span class="fn">console</span>.<span class="fn">log</span>(data);
+                </pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ENDPOINTS ===== -->
+    <section class="section" id="endpoints">
+        <div class="container">
+            <span class="section-label"><i class="fas fa-bolt" style="margin-right:6px;"></i> Koleksi Endpoint</span>
+            <h2 class="section-title">380+ API <span style="color:var(--text-secondary);">Real-time</span></h2>
+            <p class="section-sub">
+                Dari AI canggih hingga downloader dan stalker. Semua siap pakai.
+            </p>
+            <div class="endpoint-grid" id="endpointGrid"></div>
+            <div style="margin-top:36px;text-align:center;">
+                <button class="btn-primary-outline" onclick="loadMoreEndpoints()">
+                    <i class="fas fa-sync"></i> Muat Lainnya
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== DASHBOARD ===== -->
+    <section class="section" id="dashboard">
+        <div class="container">
+            <span class="section-label"><i class="fas fa-chart-pie"></i> Dashboard</span>
+            <h2 class="section-title">Monitor &amp; Kelola API</h2>
+            <p class="section-sub">
+                Pantau penggunaan, status endpoint, dan analitik real-time.
+            </p>
+            <div class="dashboard-preview">
+                <div class="dash-header">
+                    <h3><i class="fas fa-gauge-high" style="margin-right:10px;"></i> Ringkasan</h3>
+                    <div class="dash-actions">
+                        <button class="btn-ghost" style="border:1px solid var(--border-subtle);padding:4px 16px;border-radius:30px;font-size:0.75rem;">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                        <button class="btn-ghost" style="border:1px solid var(--border-subtle);padding:4px 16px;border-radius:30px;font-size:0.75rem;">
+                            <i class="fas fa-rotate"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+                <div class="dash-stats">
+                    <div class="dash-stat-box">
+                        <div class="label">Request Hari Ini</div>
+                        <div class="value" id="dashReq">47.2K</div>
+                        <div class="change">↑ 12%</div>
+                    </div>
+                    <div class="dash-stat-box">
+                        <div class="label">Endpoint Aktif</div>
+                        <div class="value" id="dashActive">312</div>
+                        <div class="change">● 98% uptime</div>
+                    </div>
+                    <div class="dash-stat-box">
+                        <div class="label">Pengguna Aktif</div>
+                        <div class="value" id="dashUsers">3.4K</div>
+                        <div class="change">↑ 8%</div>
+                    </div>
+                    <div class="dash-stat-box">
+                        <div class="label">Rata-rata Respon</div>
+                        <div class="value" id="dashLatency">142ms</div>
+                        <div class="change">↓ 12ms</div>
+                    </div>
+                </div>
+                <div class="dash-table-wrap">
+                    <table class="dash-table">
+                        <thead>
+                            <tr>
+                                <th>Endpoint</th>
+                                <th>Metode</th>
+                                <th>Status</th>
+                                <th>Request</th>
+                                <th>Latency</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Languages -->
+            <div style="margin-top:36px;">
+                <p style="font-weight:600;margin-bottom:10px;color:var(--text-secondary);">Didukung oleh</p>
+                <div class="lang-strip">
+                    <span class="lang-pill"><i class="fab fa-node"></i> Node.js</span>
+                    <span class="lang-pill"><i class="fab fa-python"></i> Python</span>
+                    <span class="lang-pill"><i class="fab fa-php"></i> PHP</span>
+                    <span class="lang-pill"><i class="fab fa-golang"></i> Go</span>
+                    <span class="lang-pill"><i class="fas fa-code"></i> cURL</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div style="display:flex;align-items:center;gap:12px;">
+                        <img src="https://h.uguu.se/bkumeurk.jpg" alt="Xyrooo" style="height:38px;width:38px;border-radius:10px;object-fit:cover;" />
+                        <span style="font-weight:800;font-size:1.3rem;">Xyrooo</span>
+                    </div>
+                    <p>Platform REST API premium dengan 380+ endpoint real-time. Dibangun untuk developer modern.</p>
+                </div>
+                <div class="footer-col">
+                    <h5>Produk</h5>
+                    <a href="#endpoints">Endpoint</a>
+                    <a href="#dashboard">Dashboard</a>
+                    <a href="#">Dokumentasi</a>
+                    <a href="#">Harga</a>
+                </div>
+                <div class="footer-col">
+                    <h5>Perusahaan</h5>
+                    <a href="#">Tentang</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Karir</a>
+                    <a href="#">Kontak</a>
+                </div>
+                <div class="footer-col">
+                    <h5>Legal</h5>
+                    <a href="#">Privasi</a>
+                    <a href="#">Syarat</a>
+                    <a href="#">Cookie</a>
+                    <a href="#">Keamanan</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>&copy; 2026 Xyrooo Rest Api Platform. All rights reserved.</span>
+                <span style="display:flex;gap:14px;">
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-discord"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== MODAL LOGIN / REGISTER ===== -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-box">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            <div id="authContent"></div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        // ==========================================
+        // 1. DATA ENDPOINTS
+        // ==========================================
+        const allEndpoints = [
+            { icon: '🤖', name: 'Suno AI Music', desc: 'Generate musik AI dengan prompt teks', tag: 'real',
+            premium: false },
+            { icon: '🎥', name: 'Image to Video', desc: 'Konversi gambar ke video dengan AI', tag: 'real', premium: true },
+            { icon: '📱', name: 'WA Reaction', desc: 'Analisis reaksi WhatsApp real-time', tag: 'real', premium: false },
+            { icon: '🎬', name: 'Alight Motion Netflix Gen', desc: 'Generator template ala Netflix', tag: 'premium',
+                premium: true },
+            { icon: '🔍', name: 'Google Search', desc: 'Cari data dari Google secara real-time', tag: 'real',
+            premium: false },
+            { icon: '🧠', name: 'Face Detection', desc: 'Deteksi wajah dari gambar atau video', tag: 'real',
+            premium: false },
+            { icon: '🎞️', name: 'Movie DB', desc: 'Info film lengkap dengan rating dan cast', tag: 'free', premium: false },
+            { icon: '🚫', name: 'Check Ban', desc: 'Cek status ban akun game & sosial media', tag: 'real', premium: false },
+            { icon: '📥', name: 'Downloader', desc: 'Download video, audio, & media dari URL', tag: 'free',
+            premium: false },
+            { icon: '👤', name: 'Stalker', desc: 'Informasi profil sosial media secara mendalam', tag: 'premium',
+                premium: true },
+            { icon: '✨', name: 'AI Chat', desc: 'Chatbot AI dengan konteks panjang', tag: 'real', premium: false },
+            { icon: '🖼️', name: 'Image Generator', desc: 'Generate gambar dari teks dengan AI', tag: 'premium',
+                premium: true },
+            { icon: '📡', name: 'Live Stats', desc: 'Statistik server & aplikasi real-time', tag: 'real', premium: false },
+            { icon: '📊', name: 'Analytics', desc: 'Analisis data pengguna & perilaku', tag: 'premium', premium: true },
+            { icon: '🔔', name: 'Notifikasi', desc: 'Kirim notifikasi multi-channel', tag: 'free', premium: false },
+            { icon: '🌐', name: 'Web Scraper', desc: 'Scrape data dari web dengan mudah', tag: 'real', premium: false },
+            { icon: '🎵', name: 'Text to Music', desc: 'Ubah teks menjadi musik AI', tag: 'real', premium: true },
+            { icon: '🗣️', name: 'Voice Clone', desc: 'Kloning suara dengan AI', tag: 'premium', premium: true },
+        ];
+
+        let displayed = 8;
+
+        function renderEndpoints(count) {
+            const grid = document.getElementById('endpointGrid');
+            const items = allEndpoints.slice(0, count);
+            grid.innerHTML = items.map((ep, i) => {
+                const tagClass = ep.tag === 'real' ? 'real' : ep.tag === 'free' ? 'free' : 'premium';
+                const newBadge = i < 3 ? '<span class="badge-new">Baru</span>' : '';
+                return `
+                    <div class="endpoint-card">
+                        ${newBadge}
+                        <div class="icon">${ep.icon}</div>
+                        <h4>${ep.name}</h4>
+                        <p>${ep.desc}</p>
+                        <span class="tag ${tagClass}">${ep.tag}</span>
+                        ${ep.premium ? '<span class="tag premium" style="margin-left:6px;">Premium</span>' : '<span class="tag free" style="margin-left:6px;">Free</span>'}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadMoreEndpoints() {
+            displayed = Math.min(displayed + 4, allEndpoints.length);
+            renderEndpoints(displayed);
+            if (displayed >= allEndpoints.length) {
+                const btn = document.querySelector('#endpoints .btn-primary-outline');
+                if (btn) btn.innerHTML = '<i class="fas fa-check"></i> Semua Dimuat';
+            }
+        }
+
+        // ==========================================
+        // 2. DASHBOARD TABLE
+        // ==========================================
+        function renderDashboardTable() {
+            const tbody = document.getElementById('dashTableBody');
+            const rows = [
+                { name: '/v1/ai/suno', method: 'POST', status: 'green', req: '12.4K', lat: '89ms' },
+                { name: '/v1/image/to-video', method: 'POST', status: 'green', req: '8.7K', lat: '210ms' },
+                { name: '/v1/wa/reaction', method: 'GET', status: 'green', req: '23.1K', lat: '45ms' },
+                { name: '/v1/search/google', method: 'GET', status: 'yellow', req: '5.3K', lat: '312ms' },
+                { name: '/v1/face/detect', method: 'POST', status: 'green', req: '3.8K', lat: '176ms' },
+                { name: '/v1/movie/info', method: 'GET', status: 'green', req: '9.2K', lat: '98ms' },
+            ];
+            tbody.innerHTML = rows.map(r => `
+                    <tr>
+                        <td><code style="font-size:0.75rem;color:#ccc;">${r.name}</code></td>
+                        <td><span style="font-weight:600;font-size:0.7rem;background:rgba(255,255,255,0.04);padding:2px 10px;border-radius:12px;">${r.method}</span></td>
+                        <td><span class="status"><span class="dot ${r.status}"></span> ${r.status === 'green' ? 'Online' : r.status === 'yellow' ? 'Degraded' : 'Offline'}</span></td>
+                        <td>${r.req}</td>
+                        <td>${r.lat}</td>
+                    </tr>
+                `).join('');
+        }
+
+        // ==========================================
+        // 3. MODAL AUTH
+        // ==========================================
+        let authMode = 'login';
+
+        function openModal(mode) {
+            authMode = mode;
+            const modal = document.getElementById('authModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            renderAuthForm();
+        }
+
+        function closeModal() {
+            document.getElementById('authModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function renderAuthForm() {
+            const container = document.getElementById('authContent');
+            const isLogin = authMode === 'login';
+            const title = isLogin ? 'Masuk ke Akun' : 'Buat Akun Baru';
+            const sub = isLogin ? 'Login dengan Google atau email Anda.' : 'Daftar gratis dan akses semua endpoint.';
+            const btnText = isLogin ? 'Masuk' : 'Daftar';
+            const switchText = isLogin ? 'Belum punya akun?' : 'Sudah punya akun?';
+            const switchAction = isLogin ? 'Daftar' : 'Masuk';
+
+            container.innerHTML = `
+                    <h2>${title}</h2>
+                    <p class="sub">${sub}</p>
+                    <button class="btn-google" onclick="handleGoogleLogin()">
+                        <i class="fab fa-google" style="font-size:1.2rem;"></i> Lanjutkan dengan Google
+                    </button>
+                    <div style="display:flex;align-items:center;gap:14px;margin:18px 0;color:var(--text-secondary);font-size:0.75rem;">
+                        <hr style="flex:1;border:none;border-top:1px solid var(--border-subtle);" />
+                        <span>atau</span>
+                        <hr style="flex:1;border:none;border-top:1px solid var(--border-subtle);" />
+                    </div>
+                    <form id="authForm" onsubmit="handleAuthSubmit(event)">
+                        ${!isLogin ? `
+                            <div class="form-group">
+                                <label>Nama Lengkap</label>
+                                <input type="text" placeholder="Nama Anda" required />
+                            </div>
+                        ` : ''}
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" placeholder="email@example.com" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Kata Sandi</label>
+                            <input type="password" placeholder="••••••••" required minlength="6" />
+                        </div>
+                        ${!isLogin ? `
+                            <div class="form-group">
+                                <label>Konfirmasi Kata Sandi</label>
+                                <input type="password" placeholder="••••••••" required minlength="6" />
+                            </div>
+                        ` : ''}
+                        <button type="submit" class="btn-full">${btnText}</button>
+                    </form>
+                    <div class="switch-auth">
+                        ${switchText} <a onclick="switchAuthMode()">${switchAction}</a>
+                    </div>
+                    <div style="margin-top:12px;font-size:0.7rem;color:var(--text-secondary);text-align:center;">
+                        Dengan melanjutkan, Anda menyetujui Syarat &amp; Kebijakan Privasi.
+                    </div>
+                `;
+        }
+
+        function switchAuthMode() {
+            authMode = authMode === 'login' ? 'register' : 'login';
+            renderAuthForm();
+        }
+
+        function handleAuthSubmit(e) {
+            e.preventDefault();
+            const form = e.target;
+            const email = form.querySelector('input[type="email"]').value;
+            if (authMode === 'register') {
+                const pass1 = form.querySelectorAll('input[type="password"]')[0];
+                const pass2 = form.querySelectorAll('input[type="password"]')[1];
+                if (pass1.value !== pass2.value) {
+                    alert('Kata sandi tidak cocok!');
+                    return;
+                }
+            }
+            alert(`✅ ${authMode === 'login' ? 'Login' : 'Registrasi'} berhasil! Selamat datang ${email}`);
+            closeModal();
+            document.querySelector('.nav-actions .btn-ghost').textContent = 'Akun';
+            document.querySelector('.nav-actions .btn-primary').innerHTML = '<i class="fas fa-bolt"></i> Dashboard';
+        }
+
+        function handleGoogleLogin() {
+            alert('🔐 Login dengan Google (simulasi) — berhasil!');
+            closeModal();
+            document.querySelector('.nav-actions .btn-ghost').textContent = 'Akun';
+            document.querySelector('.nav-actions .btn-primary').innerHTML = '<i class="fas fa-bolt"></i> Dashboard';
+        }
+
+        // ==========================================
+        // 4. PARTICLES
+        // ==========================================
+        function initParticles() {
+            const canvas = document.getElementById('particles-canvas');
+            const ctx = canvas.getContext('2d');
+            let w, h;
+            const particles = [];
+            const count = 100;
+
+            function resize() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * w;
+                    this.y = Math.random() * h;
+                    this.r = Math.random() * 1.6 + 0.4;
+                    this.dx = (Math.random() - 0.5) * 0.25;
+                    this.dy = (Math.random() - 0.5) * 0.25;
+                    this.opacity = Math.random() * 0.4 + 0.1;
+                }
+                update() {
+                    this.x += this.dx;
+                    this.y += this.dy;
+                    if (this.x < 0 || this.x > w) this.dx *= -1;
+                    if (this.y < 0 || this.y > h) this.dy *= -1;
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255,255,255,${this.opacity})`;
+                    ctx.fill();
+                }
+            }
+
+            for (let i = 0; i < count; i++) particles.push(new Particle());
+
+            function drawLines() {
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 120) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(255,255,255,${0.04 * (1 - dist / 120)})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, w, h);
+                particles.forEach(p => { p.update();
+                    p.draw(); });
+                drawLines();
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // ==========================================
+        // 5. NAVBAR & INIT
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', function() {
+                navbar.classList.toggle('scrolled', window.scrollY > 40);
+            });
+
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('navLinks');
+            hamburger.addEventListener('click', function() {
+                navLinks.classList.toggle('open');
+            });
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => navLinks.classList.remove('open'));
+            });
+
+            renderEndpoints(displayed);
+            renderDashboardTable();
+            initParticles();
+
+            animateCounter('statEndpoints', 380, 380, 1200);
+            animateCounter('statUptime', 99.9, 99.9, 800);
+            animateCounter('statUsers', 12, 12.8, 1400);
+            animateCounter('dashReq', 47.2, 47.2, 1000);
+            animateCounter('dashActive', 312, 312, 800);
+            animateCounter('dashUsers', 3.4, 3.4, 1000);
+            animateCounter('dashLatency', 142, 142, 600);
+        });
+
+        function animateCounter(id, target, display, duration) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const startTime = performance.now();
+
+            function update(time) {
+                const progress = Math.min((time - startTime) / duration, 1);
+                const current = progress * target;
+                if (target % 1 === 0) {
+                    el.textContent = Math.floor(current) + (target > 1000 ? '+' : '');
+                } else {
+                    el.textContent = current.toFixed(1) + (target > 100 ? '%' : '');
+                }
+                if (progress < 1) requestAnimationFrame(update);
+                else {
+                    el.textContent = target + (target > 1000 ? '+' : '');
+                }
+            }
+            requestAnimationFrame(update);
+        }
+
+        // ESC & overlay close
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+        document.getElementById('authModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        console.log('🚀 Xyrooo Rest API Platform — 380+ endpoint real-time');
+    </script>
+</body>
+</html>

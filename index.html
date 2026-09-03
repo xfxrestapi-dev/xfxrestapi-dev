@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XTZY XTRX Team — 380+ REST API Real-time</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#000000;
+    --surface:#0a0a0a;
+    --card:#111113;
+    --card-hover:#161618;
+    --border:#1f1f23;
+    --border-soft:#18181b;
+    --white:#ffffff;
+    --text:#f2f2f4;
+    --text-dim:#8a8a93;
+    --text-faint:#55555c;
+    --mono:'JetBrains Mono', monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:-0.02em;}
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:#fff;color:#000;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px;}
+
+  /* Lightning icon */
+  .bolt{display:inline-block;width:1em;height:1em;vertical-align:-0.12em;}
+
+  /* Buttons */
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:12px 22px;border-radius:8px;font-weight:600;font-size:14.5px;
+    cursor:pointer;border:1px solid transparent;transition:transform .15s ease, background .15s ease, box-shadow .15s ease;
+    white-space:nowrap;
+  }
+  .btn-primary{
+    background:var(--white);color:#000;
+  }
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 0 0 1px #fff, 0 8px 24px rgba(255,255,255,0.12);}
+  .btn-ghost{
+    background:transparent;color:var(--text);border-color:var(--border);
+  }
+  .btn-ghost:hover{border-color:#3a3a40;background:#0d0d0f;}
+  .btn-sm{padding:9px 16px;font-size:13.5px;}
+  .btn-block{width:100%;justify-content:center;}
+
+  /* Nav */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(0,0,0,0.82);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border-soft);
+  }
+  nav{display:flex;align-items:center;justify-content:space-between;padding:16px 0;}
+  .logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:19px;}
+  .logo svg{width:20px;height:20px;}
+  .nav-links{display:flex;gap:32px;font-size:14.5px;color:var(--text-dim);}
+  .nav-links a:hover{color:var(--text);}
+  .nav-actions{display:flex;gap:10px;align-items:center;}
+  .nav-toggle{display:none;background:none;border:none;color:#fff;font-size:22px;cursor:pointer;}
+
+  /* Hero */
+  .hero{padding:96px 0 72px;position:relative;}
+  .hero-grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:56px;align-items:center;}
+  .eyebrow-row{display:flex;align-items:center;gap:10px;margin-bottom:22px;color:var(--text-dim);font-size:13.5px;}
+  .live-dot{width:7px;height:7px;border-radius:50%;background:#fff;box-shadow:0 0 0 0 rgba(255,255,255,0.5);animation:pulse 2s infinite;}
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(255,255,255,0.35);}
+    70%{box-shadow:0 0 0 8px rgba(255,255,255,0);}
+    100%{box-shadow:0 0 0 0 rgba(255,255,255,0);}
+  }
+  .hero h1{font-size:52px;font-weight:700;line-height:1.08;margin-bottom:20px;}
+  .hero p.lead{font-size:17px;color:var(--text-dim);max-width:480px;margin-bottom:32px;}
+  .hero-cta{display:flex;gap:12px;margin-bottom:40px;flex-wrap:wrap;}
+  .lang-strip{display:flex;gap:22px;align-items:center;flex-wrap:wrap;}
+  .lang-strip span{font-size:12.5px;color:var(--text-faint);}
+  .lang-badges{display:flex;gap:10px;}
+  .lang-badge{
+    padding:6px 12px;border:1px solid var(--border);border-radius:6px;
+    font-family:var(--mono);font-size:12.5px;color:var(--text-dim);
+  }
+
+  /* Terminal demo */
+  .terminal{
+    background:var(--card);border:1px solid var(--border);border-radius:12px;
+    overflow:hidden;box-shadow:0 30px 80px -20px rgba(0,0,0,0.8);
+  }
+  .terminal-bar{
+    display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--border);background:#0d0d0f;
+  }
+  .dot{width:10px;height:10px;border-radius:50%;background:#2a2a2e;}
+  .terminal-title{margin-left:8px;font-family:var(--mono);font-size:12px;color:var(--text-faint);}
+  .code-tabs{display:flex;gap:4px;flex:1;}
+  .code-tab{
+    background:transparent;border:none;color:var(--text-faint);font-family:var(--mono);font-size:12.5px;
+    padding:6px 12px;border-radius:6px;cursor:pointer;
+  }
+  .code-tab.active{background:#1a1a1d;color:#fff;}
+  .copy-btn{
+    background:#fff;color:#000;border:none;font-size:11.5px;font-weight:600;padding:6px 12px;border-radius:6px;cursor:pointer;
+  }
+  .code-pane{display:none;white-space:pre-wrap;word-break:break-word;font-family:var(--mono);color:#e8e8ea;margin:0 0 14px;}
+  .code-pane.active{display:block;}
+  .terminal-body{padding:20px;font-family:var(--mono);font-size:13px;line-height:1.75;}
+  .req-line{color:var(--text-dim);}
+  .req-line .method{color:#fff;font-weight:700;}
+  .req-line .path{color:#e8e8ea;}
+  .terminal-body .comment{color:var(--text-faint);}
+  .json-key{color:#c9c9cf;}
+  .json-str{color:#fff;}
+  .json-num{color:#fff;}
+  .divider-line{height:1px;background:var(--border-soft);margin:14px 0;}
+  .status-ok{display:inline-flex;align-items:center;gap:6px;color:#fff;font-size:12px;background:#151517;border:1px solid var(--border);padding:3px 9px;border-radius:20px;}
+  .status-ok .bolt{width:11px;height:11px;}
+
+  /* Server monitor */
+  .monitor-section{padding:0 0 88px;}
+  .monitor-shell{
+    background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:26px 28px;
+  }
+  .monitor-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;}
+  .monitor-live{font-size:12px;color:var(--text-faint);font-family:var(--mono);}
+  .monitor-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:18px;}
+  .monitor-label{font-size:12.5px;color:var(--text-dim);margin-bottom:10px;}
+  .bar-track{height:6px;background:#151517;border-radius:4px;overflow:hidden;margin-bottom:8px;}
+  .bar-fill{height:100%;background:#fff;border-radius:4px;transition:width 1s ease;}
+  .monitor-val{font-family:var(--mono);font-size:13px;color:#fff;}
+  .monitor-foot{display:flex;justify-content:space-between;padding-top:16px;border-top:1px solid var(--border-soft);font-size:12.5px;color:var(--text-dim);font-family:var(--mono);}
+  .monitor-note{color:var(--text-faint);}
+
+  /* Stats */
+  .stats{border-top:1px solid var(--border-soft);border-bottom:1px solid var(--border-soft);padding:36px 0;}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center;}
+  .stat-num{font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;}
+  .stat-label{font-size:13px;color:var(--text-dim);margin-top:4px;}
+
+  /* Sections */
+  section{padding:88px 0;}
+  .section-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:40px;gap:20px;flex-wrap:wrap;}
+  .section-head h2{font-size:32px;font-weight:600;}
+  .section-head p{color:var(--text-dim);font-size:15px;max-width:420px;}
+  .tag{
+    display:inline-block;font-size:11.5px;font-weight:600;color:#000;background:#fff;
+    padding:3px 9px;border-radius:5px;margin-bottom:14px;
+  }
+  .tag-new{background:transparent;color:#fff;border:1px solid #fff;}
+
+  .explore-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:22px;}
+  .endpoint-search{
+    display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);
+    border-radius:8px;padding:10px 14px;min-width:300px;
+  }
+  .search-prompt{font-family:var(--mono);color:var(--text-faint);}
+  .endpoint-search input{
+    background:none;border:none;color:#fff;font-family:var(--mono);font-size:13px;flex:1;
+  }
+  .endpoint-search input:focus{outline:none;}
+  .category-chips{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip{
+    background:transparent;border:1px solid var(--border);color:var(--text-dim);
+    padding:8px 16px;border-radius:20px;font-size:13px;cursor:pointer;
+  }
+  .chip.active{background:#fff;color:#000;border-color:#fff;font-weight:600;}
+  .no-result{text-align:center;color:var(--text-dim);font-size:14px;padding:30px 0;}
+
+  .card-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  .api-card{
+    background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px;
+    transition:border-color .15s ease, transform .15s ease;
+  }
+  .api-card:hover{border-color:#3a3a40;transform:translateY(-2px);}
+  .api-card .icon{
+    width:38px;height:38px;border-radius:9px;background:#0d0d0f;border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;margin-bottom:16px;
+  }
+  .api-card .icon svg{width:18px;height:18px;}
+  .api-card h4{font-size:15.5px;font-weight:600;margin-bottom:6px;}
+  .api-card p{font-size:13px;color:var(--text-dim);margin-bottom:14px;}
+  .api-card .meta{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--text-faint);font-family:var(--mono);}
+
+  /* Dashboard preview */
+  .dash-shell{
+    display:grid;grid-template-columns:220px 1fr;border:1px solid var(--border);border-radius:14px;overflow:hidden;
+    background:var(--surface);
+  }
+  .dash-side{border-right:1px solid var(--border);padding:20px 14px;background:#08080a;}
+  .dash-side .d-logo{display:flex;align-items:center;gap:8px;font-weight:700;font-family:'Space Grotesk',sans-serif;font-size:15px;padding:0 8px 20px;}
+  .dash-side .d-logo svg{width:16px;height:16px;}
+  .dash-item{
+    display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:8px;font-size:13.5px;color:var(--text-dim);margin-bottom:2px;
+  }
+  .dash-item.active{background:#fff;color:#000;font-weight:600;}
+  .dash-item svg{width:15px;height:15px;flex-shrink:0;}
+  .dash-main{padding:26px 28px;}
+  .dash-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+  .dash-top h3{font-size:19px;}
+  .plan-pill{font-size:11.5px;font-family:var(--mono);border:1px solid var(--border);padding:4px 10px;border-radius:20px;color:var(--text-dim);}
+  .dash-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px;}
+  .dash-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;}
+  .dash-card .label{font-size:12px;color:var(--text-dim);margin-bottom:8px;}
+  .dash-card .val{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;}
+  .key-row{
+    display:flex;justify-content:space-between;align-items:center;background:var(--card);
+    border:1px solid var(--border);border-radius:10px;padding:14px 16px;font-family:var(--mono);font-size:13px;
+  }
+  .key-row .key-val{color:var(--text-dim);}
+  .key-row button{background:#fff;color:#000;border:none;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}
+
+  /* Pricing */
+  .price-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .price-card{border:1px solid var(--border);border-radius:14px;padding:32px;background:var(--surface);}
+  .price-card.highlight{background:#fff;color:#000;border-color:#fff;}
+  .price-card h3{font-size:20px;margin-bottom:6px;}
+  .price-card .price{font-family:'Space Grotesk',sans-serif;font-size:36px;font-weight:700;margin:14px 0 20px;}
+  .price-card .price span{font-size:14px;font-weight:400;color:var(--text-dim);}
+  .price-card.highlight .price span{color:#555;}
+  .price-list{list-style:none;margin-bottom:26px;}
+  .price-list li{display:flex;gap:10px;align-items:flex-start;font-size:14px;padding:7px 0;color:var(--text-dim);}
+  .price-card.highlight .price-list li{color:#333;}
+  .price-list svg{width:15px;height:15px;flex-shrink:0;margin-top:2px;}
+
+  /* Footer */
+  footer{border-top:1px solid var(--border-soft);padding:48px 0 32px;}
+  .footer-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:32px;margin-bottom:32px;}
+  .deploy-badges{display:flex;gap:10px;flex-wrap:wrap;}
+  .deploy-badge{
+    display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:8px;padding:9px 14px;font-size:13px;color:var(--text-dim);
+  }
+  .deploy-badge svg{width:15px;height:15px;}
+  .footer-bottom{display:flex;justify-content:space-between;color:var(--text-faint);font-size:13px;flex-wrap:wrap;gap:10px;}
+
+  /* Modal */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);
+    display:none;align-items:center;justify-content:center;z-index:100;padding:20px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:#0a0a0b;border:1px solid var(--border);border-radius:16px;padding:36px;width:100%;max-width:400px;
+    box-shadow:0 40px 100px -20px rgba(0,0,0,0.9);position:relative;
+  }
+  .modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-dim);font-size:20px;cursor:pointer;}
+  .modal h3{font-size:22px;margin-bottom:6px;}
+  .modal p.sub{color:var(--text-dim);font-size:13.5px;margin-bottom:24px;}
+  .google-btn{
+    display:flex;align-items:center;justify-content:center;gap:10px;width:100%;
+    background:#fff;color:#000;border:none;padding:12px;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer;margin-bottom:16px;
+  }
+  .or-row{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+  .or-row .line{flex:1;height:1px;background:var(--border);}
+  .or-row span{font-size:12px;color:var(--text-faint);}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:12.5px;color:var(--text-dim);margin-bottom:6px;}
+  .field input{
+    width:100%;background:#111113;border:1px solid var(--border);border-radius:8px;padding:11px 12px;
+    color:#fff;font-size:14px;font-family:'Inter',sans-serif;
+  }
+  .field input:focus{outline:none;border-color:#666;}
+  .modal-switch{text-align:center;font-size:13px;color:var(--text-dim);margin-top:18px;}
+  .modal-switch a{color:#fff;font-weight:600;}
+  .form-msg{font-size:12.5px;padding:0;margin-bottom:12px;min-height:0;}
+  .form-msg.error{color:#ff6b6b;}
+  .form-msg.success{color:#8effa1;}
+  .form-msg.loading{color:var(--text-dim);}
+  .conn-badge{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--text-faint);font-family:var(--mono);}
+  .conn-dot{width:6px;height:6px;border-radius:50%;background:var(--text-faint);}
+  .conn-dot.ok{background:#8effa1;}
+  .conn-dot.fail{background:#ff6b6b;}
+
+  @media (max-width:920px){
+    .hero-grid{grid-template-columns:1fr;}
+    .stats-grid{grid-template-columns:repeat(2,1fr);}
+    .card-grid{grid-template-columns:repeat(2,1fr);}
+    .dash-shell{grid-template-columns:1fr;}
+    .dash-side{display:none;}
+    .dash-cards{grid-template-columns:1fr;}
+    .price-grid{grid-template-columns:1fr;}
+    .nav-links{display:none;}
+    .hero h1{font-size:38px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .live-dot{animation:none;}
+    *{transition:none!important;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <div class="logo">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" fill="#fff"/></svg>
+        XTZY XTRX Team
+      </div>
+      <div class="nav-links">
+        <a href="#fitur">Fitur</a>
+        <a href="#baru">Terbaru</a>
+        <a href="#harga">Harga</a>
+        <a href="#dashboard">Dashboard</a>
+      </div>
+      <div class="nav-actions">
+        <a class="btn btn-ghost btn-sm" onclick="openModal('login')">Masuk</a>
+        <a class="btn btn-primary btn-sm" onclick="openModal('register')">Daftar Gratis</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow-row"><span class="live-dot"></span> 380+ endpoint aktif · rata-rata respons 180ms</div>
+      <div class="eyebrow-row" id="connStatusRow" style="margin-bottom:22px;margin-top:-14px;">
+        <span class="conn-badge"><span class="conn-dot" id="connDot"></span><span id="connText">Mengecek koneksi ke server API…</span></span>
+      </div>
+      <h1>Satu API key, akses ke ratusan layanan real-time.</h1>
+      <p class="lead">AI, downloader, stalker, dan alat otomasi lain dalam satu platform. Tinggal panggil endpoint-nya — Node.js, Python, PHP, atau Go, semua kami dukung.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" onclick="openModal('register')">
+          <svg class="bolt" viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" fill="#000"/></svg>
+          Mulai Gratis
+        </a>
+        <a class="btn btn-ghost" href="#fitur">Lihat Semua API</a>
+      </div>
+      <div class="lang-strip">
+        <span>Tersedia SDK untuk</span>
+        <div class="lang-badges">
+          <span class="lang-badge">Node.js</span>
+          <span class="lang-badge">Python</span>
+          <span class="lang-badge">PHP</span>
+          <span class="lang-badge">Go</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="code-tabs">
+          <button class="code-tab active" data-tab="curl" onclick="switchTab('curl')">cURL</button>
+          <button class="code-tab" data-tab="node" onclick="switchTab('node')">Node.js</button>
+          <button class="code-tab" data-tab="python" onclick="switchTab('python')">Python</button>
+        </div>
+        <button class="copy-btn" onclick="copySnippet()">Salin</button>
+      </div>
+      <div class="terminal-body">
+        <pre class="code-pane active" id="pane-curl">curl -X GET "https://xtzy.my.id/api/ai/suno?prompt=lofi+senja&apikey=API_KEY_KAMU"</pre>
+        <pre class="code-pane" id="pane-node">const res = await fetch(
+  "https://xtzy.my.id/api/ai/suno?prompt=lofi+senja&apikey=API_KEY_KAMU"
+);
+const data = await res.json();
+console.log(data);</pre>
+        <pre class="code-pane" id="pane-python">import requests
+
+r = requests.get(
+    "https://xtzy.my.id/api/ai/suno",
+    params={"prompt": "lofi senja", "apikey": "API_KEY_KAMU"}
+)
+print(r.json())</pre>
+        <div class="divider-line"></div>
+        <div><span class="status-ok"><svg class="bolt" viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" fill="#fff"/></svg>200 OK · 178ms</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="monitor-section">
+  <div class="wrap">
+    <div class="monitor-shell">
+      <div class="monitor-head">
+        <span class="conn-badge"><span class="conn-dot ok"></span><span>Server Monitor</span></span>
+        <span class="monitor-live">Diperbarui tiap 5 detik</span>
+      </div>
+      <div class="monitor-grid">
+        <div class="monitor-item">
+          <div class="monitor-label">Penggunaan CPU</div>
+          <div class="bar-track"><div class="bar-fill" id="cpuBar" style="width:0%"></div></div>
+          <div class="monitor-val" id="cpuVal">0%</div>
+        </div>
+        <div class="monitor-item">
+          <div class="monitor-label">Penggunaan RAM</div>
+          <div class="bar-track"><div class="bar-fill" id="ramBar" style="width:0%"></div></div>
+          <div class="monitor-val" id="ramVal">0 / 0 GB</div>
+        </div>
+        <div class="monitor-item">
+          <div class="monitor-label">Kecepatan Panel</div>
+          <div class="bar-track"><div class="bar-fill" id="speedBar" style="width:0%"></div></div>
+          <div class="monitor-val" id="speedVal">0ms</div>
+        </div>
+      </div>
+      <div class="monitor-foot">
+        <span id="monitorUptime">Uptime: 0h 0m</span>
+        <span id="monitorNote" class="monitor-note">menunggu data server…</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="wrap stats-grid">
+    <div><div class="stat-num">380+</div><div class="stat-label">Endpoint API</div></div>
+    <div><div class="stat-num">99.9%</div><div class="stat-label">Uptime</div></div>
+    <div><div class="stat-num">180ms</div><div class="stat-label">Rata-rata respons</div></div>
+    <div><div class="stat-num">4</div><div class="stat-label">Bahasa didukung</div></div>
+  </div>
+</div>
+
+<section id="fitur">
+  <div class="wrap">
+    <div class="explore-head">
+      <div>
+        <h2>Jelajahi katalog endpoint</h2>
+        <p style="color:var(--text-dim);font-size:15px;">Cari atau saring dari 380+ endpoint berdasarkan kategori.</p>
+      </div>
+      <div class="endpoint-search">
+        <span class="search-prompt">$</span>
+        <input type="text" id="endpointSearch" placeholder="cari endpoint, mis. 'suno' atau 'checkban'" oninput="filterEndpoints()">
+      </div>
+    </div>
+    <div class="category-chips" id="categoryChips">
+      <button class="chip active" data-cat="all" onclick="setCategory('all')">Semua</button>
+      <button class="chip" data-cat="ai" onclick="setCategory('ai')">AI</button>
+      <button class="chip" data-cat="downloader" onclick="setCategory('downloader')">Downloader</button>
+      <button class="chip" data-cat="tools" onclick="setCategory('tools')">Tools</button>
+      <button class="chip" data-cat="search" onclick="setCategory('search')">Search</button>
+    </div>
+
+    <div class="section-head" style="margin-top:44px;">
+      <div>
+        <span class="tag">Paling banyak dipakai</span>
+        <h2>Endpoint favorit pengguna</h2>
+        <p>Empat layanan yang paling sering dipanggil bulan ini.</p>
+      </div>
+    </div>
+    <div class="card-grid" id="topGrid">
+      <div class="api-card" data-cat="tools" data-name="wa reaction">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><path d="M8 10h8M8 14h5"/><path d="M21 12c0 4.4-4 8-9 8-1.5 0-2.9-.3-4.1-.9L3 20l1.1-4C3.4 14.7 3 13.4 3 12c0-4.4 4-8 9-8s9 3.6 9 8z"/></svg></div>
+        <h4>WA Reaction</h4>
+        <p>Kirim reaksi emoji otomatis ke pesan WhatsApp lewat satu request.</p>
+        <div class="meta"><span>GET /v1/wa/react</span><span>Realtime</span></div>
+      </div>
+      <div class="api-card" data-cat="ai" data-name="alight motion netflix generator">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3z" fill="#fff"/></svg></div>
+        <h4>Alight Motion x Netflix</h4>
+        <p>Generate template intro bergaya Netflix untuk Alight Motion otomatis.</p>
+        <div class="meta"><span>POST /v1/am/netflix</span><span>Generator</span></div>
+      </div>
+      <div class="api-card" data-cat="ai" data-name="suno ai">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg></div>
+        <h4>Suno AI</h4>
+        <p>Buat lagu penuh dari prompt teks, lengkap dengan lirik dan vokal AI.</p>
+        <div class="meta"><span>GET /v1/ai/suno</span><span>AI Audio</span></div>
+      </div>
+      <div class="api-card" data-cat="ai" data-name="image to video">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><rect x="3" y="4" width="14" height="14" rx="2"/><path d="M17 9l4-2v10l-4-2"/></svg></div>
+        <h4>Image to Video</h4>
+        <p>Animasikan satu foto menjadi klip video pendek dengan gerakan alami.</p>
+        <div class="meta"><span>POST /v1/ai/i2v</span><span>AI Video</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="baru">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="tag tag-new">Baru rilis</span>
+        <h2>Baru ditambahkan minggu ini</h2>
+        <p>Endpoint segar yang baru masuk ke katalog.</p>
+      </div>
+    </div>
+    <div class="card-grid" id="newGrid">
+      <div class="api-card" data-cat="tools" data-name="check ban">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M15 9l-6 6M9 9l6 6"/></svg></div>
+        <h4>Check Ban</h4>
+        <p>Cek status ban sebuah nomor atau akun sebelum dipakai lebih jauh.</p>
+        <div class="meta"><span>GET /v1/tools/checkban</span><span>Baru</span></div>
+      </div>
+      <div class="api-card" data-cat="search" data-name="movie">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M9 10l5 2-5 2z" fill="#fff"/></svg></div>
+        <h4>Movie</h4>
+        <p>Cari detail film, sinopsis, dan tautan tontonan dari satu judul.</p>
+        <div class="meta"><span>GET /v1/movie/search</span><span>Baru</span></div>
+      </div>
+      <div class="api-card" data-cat="search" data-name="google search">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+        <h4>Google Search</h4>
+        <p>Ambil hasil pencarian Google dalam format JSON yang rapi.</p>
+        <div class="meta"><span>GET /v1/search/google</span><span>Baru</span></div>
+      </div>
+      <div class="api-card" data-cat="ai" data-name="face detection">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="10" r="1" fill="#fff"/><circle cx="15" cy="10" r="1" fill="#fff"/><path d="M9 15c1 1 5 1 6 0"/></svg></div>
+        <h4>Face Detection</h4>
+        <p>Deteksi wajah pada gambar lengkap dengan koordinat dan skor akurasi.</p>
+        <div class="meta"><span>POST /v1/vision/face</span><span>Baru</span></div>
+      </div>
+    </div>
+    <p class="no-result" id="noResult" style="display:none;">Tidak ada endpoint yang cocok dengan pencarian kamu.</p>
+  </div>
+</section>
+
+<section id="dashboard">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2>Kelola semuanya dari satu dashboard</h2>
+        <p>Pantau pemakaian, kelola API key, dan upgrade paket tanpa keluar dari satu halaman.</p>
+      </div>
+    </div>
+    <div class="dash-shell">
+      <div class="dash-side">
+        <div class="d-logo"><svg viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" fill="#fff"/></svg>XTZY XTRX Team</div>
+        <div class="dash-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Ringkasan</div>
+        <div class="dash-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 17V7l8-4 8 4v10l-8 4z"/></svg>API Key</div>
+        <div class="dash-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>Statistik</div>
+        <div class="dash-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>Dokumentasi</div>
+        <div class="dash-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v18M3 12h18"/></svg>Tagihan</div>
+      </div>
+      <div class="dash-main">
+        <div class="dash-top">
+          <h3>Ringkasan akun</h3>
+          <span class="plan-pill">Paket Free</span>
+        </div>
+        <div class="dash-cards">
+          <div class="dash-card"><div class="label">Request hari ini</div><div class="val">1,204</div></div>
+          <div class="dash-card"><div class="label">Kuota harian</div><div class="val">2,000</div></div>
+          <div class="dash-card"><div class="label">Rata-rata respons</div><div class="val">176ms</div></div>
+        </div>
+        <div class="key-row">
+          <span class="key-val">Masuk untuk melihat API key kamu</span>
+          <div style="display:flex;gap:8px;">
+            <button onclick="copyApiKey(this)">Salin</button>
+            <button onclick="regenerateApiKey(this)" style="background:transparent;color:#fff;border:1px solid var(--border);">Generate Baru</button>
+          </div>
+        </div>
+        <p style="font-size:11.5px;color:var(--text-faint);margin-top:8px;">Generate key baru akan langsung menonaktifkan key lama.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="harga">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2>Mulai gratis, upgrade saat butuh lebih</h2>
+        <p>Tidak ada kartu kredit untuk memulai.</p>
+      </div>
+    </div>
+    <div class="price-grid">
+      <div class="price-card">
+        <h3>Free</h3>
+        <div class="price">Rp0<span> /bulan</span></div>
+        <ul class="price-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>2.000 request/hari</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Akses seluruh 380+ endpoint</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Dukungan komunitas</li>
+        </ul>
+        <a class="btn btn-ghost btn-block" onclick="openModal('register')">Daftar Free</a>
+      </div>
+      <div class="price-card highlight">
+        <h3>Premium</h3>
+        <div class="price">Rp49rb<span> /bulan</span></div>
+        <ul class="price-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Request tanpa batas harian</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Prioritas kecepatan respons</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Akses endpoint baru lebih awal</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Dukungan prioritas 24/7</li>
+        </ul>
+        <a class="btn btn-primary btn-block" onclick="openModal('register')">Upgrade ke Premium</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <div class="logo" style="margin-bottom:12px;">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" fill="#fff"/></svg>
+          XTZY XTRX Team
+        </div>
+        <p style="color:var(--text-dim);font-size:13.5px;max-width:280px;">Platform REST API untuk developer Indonesia — AI, downloader, stalker, dan lainnya.</p>
+      </div>
+      <div class="deploy-badges">
+        <span class="deploy-badge"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5 3.3 9.3 7.9 10.8.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.4-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.2 1.2a11 11 0 015.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0023.5 12C23.5 5.7 18.3.5 12 .5z"/></svg>Deploy dari GitHub</span>
+        <span class="deploy-badge"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7"><path d="M3 15a5 5 0 015-5 6 6 0 0111.5 1.5A4 4 0 0119 19H7a4 4 0 01-4-4z"/></svg>Hosting via Cloudflare</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 XTZY XTRX Team. Semua hak dilindungi.</span>
+      <span>Status sistem: Semua layanan normal</span>
+    </div>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="loginView">
+      <h3>Selamat datang kembali</h3>
+      <p class="sub">Masuk untuk mengakses dashboard dan API key kamu.</p>
+      <button class="google-btn"><svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.6 9.2c0-.6-.1-1.2-.2-1.8H9v3.4h4.8c-.2 1.1-.8 2-1.8 2.7v2.2h2.9c1.7-1.6 2.7-3.9 2.7-6.5z"/><path fill="#34A853" d="M9 18c2.4 0 4.5-.8 6-2.2l-2.9-2.2c-.8.5-1.9.9-3.1.9-2.4 0-4.4-1.6-5.1-3.8H.9v2.3C2.5 16 5.5 18 9 18z"/><path fill="#FBBC05" d="M3.9 10.7c-.2-.5-.3-1.1-.3-1.7s.1-1.2.3-1.7V4.9H.9C.3 6.1 0 7.5 0 9s.3 2.9.9 4.1l3-2.4z"/><path fill="#EA4335" d="M9 3.6c1.3 0 2.5.5 3.4 1.3l2.6-2.6C13.5.9 11.4 0 9 0 5.5 0 2.5 2 .9 4.9l3 2.3C4.6 5.1 6.6 3.6 9 3.6z"/></svg>Lanjutkan dengan Google</button>
+      <div class="or-row"><div class="line"></div><span>atau</span><div class="line"></div></div>
+      <div class="field"><label>Email</label><input type="email" id="loginEmail" placeholder="kamu@email.com"></div>
+      <div class="field"><label>Kata sandi</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
+      <div class="form-msg" id="loginMsg"></div>
+      <button class="btn btn-primary btn-block" onclick="handleLogin()" id="loginBtn">Masuk</button>
+      <div class="modal-switch">Belum punya akun? <a onclick="openModal('register')">Daftar</a></div>
+    </div>
+    <div id="registerView" style="display:none;">
+      <h3>Buat akun gratis</h3>
+      <p class="sub">Langsung dapat 2.000 request/hari, tanpa kartu kredit.</p>
+      <button class="google-btn" onclick="handleGoogleAuth()"><svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.6 9.2c0-.6-.1-1.2-.2-1.8H9v3.4h4.8c-.2 1.1-.8 2-1.8 2.7v2.2h2.9c1.7-1.6 2.7-3.9 2.7-6.5z"/><path fill="#34A853" d="M9 18c2.4 0 4.5-.8 6-2.2l-2.9-2.2c-.8.5-1.9.9-3.1.9-2.4 0-4.4-1.6-5.1-3.8H.9v2.3C2.5 16 5.5 18 9 18z"/><path fill="#FBBC05" d="M3.9 10.7c-.2-.5-.3-1.1-.3-1.7s.1-1.2.3-1.7V4.9H.9C.3 6.1 0 7.5 0 9s.3 2.9.9 4.1l3-2.4z"/><path fill="#EA4335" d="M9 3.6c1.3 0 2.5.5 3.4 1.3l2.6-2.6C13.5.9 11.4 0 9 0 5.5 0 2.5 2 .9 4.9l3 2.3C4.6 5.1 6.6 3.6 9 3.6z"/></svg>Daftar dengan Google</button>
+      <div class="or-row"><div class="line"></div><span>atau</span><div class="line"></div></div>
+      <div class="field"><label>Nama</label><input type="text" id="regName" placeholder="Nama kamu"></div>
+      <div class="field"><label>Email</label><input type="email" id="regEmail" placeholder="kamu@email.com"></div>
+      <div class="field"><label>Kata sandi</label><input type="password" id="regPassword" placeholder="Minimal 8 karakter"></div>
+      <div class="form-msg" id="regMsg"></div>
+      <button class="btn btn-primary btn-block" onclick="handleRegister()" id="regBtn">Buat Akun</button>
+      <div class="modal-switch">Sudah punya akun? <a onclick="openModal('login')">Masuk</a></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ======================================================================
+  // KONEKSI BACKEND
+  // Base URL nyata yang diberikan: https://xtzy.my.id
+  // CATATAN PENTING: situs ini memblokir crawler otomatis (robots.txt),
+  // jadi path endpoint di bawah (/api/auth/register, /api/auth/login, dst)
+  // adalah KONVENSI REST UMUM, bukan hasil verifikasi langsung ke dokumentasi
+  // resmi xtzy.my.id. Sesuaikan path & nama field di objek ENDPOINTS di bawah
+  // ini kalau format API kamu berbeda.
+  // ======================================================================
+  const BASE_URL = 'https://xtzy.xtzyzxz.workers.dev';
+  const ENDPOINTS = {
+    ping:    BASE_URL + '/',                 // dipakai hanya untuk tes konektivitas
+    register: BASE_URL + '/api/auth/register',
+    login:    BASE_URL + '/api/auth/login',
+    google:   BASE_URL + '/api/auth/google', // redirect ke OAuth Google di backend
+    me:       BASE_URL + '/api/user/me',
+    system:   BASE_URL + '/api/system',          // data real untuk panel Server Monitor
+    regenerateKey: BASE_URL + '/api/user/regenerate-key'
+  };
+
+  // Tes konektivitas real ke base URL saat halaman dibuka
+  async function checkConnection(){
+    const dot = document.getElementById('connDot');
+    const text = document.getElementById('connText');
+    const host = new URL(BASE_URL).hostname;
+    try{
+      const res = await fetch(ENDPOINTS.ping, { method: 'GET', mode: 'cors' });
+      dot.classList.add('ok');
+      text.textContent = 'Terhubung ke ' + host + ' (HTTP ' + res.status + ')';
+    }catch(err){
+      dot.classList.add('fail');
+      text.textContent = 'Gagal konek ke ' + host + ' — cek CORS/endpoint di server (' + err.message + ')';
+    }
+  }
+  checkConnection();
+
+  async function handleRegister(){
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const msg = document.getElementById('regMsg');
+    const btn = document.getElementById('regBtn');
+    if(!name || !email || !password){
+      msg.textContent = 'Lengkapi semua kolom dulu.'; msg.className = 'form-msg error'; return;
+    }
+    msg.textContent = 'Menghubungi server…'; msg.className = 'form-msg loading';
+    btn.disabled = true;
+    try{
+      const res = await fetch(ENDPOINTS.register, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password })
+      });
+      const data = await res.json().catch(() => ({}));
+      if(!res.ok) throw new Error(data.message || ('Server merespons ' + res.status));
+      if(data.token) localStorage.setItem('xtzy_token', data.token);
+      if(data.api_key) localStorage.setItem('xtzy_key', data.api_key);
+      msg.textContent = 'Akun berhasil dibuat. Mengalihkan…'; msg.className = 'form-msg success';
+      setTimeout(() => { closeModal(); window.location.hash = '#dashboard'; refreshDashboard(); }, 900);
+    }catch(err){
+      msg.textContent = 'Gagal daftar: ' + err.message; msg.className = 'form-msg error';
+    }finally{
+      btn.disabled = false;
+    }
+  }
+
+  async function handleLogin(){
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const msg = document.getElementById('loginMsg');
+    const btn = document.getElementById('loginBtn');
+    if(!email || !password){
+      msg.textContent = 'Isi email dan kata sandi.'; msg.className = 'form-msg error'; return;
+    }
+    msg.textContent = 'Menghubungi server…'; msg.className = 'form-msg loading';
+    btn.disabled = true;
+    try{
+      const res = await fetch(ENDPOINTS.login, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json().catch(() => ({}));
+      if(!res.ok) throw new Error(data.message || ('Server merespons ' + res.status));
+      if(data.token) localStorage.setItem('xtzy_token', data.token);
+      if(data.api_key) localStorage.setItem('xtzy_key', data.api_key);
+      msg.textContent = 'Berhasil masuk. Mengalihkan…'; msg.className = 'form-msg success';
+      setTimeout(() => { closeModal(); window.location.hash = '#dashboard'; refreshDashboard(); }, 700);
+    }catch(err){
+      msg.textContent = 'Gagal masuk: ' + err.message; msg.className = 'form-msg error';
+    }finally{
+      btn.disabled = false;
+    }
+  }
+
+  function handleGoogleAuth(){
+    // Backend yang menangani OAuth Google harus redirect balik ke halaman ini
+    // dengan token (mis. ?token=xxx) setelah proses selesai.
+    window.location.href = ENDPOINTS.google + '?redirect_uri=' + encodeURIComponent(window.location.href);
+  }
+
+  // Kalau backend redirect balik dengan ?token=xxx setelah Google OAuth
+  (function captureOAuthToken(){
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    if(token){
+      localStorage.setItem('xtzy_token', token);
+      history.replaceState({}, '', window.location.pathname + window.location.hash);
+    }
+  })();
+
+  async function refreshDashboard(){
+    const token = localStorage.getItem('xtzy_token');
+    if(!token) return;
+    try{
+      const res = await fetch(ENDPOINTS.me, {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const data = await res.json().catch(() => ({}));
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const keyEl = document.querySelector('.key-row .key-val');
+      if(keyEl && data.api_key) keyEl.textContent = data.api_key;
+      const planEl = document.querySelector('.plan-pill');
+      if(planEl && data.plan) planEl.textContent = 'Paket ' + data.plan;
+    }catch(err){
+      console.warn('Gagal ambil data dashboard:', err.message);
+    }
+  }
+  refreshDashboard();
+
+  // Generate API key baru (menonaktifkan key lama)
+  async function regenerateApiKey(btn){
+    const token = localStorage.getItem('xtzy_token');
+    if(!token){ openModal('login'); return; }
+    if(!confirm('API key lama akan langsung berhenti berfungsi. Lanjutkan generate key baru?')) return;
+    const original = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Memproses…';
+    try{
+      const res = await fetch(ENDPOINTS.regenerateKey, {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const data = await res.json().catch(() => ({}));
+      if(!res.ok) throw new Error(data.message || ('Server merespons ' + res.status));
+      localStorage.setItem('xtzy_key', data.api_key);
+      const keyEl = document.querySelector('.key-row .key-val');
+      if(keyEl) keyEl.textContent = data.api_key;
+      btn.textContent = 'Berhasil!';
+    }catch(err){
+      alert('Gagal generate API key: ' + err.message);
+      btn.textContent = original;
+    }finally{
+      setTimeout(() => { btn.textContent = original; btn.disabled = false; }, 1500);
+    }
+  }
+
+  // Tab kode (cURL / Node.js / Python)
+  function switchTab(tab){
+    document.querySelectorAll('.code-tab').forEach(el => el.classList.toggle('active', el.dataset.tab === tab));
+    document.querySelectorAll('.code-pane').forEach(el => el.classList.toggle('active', el.id === 'pane-' + tab));
+  }
+  function copySnippet(){
+    const active = document.querySelector('.code-pane.active');
+    navigator.clipboard.writeText(active.textContent.trim()).then(() => {
+      const btn = document.querySelector('.copy-btn');
+      const original = btn.textContent;
+      btn.textContent = 'Tersalin';
+      setTimeout(() => btn.textContent = original, 1500);
+    });
+  }
+
+  // Filter kategori + pencarian endpoint
+  let currentCategory = 'all';
+  function setCategory(cat){
+    currentCategory = cat;
+    document.querySelectorAll('.chip').forEach(el => el.classList.toggle('active', el.dataset.cat === cat));
+    filterEndpoints();
+  }
+  function filterEndpoints(){
+    const q = document.getElementById('endpointSearch').value.trim().toLowerCase();
+    const cards = document.querySelectorAll('#topGrid .api-card, #newGrid .api-card');
+    let visibleCount = 0;
+    cards.forEach(card => {
+      const matchCat = currentCategory === 'all' || card.dataset.cat === currentCategory;
+      const matchQuery = !q || card.dataset.name.includes(q);
+      const show = matchCat && matchQuery;
+      card.style.display = show ? '' : 'none';
+      if(show) visibleCount++;
+    });
+    document.getElementById('noResult').style.display = visibleCount === 0 ? 'block' : 'none';
+  }
+
+  // Panel server monitor — data REAL dari Worker (lokasi edge, total request, latency)
+  async function refreshSystemMonitor(){
+    const labels = document.querySelectorAll('.monitor-grid .monitor-label');
+    if(labels[0]) labels[0].textContent = 'Lokasi Edge Server';
+    if(labels[1]) labels[1].textContent = 'Total Request Diproses';
+    if(labels[2]) labels[2].textContent = 'Latency Respons';
+
+    const t0 = performance.now();
+    try{
+      const res = await fetch(ENDPOINTS.system);
+      const data = await res.json();
+      const latency = Math.round(performance.now() - t0);
+
+      document.getElementById('cpuBar').style.width = '100%';
+      document.getElementById('cpuVal').textContent = (data.colo || '-') + ' · ' + (data.country || '-');
+
+      const reqPct = Math.min((data.totalRequests || 0) / 10, 100);
+      document.getElementById('ramBar').style.width = reqPct + '%';
+      document.getElementById('ramVal').textContent = (data.totalRequests || 0).toLocaleString('id-ID') + ' request';
+
+      document.getElementById('speedBar').style.width = Math.max(0, 100 - latency) + '%';
+      document.getElementById('speedVal').textContent = latency + 'ms';
+
+      document.getElementById('monitorNote').textContent = 'data real-time dari server (bukan simulasi)';
+    }catch(err){
+      document.getElementById('monitorNote').textContent = 'gagal ambil data server: ' + err.message;
+    }
+  }
+  let monitorStart = Date.now();
+  function updateMonitorUptime(){
+    const diff = Math.floor((Date.now() - monitorStart) / 60000);
+    const h = Math.floor(diff / 60), m = diff % 60;
+    document.getElementById('monitorUptime').textContent = 'Uptime sesi: ' + h + 'h ' + m + 'm';
+  }
+  refreshSystemMonitor();
+  updateMonitorUptime();
+  setInterval(refreshSystemMonitor, 5000);
+  setInterval(updateMonitorUptime, 60000);
+
+  function copyApiKey(btn){
+    const key = document.querySelector('.key-row .key-val').textContent.trim();
+    navigator.clipboard.writeText(key).then(() => {
+      const original = btn.textContent;
+      btn.textContent = 'Tersalin';
+      setTimeout(() => btn.textContent = original, 1500);
+    }).catch(() => { btn.textContent = 'Gagal salin'; });
+  }
+
+  function openModal(view){
+    document.getElementById('modalOverlay').classList.add('open');
+    document.getElementById('loginView').style.display = view === 'login' ? 'block' : 'none';
+    document.getElementById('registerView').style.display = view === 'register' ? 'block' : 'none';
+  }
+  function closeModal(){
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+  document.getElementById('modalOverlay').addEventListener('click', function(e){
+    if(e.target === this) closeModal();
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') closeModal();
+  });
+</script>
+
+</body>
+</html>

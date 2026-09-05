@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json.schemastore.org/wrangler.json",
+  "name": "xtzy-rest-api",
+  "main": "worker.js",
+  "compatibility_date": "2026-09-05",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+  "vars": {
+    "ALIGHT_MOTION_API_BASE": "https://REPLACE-WITH-YOUR-UPSTREAM.example"
+  }
+}

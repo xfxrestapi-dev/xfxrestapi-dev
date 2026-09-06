@@ -1,52 +1,60 @@
-# XTZY REST API — Cloudflare Worker + Static UI
+# Premium API Platform — GitHub + Cloudflare Workers + Pages
 
-## Struktur
-```text
-xtzy-rest-api/
-├── public/
-│   └── index.html
-├── worker.js
-├── wrangler.json
-├── package.json
-└── README.md
-```
+`worker/` is the API gateway and Durable Object WebSocket. `pages/` is the premium landing page. The Worker is configured to serve the Pages assets too, so one Worker can host the full stack; Pages can also host `pages/` separately.
 
-## Endpoint
-Base URL setelah deploy:
-- `POST /v1/alight-motion/send`
-- `GET /v1/alight-motion/verify?magicLink=...`
+## Endpoints
+GET /api/v1/health
+POST /api/v1/auth/login
+POST /api/v1/alight-motion/send
+POST /api/v1/alight-motion/verif
+POST /api/v1/photoenhancer2
+POST /api/v1/nftoken-gen
+GET /ws
 
-### Send
-```bash
-curl -X POST "https://api.xtzy.dev/v1/alight-motion/send" \
-  -H "Content-Type: application/json" \
-  -H "x-apikey: YOUR_API_KEY" \
-  -d '{"email":"user@gmail.com"}'
-```
+## Real upstream configuration
+Set these as Cloudflare Worker secrets:
+ALIGHT_MOTION_SEND_URL
+ALIGHT_MOTION_VERIFY_URL
+PHOTOENHANCER2_URL
+NFTOKEN_GEN_URL
+ALIGHT_MOTION_API_KEY
+PHOTOENHANCER2_API_KEY
+NFTOKEN_GEN_API_KEY
 
-### Verify
-```bash
-curl -G "https://api.xtzy.dev/v1/alight-motion/verify" \
-  -H "x-apikey: YOUR_API_KEY" \
-  --data-urlencode "magicLink=https://example.com/verify?token=..."
-```
+If a URL is missing, the endpoint returns 503 rather than a fake response. The Alight Motion routes are transparent authorized-provider adapters; they do not bypass OTP, licensing, subscriptions, or account security.
 
-## Konfigurasi upstream
-Worker ini adalah gateway/proxy. Isi `ALIGHT_MOTION_API_BASE` dengan API upstream yang benar-benar menyediakan endpoint Alight Motion tersebut. Jangan menaruh secret upstream di HTML.
+## Termux → GitHub
+pkg update -y
+pkg install git nodejs-lts -y
+cd premium-cloudflare-platform
+git init
+git branch -M main
+git add .
+git commit -m "Initial premium API platform"
+git remote add origin https://github.com/YOUR_USER/YOUR_REPO.git
+git push -u origin main
 
-Jika upstream membutuhkan key, buat secret:
-```bash
-npx wrangler secret put UPSTREAM_API_KEY
-```
-
-Lalu deploy:
-```bash
+## Deploy Worker
+cd worker
 npm install
 npx wrangler login
+npx wrangler secret put JWT_SECRET
+npx wrangler secret put ADMIN_EMAIL
+npx wrangler secret put ADMIN_PASSWORD
+npx wrangler secret put ALIGHT_MOTION_SEND_URL
+npx wrangler secret put ALIGHT_MOTION_VERIFY_URL
+npx wrangler secret put PHOTOENHANCER2_URL
+npx wrangler secret put NFTOKEN_GEN_URL
+npx wrangler secret put ALIGHT_MOTION_API_KEY
+npx wrangler secret put PHOTOENHANCER2_API_KEY
+npx wrangler secret put NFTOKEN_GEN_API_KEY
 npx wrangler deploy
-```
 
-## Custom domain
-Tambahkan `api.xtzy.dev` sebagai Custom Domain pada Worker di Cloudflare Dashboard. Untuk frontend, Worker Static Assets sudah menyajikan `public/index.html` dari Worker yang sama.
+## GitHub automatic deploy
+Cloudflare Dashboard → Workers & Pages → Create application → Get started next to Import a repository → connect GitHub → select repository → set root directory to `worker`. Workers Builds deploys on pushes to the selected production branch.
 
-Cloudflare saat ini merekomendasikan Workers Static Assets untuk aplikasi baru yang menggabungkan frontend statis dan API.
+## Separate Pages deployment
+Cloudflare Dashboard → Workers & Pages → Create application → Pages → Import existing Git repository. Build command: `exit 0`. Build output directory: `pages`.
+
+## Python
+Cloudflare also supports Python Workers (open beta). This repo uses JavaScript for the main gateway because it directly supports the static assets and Durable Object WebSocket. A Python adapter can be deployed separately when a provider actually requires Python-specific libraries.

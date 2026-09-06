@@ -1,0 +1,1837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Xyrooo Rest Api Platform</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <!-- Font Awesome 6 (Free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ---------- RESET & BASE ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-card: #1a1a1a;
+            --bg-card-hover: #222222;
+            --text-primary: #ffffff;
+            --text-secondary: #aaaaaa;
+            --text-muted: #666666;
+            --accent: #00e5ff;
+            --accent-glow: rgba(0, 229, 255, 0.3);
+            --lightning: #ffffff;
+            --lightning-glow: rgba(255, 255, 255, 0.5);
+            --border-color: #2a2a2a;
+            --gradient-1: linear-gradient(135deg, #00e5ff, #7c4dff);
+            --gradient-2: linear-gradient(135deg, #ff6b6b, #feca57);
+            --shadow-premium: 0 20px 60px rgba(0, 0, 0, 0.8);
+            --radius: 16px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 10px;
+        }
+
+        /* ---------- ANIMATED BACKGROUND ---------- */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(0, 229, 255, 0.05) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 50%, rgba(124, 77, 255, 0.05) 0%, transparent 60%),
+                radial-gradient(ellipse at 50% 100%, rgba(0, 229, 255, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        /* ---------- LIGHTNING BUTTON ---------- */
+        .btn-lightning {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background: var(--lightning);
+            color: #0a0a0a;
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 20px var(--lightning-glow), inset 0 0 20px rgba(255, 255, 255, 0.3);
+            z-index: 1;
+            overflow: hidden;
+        }
+        .btn-lightning::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ffffff, #00e5ff, #7c4dff, #ffffff);
+            background-size: 300% 300%;
+            border-radius: 60px;
+            z-index: -1;
+            animation: lightningBorder 4s ease infinite;
+            opacity: 0.7;
+        }
+        .btn-lightning:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px var(--lightning-glow), 0 0 80px rgba(255, 255, 255, 0.2);
+        }
+        .btn-lightning:active {
+            transform: scale(0.96);
+        }
+        .btn-lightning i {
+            font-size: 1.1rem;
+        }
+
+        .btn-lightning-outline {
+            background: transparent;
+            color: var(--lightning);
+            border: 2px solid var(--lightning);
+            box-shadow: none;
+        }
+        .btn-lightning-outline::before {
+            display: none;
+        }
+        .btn-lightning-outline:hover {
+            background: var(--lightning);
+            color: #0a0a0a;
+            box-shadow: 0 0 30px var(--lightning-glow);
+        }
+
+        @keyframes lightningBorder {
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        /* ---------- HEADER / NAV ---------- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 16px 40px;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: var(--transition);
+        }
+        header.scrolled {
+            padding: 10px 40px;
+            background: rgba(10, 10, 10, 0.95);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+        .logo img {
+            height: 42px;
+            width: 42px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        .logo span {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+        }
+        .nav-links a {
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            position: relative;
+        }
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-1);
+            transition: var(--transition);
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .nav-actions .btn-lightning {
+            padding: 10px 24px;
+            font-size: 0.85rem;
+        }
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 4px;
+        }
+        .hamburger span {
+            width: 28px;
+            height: 2px;
+            background: var(--text-primary);
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        /* ---------- HERO ---------- */
+        .hero {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 40px 80px;
+            text-align: center;
+        }
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 60px;
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            animation: pulseBadge 3s ease-in-out infinite;
+        }
+        @keyframes pulseBadge {
+            0%,
+            100% {
+                box-shadow: 0 0 10px rgba(0, 229, 255, 0.1);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(0, 229, 255, 0.25);
+            }
+        }
+        .hero h1 {
+            font-size: clamp(2.8rem, 8vw, 5.5rem);
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+        }
+        .hero h1 .highlight {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 680px;
+            margin: 0 auto 36px;
+            line-height: 1.8;
+        }
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        .hero-stats .stat {
+            text-align: center;
+        }
+        .hero-stats .stat .number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        .hero-stats .stat .label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .hero-stats .stat .number .accent {
+            color: var(--accent);
+        }
+
+        /* ---------- SECTION COMMON ---------- */
+        section {
+            position: relative;
+            z-index: 1;
+            padding: 80px 40px;
+        }
+        .section-title {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+        .section-title h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+        .section-title h2 .highlight {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .section-title p {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 12px auto 0;
+        }
+
+        /* ---------- API CATEGORIES ---------- */
+        .api-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .api-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 28px 24px;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            cursor: default;
+            position: relative;
+            overflow: hidden;
+        }
+        .api-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        .api-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(0, 229, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            background: var(--bg-card-hover);
+        }
+        .api-card:hover::before {
+            opacity: 1;
+        }
+        .api-card .icon {
+            font-size: 2rem;
+            margin-bottom: 16px;
+            display: inline-block;
+        }
+        .api-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .api-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+        .api-card .endpoints {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .api-card .endpoints .tag {
+            background: rgba(0, 229, 255, 0.08);
+            color: var(--accent);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            border: 1px solid rgba(0, 229, 255, 0.1);
+        }
+        .api-card .endpoints .tag.green {
+            background: rgba(0, 255, 150, 0.08);
+            color: #00ff96;
+            border-color: rgba(0, 255, 150, 0.1);
+        }
+        .api-card .endpoints .tag.purple {
+            background: rgba(124, 77, 255, 0.08);
+            color: #b388ff;
+            border-color: rgba(124, 77, 255, 0.1);
+        }
+        .api-card .endpoints .tag.orange {
+            background: rgba(255, 150, 0, 0.08);
+            color: #ffb300;
+            border-color: rgba(255, 150, 0, 0.1);
+        }
+        .api-card .endpoints .tag.pink {
+            background: rgba(255, 0, 150, 0.08);
+            color: #ff4081;
+            border-color: rgba(255, 0, 150, 0.1);
+        }
+        .api-card .badge-new {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--gradient-2);
+            color: #0a0a0a;
+            font-size: 0.6rem;
+            font-weight: 800;
+            padding: 3px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .api-card .badge-top {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--gradient-1);
+            color: #0a0a0a;
+            font-size: 0.6rem;
+            font-weight: 800;
+            padding: 3px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ---------- LANGUAGES ---------- */
+        .lang-grid {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .lang-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px 28px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+        .lang-item:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+        .lang-item i {
+            font-size: 1.4rem;
+        }
+        .lang-item .fa-node-js {
+            color: #68a063;
+        }
+        .lang-item .fa-python {
+            color: #4584b6;
+        }
+        .lang-item .fa-php {
+            color: #777bb3;
+        }
+        .lang-item .fa-golang {
+            color: #00add8;
+        }
+
+        /* ---------- DASHBOARD (hidden by default) ---------- */
+        .dashboard-container {
+            display: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+        .dashboard-container.active {
+            display: block;
+        }
+
+        .dash-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .dash-stat {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 24px 20px;
+            text-align: center;
+            transition: var(--transition);
+        }
+        .dash-stat:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+        .dash-stat .number {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+        .dash-stat .label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+
+        .dash-menu {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+        .dash-menu .menu-item {
+            padding: 10px 24px;
+            border-radius: 40px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .dash-menu .menu-item:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+        .dash-menu .menu-item.active {
+            background: var(--accent);
+            color: #0a0a0a;
+            border-color: var(--accent);
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+
+        .dash-content {
+            display: none;
+            animation: fadeUp 0.4s ease;
+        }
+        .dash-content.active {
+            display: block;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .api-table-wrap {
+            overflow-x: auto;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            padding: 4px;
+        }
+        .api-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        .api-table th {
+            text-align: left;
+            padding: 16px 20px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .api-table td {
+            padding: 14px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .api-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .api-table .status {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .api-table .status.online {
+            background: #00ff96;
+            box-shadow: 0 0 12px rgba(0, 255, 150, 0.4);
+        }
+        .api-table .status.beta {
+            background: #ffb300;
+            box-shadow: 0 0 12px rgba(255, 179, 0, 0.3);
+        }
+        .api-table .method {
+            font-weight: 700;
+            font-size: 0.7rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(0, 229, 255, 0.1);
+            color: var(--accent);
+        }
+        .api-table .method.post {
+            background: rgba(0, 255, 150, 0.1);
+            color: #00ff96;
+        }
+        .api-table .method.get {
+            background: rgba(0, 229, 255, 0.1);
+            color: var(--accent);
+        }
+        .api-table .method.delete {
+            background: rgba(255, 0, 80, 0.1);
+            color: #ff0050;
+        }
+
+        /* ---------- FOOTER ---------- */
+        footer {
+            position: relative;
+            z-index: 1;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 40px 40px 24px;
+            text-align: center;
+        }
+        footer .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        footer .footer-links a {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        footer .footer-links a:hover {
+            color: var(--text-primary);
+        }
+        footer .copy {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        /* ---------- MODAL / AUTH ---------- */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 2000;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(12px);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .auth-modal.open {
+            display: flex;
+        }
+        .auth-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 48px 40px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: var(--shadow-premium);
+            animation: fadeUp 0.4s ease;
+        }
+        .auth-box .logo-mini {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .auth-box .logo-mini img {
+            height: 40px;
+            width: 40px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 2px solid var(--accent);
+        }
+        .auth-box .logo-mini span {
+            font-weight: 800;
+            font-size: 1.2rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .auth-box h3 {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+        }
+        .auth-box p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 28px;
+        }
+        .auth-box .btn-google {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 14px;
+            border-radius: 60px;
+            background: #ffffff;
+            color: #0a0a0a;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+        }
+        .auth-box .btn-google:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
+        }
+        .auth-box .btn-google img {
+            height: 22px;
+            width: 22px;
+        }
+        .auth-box .divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 24px 0;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        .auth-box .divider::before,
+        .auth-box .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-color);
+        }
+        .auth-box .input-group {
+            text-align: left;
+            margin-bottom: 16px;
+        }
+        .auth-box .input-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+        .auth-box .input-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: var(--transition);
+            outline: none;
+        }
+        .auth-box .input-group input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        .auth-box .btn-submit {
+            width: 100%;
+            padding: 14px;
+            border-radius: 60px;
+            background: var(--gradient-1);
+            color: #0a0a0a;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        .auth-box .btn-submit:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 40px var(--accent-glow);
+        }
+        .auth-box .switch-auth {
+            margin-top: 16px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        .auth-box .switch-auth a {
+            color: var(--accent);
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .auth-box .close-modal {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .auth-box .close-modal:hover {
+            color: var(--text-primary);
+        }
+        .auth-box {
+            position: relative;
+        }
+
+        /* ---------- TOAST ---------- */
+        .toast-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .toast {
+            padding: 14px 24px;
+            border-radius: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-premium);
+            animation: slideIn 0.3s ease;
+            max-width: 380px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .toast.success {
+            border-left: 4px solid #00ff96;
+        }
+        .toast.error {
+            border-left: 4px solid #ff0050;
+        }
+        .toast.info {
+            border-left: 4px solid var(--accent);
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* ---------- RESPONSIVE ---------- */
+        @media (max-width: 992px) {
+            header {
+                padding: 12px 20px;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(10, 10, 10, 0.98);
+                backdrop-filter: blur(20px);
+                padding: 20px 30px;
+                border-bottom: 1px solid var(--border-color);
+                gap: 16px;
+            }
+            .nav-links.open {
+                display: flex;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .hero {
+                padding: 100px 20px 60px;
+            }
+            .hero-stats {
+                gap: 24px;
+            }
+            section {
+                padding: 50px 20px;
+            }
+            .api-grid {
+                grid-template-columns: 1fr;
+            }
+            .dash-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .auth-box {
+                padding: 32px 24px;
+            }
+        }
+        @media (max-width: 600px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .hero-stats {
+                gap: 16px;
+                flex-direction: column;
+            }
+            .dash-grid {
+                grid-template-columns: 1fr;
+            }
+            .lang-grid {
+                gap: 12px;
+            }
+            .lang-item {
+                padding: 12px 18px;
+                font-size: 0.85rem;
+            }
+            .nav-actions .btn-lightning {
+                padding: 8px 16px;
+                font-size: 0.75rem;
+            }
+            .logo {
+                font-size: 1rem;
+            }
+            .logo img {
+                height: 34px;
+                width: 34px;
+            }
+        }
+
+        /* ---------- SCROLL ANIMATIONS ---------- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ---------- USER AVATAR IN NAV ---------- */
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid var(--accent);
+            object-fit: cover;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .user-avatar:hover {
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        .user-name {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        /* ---------- REAL-TIME INDICATOR ---------- */
+        .live-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #00ff96;
+            margin-right: 6px;
+            animation: pulseDot 1.5s ease-in-out infinite;
+        }
+        @keyframes pulseDot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.4;
+                transform: scale(1.4);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ====== ANIMATED BACKGROUND ====== -->
+    <canvas id="particles-canvas"></canvas>
+    <div class="bg-overlay"></div>
+
+    <!-- ====== HEADER ====== -->
+    <header id="header">
+        <div class="logo">
+            <img src="https://h.uguu.se/bkumeurk.jpg" alt="Xyrooo Logo" />
+            <span>Xyrooo</span>
+        </div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#apis">APIs</a></li>
+            <li><a href="#languages">Languages</a></li>
+            <li><a href="#dashboard" id="dashNavLink" style="display:none;">Dashboard</a></li>
+        </ul>
+        <div class="nav-actions">
+            <span id="userDisplay" style="display:none; display:flex; align-items:center; gap:10px;">
+                <span class="user-name" id="userNameDisplay"></span>
+                <img class="user-avatar" id="userAvatarDisplay" src="" alt="avatar" />
+            </span>
+            <button class="btn-lightning btn-lightning-outline" id="authBtn" style="padding:10px 24px; font-size:0.85rem;">
+                <i class="fas fa-user"></i> Login
+            </button>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- ====== HERO ====== -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="live-dot"></span> 380+ Endpoints • Real-Time
+            </div>
+            <h1>
+                Build Smarter with<br />
+                <span class="highlight">Xyrooo API</span> Platform
+            </h1>
+            <p>
+                Premium REST API platform with <strong>380+ real-time endpoints</strong>
+                for AI, downloaders, stalkers, and more. Free tier available.
+                Supports Node.js, Python, PHP &amp; Go.
+            </p>
+            <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+                <button class="btn-lightning" id="heroGetStarted">
+                    <i class="fas fa-rocket"></i> Get Started Free
+                </button>
+                <button class="btn-lightning btn-lightning-outline" id="heroExplore">
+                    <i class="fas fa-code"></i> Explore APIs
+                </button>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="number"><span class="accent">380</span>+</div>
+                    <div class="label">Endpoints</div>
+                </div>
+                <div class="stat">
+                    <div class="number"><span class="accent">4</span></div>
+                    <div class="label">Languages</div>
+                </div>
+                <div class="stat">
+                    <div class="number"><span class="accent">99.9</span>%</div>
+                    <div class="label">Uptime</div>
+                </div>
+                <div class="stat">
+                    <div class="number"><span class="accent">Free</span></div>
+                    <div class="label">Tier Available</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== APIS SECTION ====== -->
+    <section id="apis">
+        <div class="section-title reveal">
+            <h2>⚡ <span class="highlight">Premium API</span> Collection</h2>
+            <p>Real-time endpoints for every use case — AI, downloaders, stalkers, and more.</p>
+        </div>
+        <div class="api-grid">
+
+            <!-- TOP CATEGORIES -->
+            <div class="api-card reveal">
+                <div class="badge-top">🔥 TOP</div>
+                <div class="icon">💬</div>
+                <h3>WA Reaction</h3>
+                <p>Real-time WhatsApp reaction tracking &amp; analytics with AI sentiment.</p>
+                <div class="endpoints">
+                    <span class="tag">/wa/reaction</span>
+                    <span class="tag green">/wa/sentiment</span>
+                    <span class="tag purple">/wa/stats</span>
+                </div>
+            </div>
+
+            <div class="api-card reveal">
+                <div class="badge-top">🔥 TOP</div>
+                <div class="icon">🎬</div>
+                <h3>Alight Motion Netflix Gen</h3>
+                <p>Generate Netflix-style intros &amp; Alight Motion templates via AI.</p>
+                <div class="endpoints">
+                    <span class="tag">/am/generate</span>
+                    <span class="tag green">/am/templates</span>
+                    <span class="tag orange">/am/netflix</span>
+                </div>
+            </div>
+
+            <div class="api-card reveal">
+                <div class="badge-top">🔥 TOP</div>
+                <div class="icon">🎵</div>
+                <h3>Suno AI</h3>
+                <p>AI-powered music &amp; audio generation with Suno integration.</p>
+                <div class="endpoints">
+                    <span class="tag">/suno/generate</span>
+                    <span class="tag purple">/suno/remix</span>
+                    <span class="tag pink">/suno/lyrics</span>
+                </div>
+            </div>
+
+            <div class="api-card reveal">
+                <div class="badge-top">🔥 TOP</div>
+                <div class="icon">🖼️</div>
+                <h3>Image to Video</h3>
+                <p>Convert static images into dynamic AI-generated videos.</p>
+                <div class="endpoints">
+                    <span class="tag">/img2vid</span>
+                    <span class="tag green">/img2vid/animate</span>
+                    <span class="tag orange">/img2vid/styles</span>
+                </div>
+            </div>
+
+            <!-- NEW CATEGORIES -->
+            <div class="api-card reveal">
+                <div class="badge-new">✨ NEW</div>
+                <div class="icon">🚫</div>
+                <h3>Checkban</h3>
+                <p>Check if a user or IP is banned across multiple platforms.</p>
+                <div class="endpoints">
+                    <span class="tag">/checkban/user</span>
+                    <span class="tag green">/checkban/ip</span>
+                    <span class="tag purple">/checkban/bulk</span>
+                </div>
+            </div>
+
+            <div class="api-card reveal">
+                <div class="badge-new">✨ NEW</div>
+                <div class="icon">🎥</div>
+                <h3>Movie</h3>
+                <p>Real-time movie data, ratings, trailers, and streaming info.</p>
+                <div class="endpoints">
+                    <span class="tag">/movie/search</span>
+                    <span class="tag green">/movie/details</span>
+                    <span class="tag orange">/movie/trending</span>
+                </div>
+            </div>
+
+            <div class="api-card reveal">
+                <div class="badge-new">✨ NEW</div>
+                <div class="icon">🔍</div>
+                <h3>Google Search</h3>
+                <p>Programmatic Google Search API with rich snippets &amp; AI summaries.</p>
+                <div class="endpoints">
+                    <span class="tag">/google/search</span>
+                    <span class="tag purple">/google/images</span>
+                    <span class="tag pink">/google/news</span>
+                </div>
+            </div>
+
+            <div class="api-card reveal">
+                <div class="badge-new">✨ NEW</div>
+                <div class="icon">👤</div>
+                <h3>Face Detection</h3>
+                <p>AI-powered face detection, recognition, and emotion analysis.</p>
+                <div class="endpoints">
+                    <span class="tag">/face/detect</span>
+                    <span class="tag green">/face/recognize</span>
+                    <span class="tag orange">/face/emotion</span>
+                </div>
+            </div>
+
+            <!-- MORE -->
+            <div class="api-card reveal">
+                <div class="icon">🤖</div>
+                <h3>AI Chat</h3>
+                <p>Multi-model AI chat with GPT, Claude, and Gemini support.</p>
+                <div class="endpoints">
+                    <span class="tag">/ai/chat</span>
+                    <span class="tag purple">/ai/stream</span>
+                    <span class="tag green">/ai/models</span>
+                </div>
+            </div>
+
+            <div class="api-card reveal">
+                <div class="icon">📥</div>
+                <h3>Downloader</h3>
+                <p>Download videos, audio, and media from 50+ platforms.</p>
+                <div class="endpoints">
+                    <span class="tag">/dl/video</span>
+                    <span class="tag green">/dl/audio</span>
+                    <span class="tag orange">/dl/playlist</span>
+                </div>
+            </div>
+
+            <div class="api-card reveal">
+                <div class="icon">🕵️</div>
+                <h3>Stalker</h3>
+                <p>Social media stalking — profiles, posts, followers, and more.</p>
+                <div class="endpoints">
+                    <span class="tag">/stalk/profile</span>
+                    <span class="tag purple">/stalk/posts</span>
+                    <span class="tag pink">/stalk/followers</span>
+                </div>
+            </div>
+
+            <div class="api-card reveal">
+                <div class="icon">📊</div>
+                <h3>Real-Time Analytics</h3>
+                <p>Live analytics, metrics, and dashboards for your apps.</p>
+                <div class="endpoints">
+                    <span class="tag">/analytics/live</span>
+                    <span class="tag green">/analytics/historical</span>
+                    <span class="tag orange">/analytics/export</span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ====== LANGUAGES ====== -->
+    <section id="languages" style="padding-top:20px;">
+        <div class="section-title reveal">
+            <h2>🌐 <span class="highlight">Multi-Language</span> Support</h2>
+            <p>Seamlessly integrate with your favorite stack.</p>
+        </div>
+        <div class="lang-grid">
+            <div class="lang-item"><i class="fab fa-node-js"></i> Node.js</div>
+            <div class="lang-item"><i class="fab fa-python"></i> Python</div>
+            <div class="lang-item"><i class="fab fa-php"></i> PHP</div>
+            <div class="lang-item"><i class="fab fa-golang"></i> Go</div>
+        </div>
+        <div style="text-align:center;margin-top:30px;">
+            <span style="color:var(--text-muted);font-size:0.9rem;">
+                <i class="fas fa-check-circle" style="color:var(--accent);"></i> SDKs &amp; code examples available for all languages.
+            </span>
+        </div>
+    </section>
+
+    <!-- ====== DASHBOARD ====== -->
+    <section id="dashboard" style="display:none; padding-top:20px;">
+        <div class="section-title reveal">
+            <h2>📊 <span class="highlight">Dashboard</span></h2>
+            <p>Monitor your API usage, manage keys, and explore endpoints.</p>
+        </div>
+        <div class="dashboard-container active" id="dashContainer">
+
+            <!-- Stats -->
+            <div class="dash-grid">
+                <div class="dash-stat"><div class="number" id="dashEndpoints">380</div><div class="label">Total Endpoints</div></div>
+                <div class="dash-stat"><div class="number" id="dashRequests">12.4K</div><div class="label">Requests Today</div></div>
+                <div class="dash-stat"><div class="number" id="dashStatus">99.9%</div><div class="label">Uptime</div></div>
+                <div class="dash-stat"><div class="number" id="dashUsers">1,284</div><div class="label">Active Users</div></div>
+            </div>
+
+            <!-- Menu -->
+            <div class="dash-menu">
+                <button class="menu-item active" data-tab="tab-endpoints"><i class="fas fa-list"></i> Endpoints</button>
+                <button class="menu-item" data-tab="tab-keys"><i class="fas fa-key"></i> API Keys</button>
+                <button class="menu-item" data-tab="tab-analytics"><i class="fas fa-chart-line"></i> Analytics</button>
+                <button class="menu-item" data-tab="tab-docs"><i class="fas fa-book"></i> Docs</button>
+            </div>
+
+            <!-- Tab: Endpoints -->
+            <div class="dash-content active" id="tab-endpoints">
+                <div class="api-table-wrap">
+                    <table class="api-table">
+                        <thead>
+                            <tr>
+                                <th>Endpoint</th>
+                                <th>Method</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="endpointTableBody">
+                            <!-- filled by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div style="margin-top:16px;text-align:center;color:var(--text-muted);font-size:0.85rem;">
+                    Showing 12 of 380+ endpoints. <a href="#" style="color:var(--accent);">View all →</a>
+                </div>
+            </div>
+
+            <!-- Tab: Keys -->
+            <div class="dash-content" id="tab-keys">
+                <div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius);padding:32px 28px;">
+                    <h3 style="margin-bottom:8px;">🔑 Your API Keys</h3>
+                    <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:20px;">Manage your API keys for accessing the platform.</p>
+                    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+                        <code style="background:var(--bg-primary);padding:12px 20px;border-radius:10px;border:1px solid var(--border-color);font-size:0.9rem;flex:1;min-width:200px;color:var(--accent);">
+                            sk_live_xyrooo_xxxxxxxxxxxx
+                        </code>
+                        <button class="btn-lightning" style="padding:10px 20px;font-size:0.8rem;"><i class="fas fa-copy"></i> Copy</button>
+                        <button class="btn-lightning btn-lightning-outline" style="padding:10px 20px;font-size:0.8rem;"><i class="fas fa-sync"></i> Regenerate</button>
+                    </div>
+                    <div style="margin-top:16px;color:var(--text-muted);font-size:0.85rem;">
+                        <i class="fas fa-info-circle"></i> Free tier: 1,000 requests/day. Upgrade for unlimited.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Analytics -->
+            <div class="dash-content" id="tab-analytics">
+                <div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius);padding:32px 28px;">
+                    <h3 style="margin-bottom:8px;">📈 Usage Analytics</h3>
+                    <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:20px;">Real-time metrics for your API usage.</p>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;">
+                        <div style="background:var(--bg-primary);padding:16px;border-radius:12px;text-align:center;">
+                            <div style="font-size:1.8rem;font-weight:800;color:var(--accent);">8,432</div>
+                            <div style="color:var(--text-muted);font-size:0.8rem;">Today's Requests</div>
+                        </div>
+                        <div style="background:var(--bg-primary);padding:16px;border-radius:12px;text-align:center;">
+                            <div style="font-size:1.8rem;font-weight:800;color:#00ff96;">2.4s</div>
+                            <div style="color:var(--text-muted);font-size:0.8rem;">Avg Response Time</div>
+                        </div>
+                        <div style="background:var(--bg-primary);padding:16px;border-radius:12px;text-align:center;">
+                            <div style="font-size:1.8rem;font-weight:800;color:#ffb300;">0.3%</div>
+                            <div style="color:var(--text-muted);font-size:0.8rem;">Error Rate</div>
+                        </div>
+                        <div style="background:var(--bg-primary);padding:16px;border-radius:12px;text-align:center;">
+                            <div style="font-size:1.8rem;font-weight:800;color:#b388ff;">56</div>
+                            <div style="color:var(--text-muted);font-size:0.8rem;">Active Connections</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Docs -->
+            <div class="dash-content" id="tab-docs">
+                <div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius);padding:32px 28px;">
+                    <h3 style="margin-bottom:8px;">📚 API Documentation</h3>
+                    <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:20px;">Quick links to get started with Xyrooo API.</p>
+                    <div style="display:flex;flex-direction:column;gap:12px;">
+                        <a href="#" style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--bg-primary);border-radius:10px;border:1px solid var(--border-color);transition:var(--transition);">
+                            <i class="fas fa-play-circle" style="color:var(--accent);font-size:1.2rem;"></i>
+                            <span>Getting Started Guide</span>
+                            <span style="margin-left:auto;color:var(--text-muted);font-size:0.8rem;">→</span>
+                        </a>
+                        <a href="#" style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--bg-primary);border-radius:10px;border:1px solid var(--border-color);transition:var(--transition);">
+                            <i class="fas fa-code" style="color:#00ff96;font-size:1.2rem;"></i>
+                            <span>Code Examples (Node.js, Python, PHP, Go)</span>
+                            <span style="margin-left:auto;color:var(--text-muted);font-size:0.8rem;">→</span>
+                        </a>
+                        <a href="#" style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--bg-primary);border-radius:10px;border:1px solid var(--border-color);transition:var(--transition);">
+                            <i class="fas fa-shield-alt" style="color:#b388ff;font-size:1.2rem;"></i>
+                            <span>Authentication &amp; Security</span>
+                            <span style="margin-left:auto;color:var(--text-muted);font-size:0.8rem;">→</span>
+                        </a>
+                        <a href="#" style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--bg-primary);border-radius:10px;border:1px solid var(--border-color);transition:var(--transition);">
+                            <i class="fas fa-life-ring" style="color:#ff6b6b;font-size:1.2rem;"></i>
+                            <span>Support &amp; Community</span>
+                            <span style="margin-left:auto;color:var(--text-muted);font-size:0.8rem;">→</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer>
+        <div class="footer-links">
+            <a href="#home">Home</a>
+            <a href="#apis">APIs</a>
+            <a href="#languages">Languages</a>
+            <a href="#">Documentation</a>
+            <a href="#">Support</a>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+        </div>
+        <div class="copy">
+            &copy; 2026 <strong>Xyrooo Rest Api Platform</strong> — Built with ❤️ &amp; ⚡
+        </div>
+    </footer>
+
+    <!-- ====== AUTH MODAL ====== -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-box">
+            <button class="close-modal" id="closeAuthModal">&times;</button>
+            <div class="logo-mini">
+                <img src="https://h.uguu.se/bkumeurk.jpg" alt="Xyrooo" />
+                <span>Xyrooo</span>
+            </div>
+            <h3 id="authModalTitle">Welcome Back</h3>
+            <p id="authModalDesc">Sign in to access your dashboard &amp; API keys.</p>
+
+            <!-- Google Login -->
+            <button class="btn-google" id="googleLoginBtn">
+                <svg width="22" height="22" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+                Sign in with Google
+            </button>
+
+            <div class="divider">or</div>
+
+            <!-- Email/Password -->
+            <div class="input-group">
+                <label for="authEmail">Email</label>
+                <input type="email" id="authEmail" placeholder="you@example.com" />
+            </div>
+            <div class="input-group">
+                <label for="authPassword">Password</label>
+                <input type="password" id="authPassword" placeholder="••••••••" />
+            </div>
+            <button class="btn-submit" id="authSubmitBtn">Sign In</button>
+
+            <div class="switch-auth">
+                <span id="authSwitchText">Don't have an account?</span>
+                <a id="authSwitchLink">Create one</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== TOAST CONTAINER ====== -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ====== JAVASCRIPT ====== -->
+    <script>
+        // ============================================================
+        // 1. PARTICLES (Animated Background)
+        // ============================================================
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let w, h;
+        let particles = [];
+
+        function resize() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * w;
+                this.y = Math.random() * h;
+                this.size = Math.random() * 2.5 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.6;
+                this.speedY = (Math.random() - 0.5) * 0.6;
+                this.opacity = Math.random() * 0.5 + 0.15;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > w) this.speedX *= -1;
+                if (this.y < 0 || this.y > h) this.speedY *= -1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(0, 229, 255, ${this.opacity})`;
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 120; i++) particles.push(new Particle());
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, w, h);
+            particles.forEach(p => { p.update();
+                p.draw(); });
+            // draw lines
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 130) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(0, 229, 255, ${0.06 * (1 - dist / 130)})`;
+                        ctx.lineWidth = 0.6;
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // ============================================================
+        // 2. NAV / HEADER
+        // ============================================================
+        const header = document.getElementById('header');
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        window.addEventListener('scroll', () => {
+            header.classList.toggle('scrolled', window.scrollY > 60);
+        });
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+        });
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => navLinks.classList.remove('open'));
+        });
+
+        // ============================================================
+        // 3. REVEAL ON SCROLL
+        // ============================================================
+        const reveals = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15 });
+        reveals.forEach(el => revealObserver.observe(el));
+
+        // ============================================================
+        // 4. AUTH STATE
+        // ============================================================
+        let currentUser = null;
+        let isLoginMode = true;
+
+        const authBtn = document.getElementById('authBtn');
+        const authModal = document.getElementById('authModal');
+        const closeAuthModal = document.getElementById('closeAuthModal');
+        const authModalTitle = document.getElementById('authModalTitle');
+        const authModalDesc = document.getElementById('authModalDesc');
+        const authSubmitBtn = document.getElementById('authSubmitBtn');
+        const authSwitchLink = document.getElementById('authSwitchLink');
+        const authSwitchText = document.getElementById('authSwitchText');
+        const authEmail = document.getElementById('authEmail');
+        const authPassword = document.getElementById('authPassword');
+        const googleLoginBtn = document.getElementById('googleLoginBtn');
+        const userDisplay = document.getElementById('userDisplay');
+        const userNameDisplay = document.getElementById('userNameDisplay');
+        const userAvatarDisplay = document.getElementById('userAvatarDisplay');
+        const dashNavLink = document.getElementById('dashNavLink');
+        const dashboardSection = document.getElementById('dashboard');
+        const heroGetStarted = document.getElementById('heroGetStarted');
+        const heroExplore = document.getElementById('heroExplore');
+
+        // ---------- Toast ----------
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            const icon = type === 'success' ? 'fa-check-circle' :
+                type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
+            toast.innerHTML = `<i class="fas ${icon}"></i> ${message}`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300); }, 3200);
+        }
+
+        // ---------- Update UI ----------
+        function updateAuthUI() {
+            if (currentUser) {
+                authBtn.style.display = 'none';
+                userDisplay.style.display = 'flex';
+                userNameDisplay.textContent = currentUser.name || 'User';
+                userAvatarDisplay.src = currentUser.picture || 'https://ui-avatars.com/api/?name=User&background=00e5ff&color=000';
+                dashNavLink.style.display = 'block';
+                dashboardSection.style.display = 'block';
+                // load dashboard data
+                loadDashboardData();
+                showToast(`Welcome back, ${currentUser.name || 'User'}!`, 'success');
+            } else {
+                authBtn.style.display = 'inline-flex';
+                userDisplay.style.display = 'none';
+                dashNavLink.style.display = 'none';
+                dashboardSection.style.display = 'none';
+                document.getElementById('dashContainer').classList.remove('active');
+            }
+        }
+
+        // ---------- Fake Google Login ----------
+        function googleLogin() {
+            // Simulate Google OAuth
+            const user = {
+                name: 'Alex Rivera',
+                email: 'alex@example.com',
+                picture: 'https://ui-avatars.com/api/?name=Alex+Rivera&background=00e5ff&color=000&size=128',
+                id: 'google_123456'
+            };
+            currentUser = user;
+            localStorage.setItem('xyrooo_user', JSON.stringify(user));
+            updateAuthUI();
+            authModal.classList.remove('open');
+            showToast('Signed in with Google!', 'success');
+            // redirect to dashboard
+            document.getElementById('dashboard').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ---------- Email/Password Auth ----------
+        function handleAuthSubmit() {
+            const email = authEmail.value.trim();
+            const pass = authPassword.value.trim();
+            if (!email || !pass) {
+                showToast('Please fill in all fields.', 'error');
+                return;
+            }
+            if (isLoginMode) {
+                // Fake login
+                const user = {
+                    name: email.split('@')[0],
+                    email: email,
+                    picture: `https://ui-avatars.com/api/?name=${email.split('@')[0]}&background=00e5ff&color=000&size=128`,
+                    id: 'email_' + Date.now()
+                };
+                currentUser = user;
+                localStorage.setItem('xyrooo_user', JSON.stringify(user));
+                updateAuthUI();
+                authModal.classList.remove('open');
+                showToast('Signed in successfully!', 'success');
+                document.getElementById('dashboard').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                // Fake register
+                const user = {
+                    name: email.split('@')[0],
+                    email: email,
+                    picture: `https://ui-avatars.com/api/?name=${email.split('@')[0]}&background=00e5ff&color=000&size=128`,
+                    id: 'email_' + Date.now()
+                };
+                currentUser = user;
+                localStorage.setItem('xyrooo_user', JSON.stringify(user));
+                updateAuthUI();
+                authModal.classList.remove('open');
+                showToast('Account created successfully!', 'success');
+                document.getElementById('dashboard').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // ---------- Switch Auth Mode ----------
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            if (isLoginMode) {
+                authModalTitle.textContent = 'Welcome Back';
+                authModalDesc.textContent = 'Sign in to access your dashboard & API keys.';
+                authSubmitBtn.textContent = 'Sign In';
+                authSwitchText.textContent = "Don't have an account?";
+                authSwitchLink.textContent = 'Create one';
+            } else {
+                authModalTitle.textContent = 'Create Account';
+                authModalDesc.textContent = 'Join Xyrooo and start building with 380+ APIs.';
+                authSubmitBtn.textContent = 'Sign Up';
+                authSwitchText.textContent = 'Already have an account?';
+                authSwitchLink.textContent = 'Sign in';
+            }
+        }
+
+        // ---------- Open/Close Modal ----------
+        function openAuthModal() {
+            authModal.classList.add('open');
+            authEmail.value = '';
+            authPassword.value = '';
+            if (!currentUser) {
+                // if no user, default to login
+                if (!isLoginMode) toggleAuthMode();
+            }
+        }
+
+        closeAuthModal.addEventListener('click', () => authModal.classList.remove('open'));
+        authModal.addEventListener('click', (e) => {
+            if (e.target === authModal) authModal.classList.remove('open');
+        });
+
+        authBtn.addEventListener('click', openAuthModal);
+        heroGetStarted.addEventListener('click', () => {
+            if (currentUser) {
+                document.getElementById('dashboard').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                openAuthModal();
+            }
+        });
+        heroExplore.addEventListener('click', () => {
+            document.getElementById('apis').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        authSubmitBtn.addEventListener('click', handleAuthSubmit);
+        authPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleAuthSubmit(); });
+        authSwitchLink.addEventListener('click', toggleAuthMode);
+        googleLoginBtn.addEventListener('click', googleLogin);
+
+        // ---------- Restore Session ----------
+        const savedUser = localStorage.getItem('xyrooo_user');
+        if (savedUser) {
+            try {
+                currentUser = JSON.parse(savedUser);
+                updateAuthUI();
+            } catch (e) { localStorage.removeItem('xyrooo_user'); }
+        }
+
+        // ============================================================
+        // 5. DASHBOARD - TABS
+        // ============================================================
+        const menuItems = document.querySelectorAll('.dash-menu .menu-item');
+        const contents = {
+            'tab-endpoints': document.getElementById('tab-endpoints'),
+            'tab-keys': document.getElementById('tab-keys'),
+            'tab-analytics': document.getElementById('tab-analytics'),
+            'tab-docs': document.getElementById('tab-docs'),
+        };
+
+        menuItems.forEach(item => {
+            item.addEventListener('click', () => {
+                menuItems.forEach(m => m.classList.remove('active'));
+                item.classList.add('active');
+                const target = item.dataset.tab;
+                Object.keys(contents).forEach(key => {
+                    contents[key].classList.toggle('active', key === target);
+                });
+            });
+        });
+
+        // ============================================================
+        // 6. LOAD DASHBOARD DATA (Endpoint Table)
+        // ============================================================
+        function loadDashboardData() {
+            const tbody = document.getElementById('endpointTableBody');
+            const endpoints = [
+                { name: '/wa/reaction', method: 'GET', desc: 'WhatsApp reaction analytics', status: 'online' },
+                { name: '/wa/sentiment', method: 'POST', desc: 'AI sentiment analysis on WA messages', status: 'online' },
+                { name: '/am/generate', method: 'POST', desc: 'Generate Alight Motion template', status: 'online' },
+                { name: '/am/netflix', method: 'GET', desc: 'Netflix-style intro generator', status: 'beta' },
+                { name: '/suno/generate', method: 'POST', desc: 'AI music generation via Suno', status: 'online' },
+                { name: '/img2vid', method: 'POST', desc: 'Convert image to AI video', status: 'online' },
+                { name: '/checkban/user', method: 'GET', desc: 'Check user ban status', status: 'online' },
+                { name: '/movie/search', method: 'GET', desc: 'Search movies & ratings', status: 'online' },
+                { name: '/google/search', method: 'GET', desc: 'Google search with AI summary', status: 'beta' },
+                { name: '/face/detect', method: 'POST', desc: 'AI face detection & analysis', status: 'online' },
+                { name: '/ai/chat', method: 'POST', desc: 'Multi-model AI chat', status: 'online' },
+                { name: '/dl/video', method: 'GET', desc: 'Download video from 50+ platforms', status: 'online' },
+            ];
+            tbody.innerHTML = endpoints.map(e => `
+                    <tr>
+                        <td><code style="color:var(--accent);font-size:0.85rem;">${e.name}</code></td>
+                        <td><span class="method ${e.method.toLowerCase()}">${e.method}</span></td>
+                        <td style="color:var(--text-secondary);">${e.desc}</td>
+                        <td><span class="status ${e.status}"></span> ${e.status.charAt(0).toUpperCase() + e.status.slice(1)}</td>
+                    </tr>
+                `).join('');
+
+            // Update stats
+            document.getElementById('dashEndpoints').textContent = '380';
+            document.getElementById('dashRequests').textContent = (Math.floor(Math.random() * 5000) + 10000).toLocaleString();
+            document.getElementById('dashStatus').textContent = '99.9%';
+            document.getElementById('dashUsers').textContent = (Math.floor(Math.random() * 500) + 1000).toLocaleString();
+        }
+
+        // If user is already logged in, load dashboard
+        if (currentUser) loadDashboardData();
+
+        // ============================================================
+        // 7. SMOOTH SCROLL FOR NAV LINKS
+        // ============================================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // ============================================================
+        // 8. KEYBOARD SHORTCUT: Escape closes modal
+        // ============================================================
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') authModal.classList.remove('open');
+        });
+
+        console.log('🚀 Xyrooo API Platform loaded successfully!');
+        console.log('⚡ 380+ endpoints • Real-time • Premium');
+    </script>
+
+</body>
+</html>

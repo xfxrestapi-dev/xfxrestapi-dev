@@ -1,9 +1,0 @@
-{
- "$schema":"./node_modules/wrangler/config-schema.json",
- "name":"premium-api-worker",
- "main":"src/index.js",
- "compatibility_date":"2026-09-05",
- "assets":{"directory":"../pages"},
- "durable_objects":{"bindings":[{"name":"REALTIME","class_name":"RealtimeRoom"}]},
- "migrations":[{"tag":"v1","new_sqlite_classes":["RealtimeRoom"]}]
-}
